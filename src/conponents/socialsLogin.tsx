@@ -7,12 +7,12 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../../components/ui";
+} from "../components/ui";
 import {
   TiIconBrandAppleFilled,
   TiIconBrandFacebookFilled,
   TiIconBrandGoogleFilled,
-} from "../icons";
+} from "./icons";
 
 export type loginProps = {
   setEmailPopup: any;
@@ -21,8 +21,8 @@ export type loginProps = {
 
 const SocialsLogin = ({ setEmailPopup, emailPopup }: loginProps) => {
   return (
-    <div className="absolute top-1/2 px-6 -translate-y-1/2 md:-right-32">
-      <Card className="flex flex-col justify-between items-center !border-none shadow-md w-full max-w-sm">
+    <div className="absolute w-[390px] h-[450px] lg:w-[430px] lg:h-[500px] top-1/2  px-6 -translate-y-1/2 md:-right-32">
+      <Card className=" flex flex-col justify-between items-center !border-none shadow-md w-full h-full">
         <CardHeader className="w-full">
           <CardTitle>
             <div className="w-full mb-2 flex items-center justify-center">
@@ -78,7 +78,7 @@ const SocialsLogin = ({ setEmailPopup, emailPopup }: loginProps) => {
             type="button"
             className="w-full"
           >
-            Sign up with Email
+            Sign in with Email
           </Button>
           <p className="text-center  text-gray-600 leading-tight">
             By signing up, you agree to our <br />

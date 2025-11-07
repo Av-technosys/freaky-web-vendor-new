@@ -15,14 +15,14 @@ import {
   InputOTPSlot,
   Label,
 } from "../components/ui";
-import { useUserOtpSignUpMutation } from "../services/useCreateOrLoginUser";
+import { useUserForgetPasswordUsingOTPMutation } from "../services/useCreateOrLoginUser";
 
 export type otpProps = {
   userEmail: any;
 };
 
-const OtpSignUp = ({ userEmail }: otpProps) => {
-  const mutation = useUserOtpSignUpMutation();
+const ForgetPasswordUsingOTP = ({ userEmail }: otpProps) => {
+  const mutation = useUserForgetPasswordUsingOTPMutation();
   const submitHandler = (event: any) => {
     event.preventDefault();
     const code = event.target.code.value;
@@ -31,6 +31,7 @@ const OtpSignUp = ({ userEmail }: otpProps) => {
     } else {
       const userData = {
         username: event.target.email.value,
+        confirm_password: event.target.confirm_password.value,
         code: code,
       };
       mutation.mutate(userData);
@@ -39,7 +40,7 @@ const OtpSignUp = ({ userEmail }: otpProps) => {
 
   return (
     <>
-      <div className="absolute top-1/2 px-6  w-[390px] h-[450px] lg:w-[430px] lg:h-[500px] -translate-y-1/2 md:-right-32 ">
+      <div className="absolute top-1/2 px-6 w-[390px] h-[450px] lg:w-[430px] lg:h-[500px] -translate-y-1/2 md:-right-32 ">
         <Card className="flex flex-col justify-between shadow w-full h-full">
           <CardHeader>
             <CardTitle>
@@ -49,15 +50,18 @@ const OtpSignUp = ({ userEmail }: otpProps) => {
             </CardTitle>
             <CardDescription>
               <p className="text-center text-gray-700">
-                Enter your email below to Sign Up
+                Enter your OTP and Confirm Password below to Forget your
+                Password
               </p>
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={(event) => submitHandler(event)}>
               <div className="flex flex-col gap-3 ">
-                <div className="w-full text-center font-bold">Sign Up</div>
-                <div>
+                <div className="w-full text-center font-bold">
+                  Forget Password
+                </div>
+                <div className="flex flex-col gap-2 items-start">
                   <Label htmlFor="email">Email</Label>
                   <Input
                     readOnly
@@ -67,7 +71,7 @@ const OtpSignUp = ({ userEmail }: otpProps) => {
                     required
                   />
                 </div>
-                <div>
+                <div className="flex flex-col gap-2 items-start">
                   <Label htmlFor="otp">Enter OTP</Label>
                   <InputOTP name="code" maxLength={6}>
                     <InputOTPGroup>
@@ -83,30 +87,27 @@ const OtpSignUp = ({ userEmail }: otpProps) => {
                     </InputOTPGroup>
                   </InputOTP>
                 </div>
+                <div className="flex flex-col gap-2 items-start">
+                  <Label htmlFor="confirm_password">Confirm Password</Label>
+                  <Input
+                    name="confirm_password"
+                    id="confirm_password"
+                    type="password"
+                    required
+                  />
+                </div>
                 <div>
                   <Button type="submit" className="w-full">
-                    Verify OTP
+                    Forgot Password
                   </Button>
                 </div>
               </div>
             </form>
           </CardContent>
-          <CardFooter className="flex-col gap-2">
-            <p className="text-center text-[14px] text-gray-700">
-              {" "}
-              By continuing, you agree to the <br /> Terms of use and Privacy
-              Policy.
-            </p>
-            <div className="w-full mt-2 flex items-center justify-between text-[14px]">
-              <div>
-                <u>Other issue with sign up</u>
-              </div>
-            </div>
-          </CardFooter>
         </Card>
       </div>
     </>
   );
 };
 
-export default OtpSignUp;
+export default ForgetPasswordUsingOTP;

@@ -2,10 +2,12 @@ import { useState } from "react";
 import leftImage from "@/./assets/Rectangle 3.svg";
 import rightImage from "@/./assets/Rectangle 2.svg";
 import mainImage from "@/./assets/signInImage.png";
-import SocialsLogin from "../socialsLogin";
 import EmailPasswordLogin from "../emailPasswordLogin";
-const Login = () => {
-  const [emailPopup, setEmailPopup] = useState(false);
+import ForgetPasswordUsingEmail from "../forgetPasswordUsingEmail";
+import ForgetPasswordUsingOTP from "../forgetPasswordUsingOTP";
+const ForgetPassword = () => {
+  const [otpPopup, setOtpPopup] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
 
   return (
     <div className="w-full h-screen mx-auto">
@@ -26,13 +28,14 @@ const Login = () => {
             />
           </div>
 
-          {emailPopup == false ? (
-            <SocialsLogin
-              emailPopup={emailPopup}
-              setEmailPopup={setEmailPopup}
+          {otpPopup == false ? (
+            <ForgetPasswordUsingEmail
+              otpPopup={otpPopup}
+              setOtpPopup={setOtpPopup}
+              setUserEmail={setUserEmail}
             />
           ) : (
-            <EmailPasswordLogin />
+            <ForgetPasswordUsingOTP userEmail={userEmail} />
           )}
         </div>
         <div className="order-1 hidden md:block md:order-2 p-2 md:p-0 w-full h-screen">
@@ -47,4 +50,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ForgetPassword;

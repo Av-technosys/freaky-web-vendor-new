@@ -229,7 +229,7 @@ const Services = () => {
           </div>
         </div>
       </div>
-      <div className="max-w-sm overflow-x-scroll lg:overflow-hidden md:max-w-7xl p-3 shadow-lg  my-5 rounded-lg">
+      <div className="max-w-[400px] overflow-x-scroll lg:overflow-hidden md:max-w-full p-3 shadow-lg  my-5 rounded-lg">
         <TableDemo tableData={tableData} />
       </div>
     </>
