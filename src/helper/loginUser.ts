@@ -16,3 +16,18 @@ export const otpSignUpUser = async (userData: any) => {
   console.log("response", response);
   return userData.username;
 };
+
+export const forgetPasswordUsingEmail = async (userData: any) => {
+  const response = await axiosInstance.post("/forgot-password", userData);
+  console.log("response", response);
+  return userData.username;
+};
+
+export const forgetPasswordUsingOTP = async (userData: any) => {
+  const response = await axiosInstance.post(
+    "/confirm-forgot-password",
+    userData
+  );
+  console.log("response", response);
+  return userData.username;
+};

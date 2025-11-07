@@ -77,10 +77,10 @@ function getOpenURL() {
 
 function AppSidebar() {
   return (
-    <Sidebar>
+    <Sidebar className=" ">
       <div className=" p-2 bg-transparent h-full   ">
-        <SidebarContent className=" max-h-screen h-full overflow-y-auto shadow-xl">
-          <SidebarGroup className="w-full rounded-2xl h-full !overflow-hidden">
+        <SidebarContent className=" rounded-2xl shadow-2xl h-full  p-1 overflow-y-auto ">
+          <SidebarGroup className="w-full h-full overflow-y-auto">
             <div className="flex items-center justify-center p-4">
               <img src={logo} alt="Freaky Chimp Logo" className="w-32 h-14" />
             </div>

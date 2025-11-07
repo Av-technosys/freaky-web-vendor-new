@@ -13,6 +13,7 @@ import Profile from "./conponents/pages/profile";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Booking, Reviews } from "./conponents/pages";
 import Calendar from "./conponents/pages/calendar";
+import ForgetPassword from "./conponents/pages/forgetPassword";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,10 @@ const routes = createBrowserRouter([
   {
     path: "/sign-up",
     element: <SignUp />,
+  },
+  {
+    path: "/forget-password",
+    element: <ForgetPassword />,
   },
 ]);
 

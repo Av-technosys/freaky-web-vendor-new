@@ -44,9 +44,9 @@ const EmailPasswordSignUp = ({
   };
   return (
     <>
-      <div className="absolute top-1/2     -translate-y-1/2 md:-right-32 ">
-        <Card className="w-full flex flex-col p-0 justify-between border-none shadow ">
-          <CardHeader className="py-1 px-6 lg:p-6 ">
+      <div className="absolute top-1/2 px-6  w-[390px] h-[450px] lg:w-[430px] lg:h-[520px] -translate-y-1/2 md:-right-32 ">
+        <Card className=" flex flex-col p-0 justify-start border-none shadow w-full h-full">
+          <CardHeader className="px-6 lg:p-4 ">
             <CardTitle>
               <div className="w-full mb-2 flex items-center justify-center">
                 <img className="w-28 " src={Logo} alt="freeky-logo" />
@@ -54,19 +54,19 @@ const EmailPasswordSignUp = ({
             </CardTitle>
             <CardDescription>
               <p className="text-center text-gray-700">
-                Enter your email below to login to your account
+                Enter your email and password below to create account
               </p>
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={(event) => submitHandler(event)}>
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-2">
                 <div className="w-full text-center font-bold">Sign Up</div>
-                <div>
-                  <Label htmlFor="email">Email or mobile number</Label>
+                <div className="flex flex-col items-start gap-2">
+                  <Label htmlFor="email">Email</Label>
                   <Input name="email" id="email" type="text" required />
                 </div>
-                <div>
+                <div className="flex flex-col items-start gap-2">
                   <Label htmlFor="password">Your Password</Label>
                   <Input
                     name="password"
@@ -75,7 +75,7 @@ const EmailPasswordSignUp = ({
                     required
                   />
                 </div>
-                <div>
+                <div className="flex flex-col items-start gap-2">
                   <Label htmlFor="confirm_password">Confirm Password</Label>
                   <Input
                     name="confirm_password"
@@ -98,15 +98,12 @@ const EmailPasswordSignUp = ({
               By continuing, you agree to the <br /> Terms of use and Privacy
               Policy.
             </p>
-            <div className="w-full gap-2 mt-2 flex items-center justify-between text-[14px]">
+            <div className="w-full gap-2 my-2 flex items-center justify-between text-[14px]">
               <div>
                 <NavLink to="/login">
                   {" "}
                   <u>Already have an account ?</u>
                 </NavLink>
-              </div>
-              <div>
-                <u>Other issue with sign Up</u>
               </div>
             </div>
           </CardFooter>
