@@ -127,7 +127,7 @@ function AppSidebar() {
                   </SidebarMenuItem>
                 ))}
 
-                <Button className="bg-[#FF6020]" variant={"destructive"}>
+                <Button>
                   <TiIconLogout /> Logout
                 </Button>
               </SidebarMenu>

@@ -169,9 +169,7 @@ export function SidebarDrawer() {
           </div>
 
           <DrawerFooter>
-            <Button className="bg-[#FF6020]" variant={"destructive"}>
-              Logout
-            </Button>
+            <Button>Logout</Button>
           </DrawerFooter>
         </div>
       </DrawerContent>

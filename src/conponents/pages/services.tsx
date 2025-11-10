@@ -179,7 +179,7 @@ const Services = () => {
   return (
     <>
       <div className="!w-full mb-5 flex gap-3 items-center justify-start">
-        <Button className="bg-[#FF6020] px-6" type="submit">
+        <Button className=" px-6" type="submit">
           Add New
         </Button>
       </div>
