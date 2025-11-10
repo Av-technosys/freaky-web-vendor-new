@@ -78,7 +78,7 @@ function getOpenURL() {
 function AppSidebar() {
   return (
     <Sidebar className=" ">
-      <div className=" p-2 bg-transparent h-full   ">
+      <div className=" p-2 pr-0 bg-transparent h-full   ">
         <SidebarContent className=" rounded-2xl shadow-2xl h-full  p-1 overflow-y-auto ">
           <SidebarGroup className="w-full h-full overflow-y-auto">
             <div className="flex items-center justify-center p-4">

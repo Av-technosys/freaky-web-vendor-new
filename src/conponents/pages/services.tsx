@@ -1,4 +1,4 @@
-import { Button } from "../../components/ui";
+import { Button, Card, CardContent, CardHeader } from "../../components/ui";
 import { TiIconBriefcase } from "../icons";
 import { TableDemo } from "../table";
 
@@ -177,35 +177,30 @@ const Services = () => {
     ],
   };
   return (
-    <>
-      <div className="!w-full mb-5 flex gap-3 items-center justify-start">
+    <div className="my-2 space-y-3">
+      <div className="w-full! flex gap-3 items-center justify-start">
         <Button className=" px-6" type="submit">
           Add New
         </Button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <div className="col-span-1 flex flex-col  gap-5 p-3 rounded-lg shadow-lg">
-          <div className="w-full flex items-center justify-between">
-            <div className="w-8 h-8 flex items-center justify-center rounded-md bg-[#ffe491]">
-              <TiIconBriefcase />
+        <Card className="col-span-1 flex flex-col  gap-5">
+          <CardHeader>
+            <div className="w-full flex items-center justify-between">
+              <div className="w-8 h-8 flex items-center justify-center rounded-md bg-[#ffe491]">
+                <TiIconBriefcase />
+              </div>
+              <p className="text-[#8B8D97] ">All Time</p>
             </div>
-            <p className="text-[#8B8D97] ">All Time</p>
-          </div>
-          <div className="w-full flex items-center justify-between">
-            <div>
-              <p className="text-[#8B8D97] text-[13px]">All Services</p>
-              <p>125</p>
+          </CardHeader>
+          <CardContent>
+            <div className="w-full flex items-center justify-between">
+              <StatusCardItem title={"All Services"} value={125} />
+              <StatusCardItem title={"Unpublished"} value={52} />
+              <StatusCardItem title={"Published"} value={103} />
             </div>
-            <div>
-              <p className="text-[#8B8D97] text-[13px]">Unpublished</p>
-              <p>52</p>
-            </div>
-            <div>
-              <p className="text-[#8B8D97] text-[13px]">Published</p>
-              <p>103</p>
-            </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
         <div className="col-span-1 flex flex-col  gap-5 p-3 rounded-lg shadow-lg">
           <div className="w-full flex items-center justify-between">
             <div className="w-8 h-8 flex items-center justify-center rounded-md bg-[#ffe491]">
@@ -229,11 +224,20 @@ const Services = () => {
           </div>
         </div>
       </div>
-      <div className="max-w-[400px] overflow-x-scroll lg:overflow-hidden md:max-w-full p-3 shadow-lg  my-5 rounded-lg">
+      <div className="max-w-[400px] overflow-x-scroll lg:overflow-hidden md:max-w-full p-3 shadow-lg rounded-lg">
         <TableDemo tableData={tableData} />
       </div>
-    </>
+    </div>
   );
 };
 
 export default Services;
+
+function StatusCardItem({ title, value }: { title: string; value: number }) {
+  return (
+    <div>
+      <p className="text-[#8B8D97] text-[13px]">{title}</p>
+      <p>{value}</p>
+    </div>
+  );
+}
