@@ -169,7 +169,7 @@ export function SidebarDrawer() {
           </div>
 
           <DrawerFooter>
-            <Button>Logout</Button>
+            <Button variant={"destructive"}>Logout</Button>
           </DrawerFooter>
         </div>
       </DrawerContent>

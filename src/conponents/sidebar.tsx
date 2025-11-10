@@ -127,7 +127,7 @@ function AppSidebar() {
                   </SidebarMenuItem>
                 ))}
 
-                <Button>
+                <Button variant={"destructive"}>
                   <TiIconLogout /> Logout
                 </Button>
               </SidebarMenu>
