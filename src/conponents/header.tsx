@@ -3,7 +3,7 @@ import { SidebarDrawer } from "./SidebarDrawer";
 
 const Header: React.FC = () => {
   return (
-    <header className="w-full sticky top-0 z-10 bg-[#ffffff] px-4  py-4 ">
+    <header className="w-full sticky top-0 z-10 bg-[#ffffff] px-3  py-4 ">
       <div className="bg-white rounded-lg  shadow-md px-4 py-4 flex items-center justify-between ">
         {/* Left: Avatar + Welcome text */}
         <div className="flex items-center gap-4">
