@@ -2,7 +2,6 @@ import { useState } from "react";
 import leftImage from "@/./assets/Rectangle 3.svg";
 import rightImage from "@/./assets/Rectangle 2.svg";
 import mainImage from "@/./assets/signInImage.png";
-import EmailPasswordLogin from "../emailPasswordLogin";
 import ForgetPasswordUsingEmail from "../forgetPasswordUsingEmail";
 import ForgetPasswordUsingOTP from "../forgetPasswordUsingOTP";
 const ForgetPassword = () => {
