@@ -201,28 +201,23 @@ const Services = () => {
             </div>
           </CardContent>
         </Card>
-        <div className="col-span-1 flex flex-col  gap-5 p-3 rounded-lg shadow-lg">
-          <div className="w-full flex items-center justify-between">
-            <div className="w-8 h-8 flex items-center justify-center rounded-md bg-[#ffe491]">
-              <TiIconBriefcase />
+        <Card className="col-span-1 flex flex-col  gap-5 p-3 rounded-lg shadow-lg">
+          <CardHeader>
+            <div className="w-full flex items-center justify-between">
+              <div className="w-8 h-8 flex items-center justify-center rounded-md bg-[#ffe491]">
+                <TiIconBriefcase />
+              </div>
+              <p className="text-[#8B8D97] ">All Time</p>
             </div>
-            <p className="text-[#8B8D97] ">All Time</p>
-          </div>
-          <div className="w-full flex items-center justify-between">
-            <div>
-              <p className="text-[#8B8D97] text-[13px]">Category</p>
-              <p>03</p>
+          </CardHeader>
+          <CardContent>
+            <div className="w-full flex items-center justify-between">
+              <StatusCardItem title={"Category"} value={23} />
+              <StatusCardItem title={"Avg Pricing"} value={430} />
+              <StatusCardItem title={"Done"} value={23} />
             </div>
-            <div>
-              <p className="text-[#8B8D97] text-[13px]">Avg Pricing</p>
-              <p>430$</p>
-            </div>
-            <div>
-              <p className="text-[#8B8D97] text-[13px]">Done</p>
-              <p>Done</p>
-            </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
       <div className="max-w-[400px] overflow-x-scroll lg:overflow-hidden md:max-w-full p-3 shadow-lg rounded-lg">
         <TableDemo tableData={tableData} />
