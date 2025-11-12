@@ -20,6 +20,7 @@ import {
   TiIconUsers,
 } from "./icons";
 import { Button, Separator } from "../components/ui";
+import { Link } from "react-router-dom";
 
 // Menu items.
 const items = [
@@ -97,10 +98,10 @@ function AppSidebar() {
                       }`}
                       asChild
                     >
-                      <a href={item.url}>
+                      <Link to={item.url}>
                         <item.icon />
                         <span>{item.title}</span>
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
