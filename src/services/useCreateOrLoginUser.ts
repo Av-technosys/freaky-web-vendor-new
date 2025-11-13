@@ -6,12 +6,17 @@ import {
   otpSignUpUser,
   signUpUser,
 } from "../helper/loginUser";
+import { useNavigate } from "react-router-dom";
 
 export const useUserLoginMutation = () => {
+  const navigate = useNavigate();
   return useMutation({
     mutationFn: loginUser,
-    onSuccess: () => {
+    onSuccess: (data) => {
       alert("Login successful!");
+      const Token = JSON.stringify(data.idToken);
+      localStorage.setItem("access_token", Token);
+      navigate("/");
     },
     onError: (error) => {
       console.error("Login failed:", error);
@@ -34,10 +39,15 @@ export const useUserSignUpMutation = () => {
 };
 
 export const useUserOtpSignUpMutation = () => {
+  const navigate = useNavigate();
   return useMutation({
     mutationFn: otpSignUpUser,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log("dataaaa", data);
       alert(`User Create successful!`);
+      const Token = JSON.stringify(data.idToken);
+      localStorage.setItem("access_token", Token);
+      navigate("/");
     },
     onError: (error) => {
       console.error("signUp failed:", error);

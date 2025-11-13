@@ -14,6 +14,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Booking, Reviews } from "./conponents/pages";
 import Calendar from "./conponents/pages/calendar";
 import ForgetPassword from "./conponents/pages/forgetPassword";
+import ProtectRoute from "./conponents/protectRoute";
 
 const queryClient = new QueryClient();
 
@@ -22,13 +23,18 @@ const routes = createBrowserRouter([
     path: "/",
     element: <App />,
     children: [
-      { path: "/", element: <Home /> },
-      { path: "/company-profile", element: <CompanyProfile /> },
-      { path: "/services", element: <Services /> },
-      { path: "/profile", element: <Profile /> },
-      { path: "/reviews", element: <Reviews /> },
-      { path: "/calendar", element: <Calendar /> },
-      { path: "/booking", element: <Booking /> },
+      {
+        element: <ProtectRoute />,
+        children: [
+          { path: "/", element: <Home /> },
+          { path: "/company-profile", element: <CompanyProfile /> },
+          { path: "/services", element: <Services /> },
+          { path: "/profile", element: <Profile /> },
+          { path: "/reviews", element: <Reviews /> },
+          { path: "/calendar", element: <Calendar /> },
+          { path: "/booking", element: <Booking /> },
+        ],
+      },
     ],
   },
   {

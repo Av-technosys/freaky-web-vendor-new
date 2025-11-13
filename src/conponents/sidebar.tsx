@@ -20,7 +20,7 @@ import {
   TiIconUsers,
 } from "./icons";
 import { Button, Separator } from "../components/ui";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 // Menu items.
 const items = [
@@ -69,14 +69,16 @@ const item = [
   },
 ];
 
-function getOpenURL() {
-  if (typeof window !== "undefined") {
-    return window.location.pathname;
-  }
-  return "/";
-}
-
 function AppSidebar() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const logoutHandler = () => {
+    localStorage.removeItem("access_token");
+    alert("Logout successfully...");
+    navigate("/login");
+  };
+
   return (
     <Sidebar className=" ">
       <div className=" p-2 pr-0 bg-transparent h-full   ">
@@ -92,7 +94,7 @@ function AppSidebar() {
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       className={`  ${
-                        getOpenURL() === item.url
+                        location.pathname === item.url
                           ? "bg-gradient-to-r from-[#FFE492] to-[#FFBAA4]"
                           : ""
                       }`}
@@ -114,7 +116,7 @@ function AppSidebar() {
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       className={`  ${
-                        getOpenURL() === item.url
+                        location.pathname === item.url
                           ? "bg-gradient-to-r from-[#FFE492] to-[#FFBAA4]"
                           : ""
                       }`}
@@ -128,7 +130,7 @@ function AppSidebar() {
                   </SidebarMenuItem>
                 ))}
 
-                <Button variant={"destructive"}>
+                <Button onClick={logoutHandler} variant={"destructive"}>
                   <TiIconLogout /> Logout
                 </Button>
               </SidebarMenu>
