@@ -1,5 +1,4 @@
-"use client";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/Images/freaky_logo.png";
 
 import {
@@ -29,12 +28,20 @@ const navItems = [
   { to: "/booking", label: "Booking", Icon: TiIconCalendar },
   { to: "/calendar", label: "Calendar", Icon: TiIconCalendar },
   { to: "/reviews", label: "User Reviews", Icon: TiIconStar },
-  { to: "/company", label: "Company Profile", Icon: TiIconBriefcase },
+  { to: "/company-profile", label: "Company Profile", Icon: TiIconBriefcase },
   { to: "/profile", label: "Profile", Icon: TiIconUser },
   { to: "/users", label: "Manage Users", Icon: TiIconUsers },
 ];
 
 export function SidebarDrawer() {
+  const navigate = useNavigate();
+
+  const logoutHandler = () => {
+    localStorage.removeItem("access_token");
+    alert("Logout successfully...");
+    navigate("/login");
+  };
+
   return (
     <Drawer direction="left">
       <DrawerTrigger asChild>
@@ -75,7 +82,9 @@ export function SidebarDrawer() {
           </div>
 
           <DrawerFooter>
-            <Button variant={"destructive"}>Logout</Button>
+            <Button onClick={logoutHandler} variant={"destructive"}>
+              Logout
+            </Button>
           </DrawerFooter>
         </div>
       </DrawerContent>

@@ -23,6 +23,7 @@ const EmailPasswordLogin = () => {
       password: event.target.password.value,
     };
     mutation.mutate(userData);
+    event.target.reset();
   };
   return (
     <>

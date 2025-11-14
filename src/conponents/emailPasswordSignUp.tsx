@@ -33,12 +33,12 @@ const EmailPasswordSignUp = ({
       alert("Confirm password not match with password");
     } else {
       const userData = {
-        username: event.target.email.value,
+        email: event.target.email.value,
         password: password,
         confirmPassword: confirmPassword,
       };
       mutation.mutate(userData);
-      setUserEmail(userData.username);
+      setUserEmail(userData.email);
       setOtpPopup(!otpPopup);
     }
   };
