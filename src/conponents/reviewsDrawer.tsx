@@ -1,18 +1,7 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import user from "../assets/testingProfilePicture.jpg";
 
-import {
-  TiconLayoutDashboard,
-  TiIconBriefcase,
-  TiIconCalendar,
-  TiIconMenu2,
-  TiIconStar,
-  TiIconStarFilled,
-  TiIconTool,
-  TiIconUser,
-  TiIconUsers,
-  TiIconX,
-} from "./icons";
+import { TiIconStarFilled, TiIconX } from "./icons";
 import {
   Button,
   Drawer,
@@ -25,17 +14,6 @@ import {
   Separator,
 } from "../components/ui";
 import { toast } from "sonner";
-
-const navItems = [
-  { to: "/", label: "Dashboard", Icon: TiconLayoutDashboard },
-  { to: "/services", label: "Manage Services", Icon: TiIconTool },
-  { to: "/booking", label: "Booking", Icon: TiIconCalendar },
-  { to: "/calendar", label: "Calendar", Icon: TiIconCalendar },
-  { to: "/reviews", label: "User Reviews", Icon: TiIconStar },
-  { to: "/company-profile", label: "Company Profile", Icon: TiIconBriefcase },
-  { to: "/profile", label: "Profile", Icon: TiIconUser },
-  { to: "/users", label: "Manage Users", Icon: TiIconUsers },
-];
 
 export function ReviewsDrawer() {
   const navigate = useNavigate();
