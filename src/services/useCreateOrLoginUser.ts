@@ -19,8 +19,7 @@ export const useUserLoginMutation = () => {
       localStorage.setItem("access_token", Token);
       navigate("/");
     },
-    onError: (error) => {
-      console.error("Login failed:", error);
+    onError: () => {
       toast.error("Something went wrong");
     },
   });
@@ -32,8 +31,7 @@ export const useUserSignUpMutation = () => {
     onSuccess: () => {
       toast.success(`User Create successful`);
     },
-    onError: (error) => {
-      console.error("signUp failed:", error);
+    onError: () => {
       toast.error("Something went wrong");
     },
   });
@@ -44,14 +42,12 @@ export const useUserOtpSignUpMutation = () => {
   return useMutation({
     mutationFn: otpSignUpUser,
     onSuccess: (data) => {
-      console.log("dataaaa", data);
       toast.success(`User Create successful`);
       const Token = JSON.stringify(data.idToken);
       localStorage.setItem("access_token", Token);
       navigate("/");
     },
-    onError: (error) => {
-      console.error("signUp failed:", error);
+    onError: () => {
       toast.error("Something went wrong!");
     },
   });
@@ -63,8 +59,7 @@ export const useUserForgetPasswordMutation = () => {
     onSuccess: () => {
       toast.success(`OTP send to your email`);
     },
-    onError: (error) => {
-      console.error("failed:", error);
+    onError: () => {
       toast.error("Something went wrong!");
     },
   });
@@ -76,8 +71,7 @@ export const useUserForgetPasswordUsingOTPMutation = () => {
     onSuccess: () => {
       toast.success(`Password Forgot Successfully...`);
     },
-    onError: (error) => {
-      console.error("failed:", error);
+    onError: () => {
       toast.error("Something went wrong!");
     },
   });

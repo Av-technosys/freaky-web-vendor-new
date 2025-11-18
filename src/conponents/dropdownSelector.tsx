@@ -1,5 +1,4 @@
 import { ChevronDown } from "lucide-react";
-import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,20 +9,22 @@ import {
 
 export type dropdownValuesProps = {
   Title?: string;
-  Options: string[];
+  options: string[];
 };
 
 export default function DropdownSelector({
   values,
+  onChange,
+  selectedValue,
 }: {
-  values: dropdownValuesProps;
+  values: dropdownValuesProps | any;
+  onChange: any;
+  selectedValue?: number | string | any;
 }) {
-  const [value, setValue] = useState(values.Options[0]);
-
   return (
     <div className="flex flex-col gap-2">
       {values.Title && (
-        <Label htmlFor="gender" className="text-sm font-[400]">
+        <Label htmlFor="dropdown value selector" className="text-sm font-[400]">
           {values.Title}
         </Label>
       )}
@@ -34,7 +35,7 @@ export default function DropdownSelector({
             id={values.Title}
             className="flex w-full items-center justify-between rounded-md border focus:border-black bg-white px-3 py-2 text-sm text-slate-900 shadow-sm "
           >
-            <span>{value}</span>
+            <span>{selectedValue}</span>
             <ChevronDown className="h-4 w-4 text-slate-500" />
           </button>
         </DropdownMenuTrigger>
@@ -43,13 +44,13 @@ export default function DropdownSelector({
           align="start"
           className="w-[200px] rounded-md border border-slate-200 bg-white shadow-md"
         >
-          {values.Options.map((item) => (
+          {values.options.map((item: any) => (
             <DropdownMenuItem
-              key={item}
-              onClick={() => setValue(item)}
+              key={item.label}
+              onClick={() => onChange(item)}
               className="cursor-pointer text-sm text-slate-700 hover:bg-slate-100"
             >
-              {item}
+              {item.label}
             </DropdownMenuItem>
           ))}
         </DropdownMenuContent>

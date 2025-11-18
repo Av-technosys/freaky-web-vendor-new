@@ -10,11 +10,7 @@ export const loginUser = async (userData: any) => {
 };
 
 export const signUpUser = async (userData: any) => {
-  const response = await axiosInstance.post(
-    apiConstant.authentication.signUp,
-    userData
-  );
-  console.log("response", response);
+  await axiosInstance.post(apiConstant.authentication.signUp, userData);
   return userData.username;
 };
 
@@ -27,19 +23,17 @@ export const otpSignUpUser = async (userData: any) => {
 };
 
 export const forgetPasswordUsingEmail = async (userData: any) => {
-  const response = await axiosInstance.post(
+  await axiosInstance.post(
     apiConstant.authentication.forgetPasswordUsingEmail,
     userData
   );
-  console.log("response", response);
   return userData.username;
 };
 
 export const forgetPasswordUsingOTP = async (userData: any) => {
-  const response = await axiosInstance.post(
+  await axiosInstance.post(
     apiConstant.authentication.forgetPasswordUsingOTP,
     userData
   );
-  console.log("response", response);
   return userData.username;
 };

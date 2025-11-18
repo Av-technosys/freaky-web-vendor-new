@@ -1,4 +1,5 @@
 import {
+  Button,
   Card,
   CardContent,
   CardFooter,
@@ -8,11 +9,61 @@ import {
 import DropdownSelector from "../dropdownSelector";
 import profileImage from "../../assets/testingProfilePicture.jpg";
 import { TiIconStarFilled } from "../icons";
-import CarouselReviews from "../carouselReviews";
 import { ReviewsDrawer } from "../reviewsDrawer";
+import ServicesReviews from "../servicesReviews";
+import { useState } from "react";
 
-const dropdownValues = {
-  Options: ["8:00 am - 10:00 pm", "10:00 am - 12:00 pm", "12:00 pm - 02:00 am"],
+const dropdownValuesTime = {
+  options: [
+    {
+      label: "All Time",
+      value: "all_time",
+    },
+    {
+      label: "Recent",
+      value: "recent",
+    },
+    {
+      label: "Last Week",
+      value: "last_week",
+    },
+    {
+      label: "Last Month",
+      value: "last_month",
+    },
+  ],
+};
+const dropdownValuesLocation = {
+  options: [
+    {
+      label: "Jaipur",
+      value: "jaipur",
+    },
+    {
+      label: "Bikaner",
+      value: "bikaner",
+    },
+    {
+      label: "Jodhpur",
+      value: "jodhpur",
+    },
+  ],
+};
+const dropdownValuesServices = {
+  options: [
+    {
+      label: "Service1",
+      value: "service1",
+    },
+    {
+      label: "Service2",
+      value: "service2",
+    },
+    {
+      label: "Service3",
+      value: "service3",
+    },
+  ],
 };
 
 const userReviews = [
@@ -82,21 +133,69 @@ const userReviews = [
 ];
 
 const Reviews = () => {
+  const [time, setTime] = useState(dropdownValuesTime.options[0].label);
+  const [location, setLocation] = useState(
+    dropdownValuesLocation.options[0].label
+  );
+  const [service, setService] = useState(
+    dropdownValuesServices.options[0].label
+  );
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const [reviewFulldata, setReviewFulldata] = useState();
+
+  function handleTimeChange(value: any) {
+    setTime(value.label);
+  }
+
+  function handleLocationChange(value: any) {
+    setLocation(value.label);
+  }
+
+  function handleServiceChange(value: any) {
+    setService(value.label);
+  }
+
+  const drawerHandler = (review: any) => {
+    console.log("value", review);
+    console.log("drawer", openDrawer);
+    setReviewFulldata(review);
+    setOpenDrawer(true);
+  };
+
   return (
     <>
+      {openDrawer && (
+        <ReviewsDrawer
+          open={openDrawer}
+          setOpen={setOpenDrawer}
+          reviewData={reviewFulldata}
+        />
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-2 gap-2">
         <div className="col-span-1">
-          <DropdownSelector values={dropdownValues} />{" "}
+          <DropdownSelector
+            values={dropdownValuesTime}
+            selectedValue={time}
+            onChange={handleTimeChange}
+          />{" "}
         </div>
         <div className="col-span-1">
-          <DropdownSelector values={dropdownValues} />{" "}
+          <DropdownSelector
+            values={dropdownValuesLocation}
+            selectedValue={location}
+            onChange={handleLocationChange}
+          />{" "}
         </div>
         <div className="col-span-1">
-          <DropdownSelector values={dropdownValues} />{" "}
+          <DropdownSelector
+            values={dropdownValuesServices}
+            selectedValue={service}
+            onChange={handleServiceChange}
+          />{" "}
         </div>
       </div>
       <div>
-        <CarouselReviews />
+        <ServicesReviews />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 my-2">
         {userReviews?.map((review, index) => {
@@ -127,7 +226,13 @@ const Reviews = () => {
                 </CardHeader>
                 <CardContent>{review.review}</CardContent>
                 <CardFooter className="w-full items-center justify-end">
-                  <ReviewsDrawer />
+                  <Button
+                    onClick={() => drawerHandler(review)}
+                    className="text-yellow-500"
+                    variant="ghost"
+                  >
+                    View More
+                  </Button>
                 </CardFooter>
               </Card>
             </div>

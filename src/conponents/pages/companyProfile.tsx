@@ -1,3 +1,4 @@
+import { useState } from "react";
 import profileImage from "../../assets/testingProfilePicture.jpg";
 import {
   Button,
@@ -21,10 +22,28 @@ import { TiIconCameraFilled } from "../icons";
 
 const dropdownValues = {
   Title: "Working Time",
-  Options: ["8:00 am - 10:00 pm", "10:00 am - 12:00 pm", "12:00 pm - 02:00 am"],
+  options: [
+    {
+      label: "8:00 am - 10:00 pm",
+      value: "8:00 am - 10:00 pm",
+    },
+    {
+      label: "10:00 am - 12:00 pm",
+      value: "10:00 am - 12:00 pm",
+    },
+    {
+      label: "12:00 pm - 02:00 am",
+      value: "12:00 pm - 02:00 am",
+    },
+  ],
 };
 
 const CompanyProfile = () => {
+  const [time, setTime] = useState(dropdownValues.options[0].label);
+
+  function handleTimeChange(value: any) {
+    setTime(value.label);
+  }
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4  gap-3">
       <Card className="col-span-1 order-2 my-2 lg:col-span-3 ">
@@ -86,7 +105,11 @@ const CompanyProfile = () => {
                   required
                 />
               </div>
-              <DropdownSelector values={dropdownValues} />
+              <DropdownSelector
+                values={dropdownValues}
+                selectedValue={time}
+                onChange={handleTimeChange}
+              />
             </div>
             <div className="flex flex-col items-start justify-center gap-3">
               <Label htmlFor="message-2">Description</Label>

@@ -1,36 +1,29 @@
-import { useNavigate } from "react-router-dom";
 import user from "../assets/testingProfilePicture.jpg";
 
 import { TiIconStarFilled, TiIconX } from "./icons";
 import {
-  Button,
   Drawer,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
   Separator,
 } from "../components/ui";
-import { toast } from "sonner";
 
-export function ReviewsDrawer() {
-  const navigate = useNavigate();
+type reviewDrawerProps = {
+  open: any;
+  setOpen: any;
+  reviewData: any;
+};
 
-  const logoutHandler = () => {
-    localStorage.removeItem("access_token");
-    toast.success("Logout successfully...");
-    navigate("/login");
-  };
-
+export function ReviewsDrawer({
+  open,
+  setOpen,
+  reviewData,
+}: reviewDrawerProps) {
   return (
-    <Drawer direction="right">
-      <DrawerTrigger asChild>
-        <Button className="text-yellow-500" variant="ghost">
-          View More
-        </Button>
-      </DrawerTrigger>
+    <Drawer direction="right" open={open}>
       <DrawerContent>
         <div className=" w-full h-full  overflow-y-scroll">
           <DrawerHeader>
@@ -40,8 +33,10 @@ export function ReviewsDrawer() {
                   {" "}
                   Details
                 </span>
-                <DrawerTrigger asChild>
-                  <TiIconX className="text-gray-600" />
+                <DrawerTrigger>
+                  <button onClick={() => setOpen(!open)}>
+                    <TiIconX className="text-gray-600" />
+                  </button>
                 </DrawerTrigger>
               </div>
               <div className="mb-4 w-full flex items-center gap-3 justify-between  ">
@@ -51,7 +46,7 @@ export function ReviewsDrawer() {
                   </div>
                 </div>
                 <div className="w-full">
-                  <p className="text-gray-800 text-xl">Leornardo Caprio</p>
+                  <p className="text-gray-800 text-xl">{reviewData?.name}</p>
                   <p className="text-gray-600 ">Jaipur Rajasthan</p>
                 </div>
               </div>
@@ -59,7 +54,7 @@ export function ReviewsDrawer() {
             </DrawerTitle>
           </DrawerHeader>
           <DrawerDescription>
-            <div className=" w-full px-4 flex flex-col gap-2  items-start ">
+            <div className=" w-full px-4 mb-5 md:mb-0 flex flex-col gap-2  items-start ">
               <div className="w-full  flex items-center justify-between">
                 <div>
                   <h3 className="text-lg font-bold">User Reviews:</h3>
@@ -78,13 +73,7 @@ export function ReviewsDrawer() {
               </div>
               <div className="w-full">
                 <h3 className="text-lg font-bold">Comment:</h3>
-                <p>
-                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                  Explicabo nesciunt ipsam est praesentium? Labore adipisci iste
-                  totam earum nihil exercitationem temporibus praesentium
-                  tempora perspiciatis, voluptate non blanditiis eum? Sunt,
-                  repellendus.
-                </p>
+                <p>{reviewData?.review}</p>
               </div>
               <div className="w-full">
                 <h3 className="text-lg font-bold">Photos:</h3>
@@ -102,12 +91,6 @@ export function ReviewsDrawer() {
               </div>
             </div>
           </DrawerDescription>
-
-          <DrawerFooter>
-            <Button onClick={logoutHandler} variant={"destructive"}>
-              Logout
-            </Button>
-          </DrawerFooter>
         </div>
       </DrawerContent>
     </Drawer>

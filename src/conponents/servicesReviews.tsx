@@ -29,7 +29,7 @@ const carouselItems = [
   },
 ];
 
-const CarouselReviews = () => {
+const ServicesReviews = () => {
   return (
     <div className="grid grid-cols-2  lg:grid-cols-5 gap-2 mt-2">
       {carouselItems.map((item, index) => {
@@ -66,4 +66,4 @@ const CarouselReviews = () => {
   );
 };
 
-export default CarouselReviews;
+export default ServicesReviews;
