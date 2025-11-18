@@ -9,7 +9,7 @@ import {
 } from "../components/ui";
 
 export type dropdownValuesProps = {
-  Title: string;
+  Title?: string;
   Options: string[];
 };
 
@@ -22,9 +22,11 @@ export default function DropdownSelector({
 
   return (
     <div className="flex flex-col gap-2">
-      <Label htmlFor="gender" className="text-sm font-[400]">
-        {values.Title}
-      </Label>
+      {values.Title && (
+        <Label htmlFor="gender" className="text-sm font-[400]">
+          {values.Title}
+        </Label>
+      )}
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

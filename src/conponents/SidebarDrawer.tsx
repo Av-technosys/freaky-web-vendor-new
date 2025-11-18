@@ -21,6 +21,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "../components/ui";
+import { toast } from "sonner";
 
 const navItems = [
   { to: "/", label: "Dashboard", Icon: TiconLayoutDashboard },
@@ -38,7 +39,7 @@ export function SidebarDrawer() {
 
   const logoutHandler = () => {
     localStorage.removeItem("access_token");
-    alert("Logout successfully...");
+    toast.success("Logout successfully...");
     navigate("/login");
   };
 

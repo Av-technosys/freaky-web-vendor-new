@@ -1,30 +1,43 @@
 import { axiosInstance } from "./api";
+import { apiConstant } from "./apiConstant";
 
 export const loginUser = async (userData: any) => {
-  const response = await axiosInstance.post("v1/auth/signin", userData);
+  const response = await axiosInstance.post(
+    apiConstant.authentication.login,
+    userData
+  );
   return response.data;
 };
 
 export const signUpUser = async (userData: any) => {
-  const response = await axiosInstance.post("v1/auth/signup", userData);
+  const response = await axiosInstance.post(
+    apiConstant.authentication.signUp,
+    userData
+  );
   console.log("response", response);
   return userData.username;
 };
 
 export const otpSignUpUser = async (userData: any) => {
-  const response = await axiosInstance.post("v1/auth/confirm", userData);
+  const response = await axiosInstance.post(
+    apiConstant.authentication.otpSignUp,
+    userData
+  );
   return response.data;
 };
 
 export const forgetPasswordUsingEmail = async (userData: any) => {
-  const response = await axiosInstance.post("/forgot-password", userData);
+  const response = await axiosInstance.post(
+    apiConstant.authentication.forgetPasswordUsingEmail,
+    userData
+  );
   console.log("response", response);
   return userData.username;
 };
 
 export const forgetPasswordUsingOTP = async (userData: any) => {
   const response = await axiosInstance.post(
-    "/confirm-forgot-password",
+    apiConstant.authentication.forgetPasswordUsingOTP,
     userData
   );
   console.log("response", response);

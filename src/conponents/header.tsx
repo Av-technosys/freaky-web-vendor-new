@@ -29,7 +29,7 @@ const Header: React.FC = () => {
 
           {/* Right: Search + Bell */}
           <div className="flex items-center gap-3">
-            <InputGroup className="hidden md:flex items-center bg-gray-100 rounded-full px-3 py-2 shadow-sm w-80">
+            <InputGroup className="hidden md:flex items-center bg-gray-100 rounded-full px-3 py-2 shadow-sm w-52">
               <InputGroupAddon>
                 <TiIconSearch className="text-gray-500" />
               </InputGroupAddon>

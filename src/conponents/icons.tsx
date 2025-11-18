@@ -16,6 +16,7 @@ import {
   IconBrandGoogleFilled,
   IconBell,
   IconX,
+  IconStarFilled,
 } from "@tabler/icons-react";
 
 export function TiconLayoutDashboard(props: any) {
@@ -68,4 +69,8 @@ export function TiIconBell(props: any) {
 }
 export function TiIconX(props: any) {
   return <IconX {...props} />;
+}
+
+export function TiIconStarFilled(props: any) {
+  return <IconStarFilled {...props} />;
 }
