@@ -5,7 +5,8 @@ import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
 import { Badge } from "../../components/ui/badge";
 import { type Document } from "../../types/company";
-import { CheckCircle, Upload, FileText, Trash2, Plus } from "lucide-react";
+import { CheckCircle, Upload, FileText, Trash2, Plus, CheckIcon } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '../../components/ui';
 
 interface DocumentUploadProps {
   documents: Document[];
@@ -61,45 +62,43 @@ const DocumentUpload = ({
           {/* Left Column - Document List */}
           <div className="lg:col-span-1 space-y-4">
             <h3 className="font-semibold text-lg mb-4">Documents</h3>
-            
-            {documents.map((doc) => (
-              <div
-                key={doc.id}
-                className={`p-4 border rounded-lg cursor-pointer transition-all ${
-                  selectedDoc === doc.id 
-                    ? 'border-blue-500 bg-blue-50' 
-                    : 'border-gray-200 hover:border-gray-300'
-                }`}
-                onClick={() => setSelectedDoc(doc.id)}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    {doc.files.length > 0 ? (
-                      <CheckCircle className="h-5 w-5 text-green-500" />
-                    ) : (
-                      <FileText className="h-5 w-5 text-gray-400" />
-                    )}
-                    <div>
-                      <p className="font-medium text-sm">
-                        {getDocumentDisplayName(doc.type)}
-                      </p>
-                      {/* Only show badges when files are uploaded */}
-                      {doc.files.length > 0 && (
-                        <div className="flex items-center gap-2 mt-1">
-                          <Badge variant="outline" className="text-xs bg-green-100 text-green-800">
-                            {doc.files.length} file{doc.files.length > 1 ? 's' : ''} uploaded
-                          </Badge>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  {/* Show plus icon only when files exist and can add more */}
-                  {doc.files.length > 0 && doc.files.length < doc.maxFiles && (
-                    <Plus className="h-4 w-4 text-gray-500" />
-                  )}
-                </div>
-              </div>
-            ))}
+  <DropdownMenu>
+  <DropdownMenuTrigger className='bg-secondary flex items-center gap-2 rounded-lg px-3 py-2.5'>
+    <Avatar>
+      <AvatarFallback className='text-xs'>
+        {selectedDoc ? getDocumentDisplayName(getSelectedDocument()?.type || '')[0] : 'D'}
+      </AvatarFallback>
+    </Avatar>
+
+    <span className="text-sm font-medium">
+      {selectedDoc ? getDocumentDisplayName(getSelectedDocument()?.type || '') : "Select Document"}
+    </span>
+  </DropdownMenuTrigger>
+
+  <DropdownMenuContent align='start' className='w-56'>
+    <DropdownMenuLabel>Select Document</DropdownMenuLabel>
+
+    {documents.map((doc) => (
+      <DropdownMenuItem
+        key={doc.id}
+        onClick={() => setSelectedDoc(doc.id)}
+        className="flex items-center gap-2"
+      >
+        <div className="flex flex-col">
+          <span className="font-medium text-sm">
+            {getDocumentDisplayName(doc.type)}
+          </span>
+        </div>
+
+        {/* Check icon for selected one */}
+        {selectedDoc === doc.id && <CheckIcon className="ml-auto h-4 w-4" />}
+      </DropdownMenuItem>
+    ))}
+  </DropdownMenuContent>
+</DropdownMenu>
+
+              
+          
           </div>
 
           {/* Right Column - Upload Area & File List */}
