@@ -1,4 +1,4 @@
-import { CardContent, CardTitle } from "../../components/ui/card";
+import { Card, CardContent, CardTitle } from "../../components/ui/card";
 import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
@@ -27,7 +27,8 @@ const OwnershipInformation = ({
     onRemoveOwner // Add this to destructuring
 }: OwnershipInformationProps) => {
     return (
-        <CardContent className="p-5 mt-6 rounded-xl shadow-sm">
+        <Card>
+            <CardContent >
             <div className="flex justify-between items-center mb-5">
                 <CardTitle>Ownership Information</CardTitle>
                 {data.owners.length < 4 && data.businessType !== "solo" && (
@@ -214,6 +215,7 @@ const OwnershipInformation = ({
                 </div>
             )}
         </CardContent>
+        </Card>
     );
 };
 

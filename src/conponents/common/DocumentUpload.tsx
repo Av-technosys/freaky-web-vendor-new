@@ -31,16 +31,29 @@ const DocumentUpload = ({
     return names[type] || type;
   };
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>, documentId: string) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      onUploadDocument(documentId, file);
-      // Reset file input
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
+const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>, documentId: string) => {
+  const file = event.target.files?.[0];
+  if (file) {
+    const selectedDocument = documents.find(doc => doc.id === documentId);
+    
+    // Debug logging
+    console.log('Document Upload Started:', {
+      documentId: documentId,
+      documentName: selectedDocument ? getDocumentDisplayName(selectedDocument.type) : 'Unknown',
+      fileName: file.name,
+      fileSize: file.size,
+      fileType: file.type,
+      timestamp: new Date().toISOString()
+    });
+    
+    onUploadDocument(documentId, file);
+    
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
-  };
+  }
+};
 
   const handleUploadClick = (documentId: string) => {
     setSelectedDoc(documentId);
@@ -52,7 +65,7 @@ const DocumentUpload = ({
   };
 
   return (
-    <Card className="mt-6">
+    <Card className="mb-2">
       <CardHeader>
         <CardTitle>Required Documents</CardTitle>
       </CardHeader>
