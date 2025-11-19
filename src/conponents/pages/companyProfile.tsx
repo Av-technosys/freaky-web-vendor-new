@@ -11,22 +11,23 @@ import DocumentUpload from "../common/DocumentUpload";
 
 const CompanyProfile = () => {
   const [open, setOpen] = useState(false);
+  //  const [time, setTime] = useState(dropdownValues.options[0].label);
   const {
     companyData,
     updateCompanyData,
     updateOwner,
     addOwner,
     removeOwner,
-    getCompanyDataMap, 
+    getCompanyDataMap,
     uploadDocument,
-    removeDocumentFile
+    removeDocumentFile,
   } = useCompanyData();
 
   const handleSave = () => {
     const companyDataMap = getCompanyDataMap();
     console.log("Company Data as HashMap:", companyDataMap);
     console.log("Company Data as Object:", companyData);
-    
+
     // You can now use the hashmap for API calls or further processing
     // Example: convert to regular object if needed
     const dataObject = Object.fromEntries(companyDataMap);
@@ -38,9 +39,12 @@ const CompanyProfile = () => {
     console.log("Previous step");
   };
 
+  // function handleTimeChange(value: any) {
+  //   setTime(value.label);
+  // }
   return (
-<div className="grid grid-cols-1 lg:grid-cols-4 gap-3">
-<Card className="order-1 lg:order-1 col-span-1 lg:col-span-3">
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-3">
+      <Card className="order-1 lg:order-1 col-span-1 lg:col-span-3">
         <CompanyInformation
           data={{
             businessName: companyData.businessName,
@@ -49,7 +53,7 @@ const CompanyProfile = () => {
             legalEntityName: companyData.legalEntityName,
             einNumber: companyData.einNumber,
             businessType: companyData.businessType,
-            incorporationDate: companyData.incorporationDate
+            incorporationDate: companyData.incorporationDate,
           }}
           onUpdate={updateCompanyData}
           open={open}
@@ -63,7 +67,7 @@ const CompanyProfile = () => {
             primaryPhoneNumber: companyData.primaryPhoneNumber,
             instagramLink: companyData.instagramLink,
             youtubeLink: companyData.youtubeLink,
-            facebookLink: companyData.facebookLink
+            facebookLink: companyData.facebookLink,
           }}
           onUpdate={updateCompanyData}
         />
@@ -75,7 +79,7 @@ const CompanyProfile = () => {
             country: companyData.country,
             state: companyData.state,
             city: companyData.city,
-            zipCode: companyData.zipCode
+            zipCode: companyData.zipCode,
           }}
           onUpdate={updateCompanyData}
         />
@@ -84,10 +88,12 @@ const CompanyProfile = () => {
           data={{
             owners: companyData.owners,
             authorizedSignatory: companyData.authorizedSignatory,
-            businessType: companyData.businessType
+            businessType: companyData.businessType,
           }}
           onUpdateOwner={updateOwner}
-          onUpdateAuthorizedSignatory={(index) => updateCompanyData('authorizedSignatory', index)}
+          onUpdateAuthorizedSignatory={(index) =>
+            updateCompanyData("authorizedSignatory", index)
+          }
           onAddOwner={addOwner}
           onRemoveOwner={removeOwner} // Add this line
         />
@@ -98,21 +104,20 @@ const CompanyProfile = () => {
             bankName: companyData.bankName,
             payeeName: companyData.payeeName,
             routingNumber: companyData.routingNumber,
-            bankType: companyData.bankType
+            bankType: companyData.bankType,
           }}
           onUpdate={updateCompanyData}
           onPrevious={handlePrevious}
           onSave={handleSave}
         />
-<DocumentUpload
-  documents={companyData.documents}
-  onUploadDocument={uploadDocument}
-  onRemoveDocumentFile={removeDocumentFile}
-/>
+        <DocumentUpload
+          documents={companyData.documents}
+          onUploadDocument={uploadDocument}
+          onRemoveDocumentFile={removeDocumentFile}
+        />
       </Card>
 
-<CompanyLogo  />
-
+      <CompanyLogo />
     </div>
   );
 };

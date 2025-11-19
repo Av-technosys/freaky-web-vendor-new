@@ -3,10 +3,9 @@ import { Card, CardContent, CardTitle, CardHeader } from "../../components/ui/ca
 import { Button } from "../../components/ui/button";
 import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
-import { Badge } from "../../components/ui/badge";
 import { type Document } from "../../types/company";
-import { CheckCircle, Upload, FileText, Trash2, Plus, CheckIcon } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '../../components/ui';
+import {  Upload, FileText, Trash2, CheckIcon } from "lucide-react";
+import { Avatar, AvatarFallback, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '../../components/ui';
 
 interface DocumentUploadProps {
   documents: Document[];
