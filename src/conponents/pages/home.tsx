@@ -1,5 +1,9 @@
+import MyAddressForm from "../../components/addressMapbox";
+
 const Home = () => {
-  return <div>this is home page...</div>;
+  return <div>
+    <MyAddressForm />
+  </div>;
 };
 
 export default Home;
