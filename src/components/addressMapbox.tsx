@@ -1,90 +1,106 @@
-"use client";
+import React, { useState } from "react"; 
+import AddressAutocomplete from "./adminAutocomplete";
 
-import { useState } from "react";
-import { AddressAutofill } from "@mapbox/search-js-react";
-
-interface USAddressForm {
-  address1: string;  // street address
-  address2: string;  // apt / suite
-  city: string;
-  state: string;     // 2-letter US state
-  zip: string;       // 5-digit or zip+4
-}
-
-export default function MyUSAddressForm() {
-  const [form, setForm] = useState<USAddressForm>({
-    address1: "",
-    address2: "",
+export default function AddressForm() {
+  const [form, setForm] = useState({
+    line1: "",
+    line2: "",
     city: "",
     state: "",
-    zip: "",
+    zipcode: "",
+    country: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+  const getComponent = (
+    components: google.maps.GeocoderAddressComponent[],
+    type: string
+  ) => {
+    const c = components.find((comp) => comp.types.includes(type));
+    return c ? c.long_name : "";
+  };
+
+  const handlePlaceSelect = (place: google.maps.places.PlaceResult) => {
+    if (!place || !place.address_components) return;
+
+    const components = place.address_components;
+
+    const streetNumber = getComponent(components, "street_number");
+    const route = getComponent(components, "route");
+
+    setForm({
+      line1: `${streetNumber} ${route}`.trim(),
+      line2: "",
+      city:
+        getComponent(components, "locality") ||
+        getComponent(components, "sublocality") ||
+        "",
+      state: getComponent(components, "administrative_area_level_1"),
+      zipcode: getComponent(components, "postal_code"),
+      country: getComponent(components, "country"),
+    });
   };
 
   return (
-    <form className="flex flex-col gap-3 w-full max-w-md">
+    <div style={{ maxWidth: 450, margin: "40px auto", fontFamily: "sans-serif" }}>
+      <h2>Address Form</h2>
 
-      <AddressAutofill accessToken="pk.eyJ1IjoiYXNoaXNoMTEwMTEiLCJhIjoiY21pNWtyZnExMDZybjJpcXowd3B5OXJwdiJ9.4vKDp0wZewOz0P5UPKjHHg">
-        {/* Street Address */}
+      <AddressAutocomplete onSelect={handlePlaceSelect} />
+
+      <div style={{ marginTop: 20 }}>
+        <label>Address Line 1</label>
         <input
-          type="text"
-          name="address1"
-          autoComplete="address-line1"
-          placeholder="Street Address"
-          value={form.address1}
-          onChange={handleChange}
-          className="border px-3 py-2 rounded"
+          value={form.line1}
+          onChange={(e) => setForm({ ...form, line1: e.target.value })}
+          className="input"
         />
 
-        {/* Apt / Suite */}
+        <label>Address Line 2</label>
         <input
-          type="text"
-          name="address2"
-          autoComplete="address-line2"
-          placeholder="Apt / Suite (optional)"
-          value={form.address2}
-          onChange={handleChange}
-          className="border px-3 py-2 rounded"
+          value={form.line2}
+          onChange={(e) => setForm({ ...form, line2: e.target.value })}
+          className="input"
         />
 
-        {/* City */}
+        <label>City</label>
         <input
-          type="text"
-          name="city"
-          autoComplete="address-level2"
-          placeholder="City"
           value={form.city}
-          onChange={handleChange}
-          className="border px-3 py-2 rounded"
+          onChange={(e) => setForm({ ...form, city: e.target.value })}
+          className="input"
         />
 
-        {/* State */}
+        <label>State</label>
         <input
-          type="text"
-          name="state"
-          autoComplete="address-level1"
-          placeholder="State (e.g., CA)"
           value={form.state}
-          onChange={handleChange}
-          className="border px-3 py-2 rounded uppercase"
-          maxLength={2}
+          onChange={(e) => setForm({ ...form, state: e.target.value })}
+          className="input"
         />
 
-        {/* ZIP Code */}
+        <label>Zipcode</label>
         <input
-          type="text"
-          name="zip"
-          autoComplete="postal-code"
-          placeholder="ZIP Code"
-          value={form.zip}
-          onChange={handleChange}
-          className="border px-3 py-2 rounded"
+          value={form.zipcode}
+          onChange={(e) => setForm({ ...form, zipcode: e.target.value })}
+          className="input"
         />
-      </AddressAutofill>
-    </form>
+
+        <label>Country</label>
+        <input
+          value={form.country}
+          onChange={(e) => setForm({ ...form, country: e.target.value })}
+          className="input"
+        />
+      </div>
+
+      <style>{`
+        .input {
+          display: block;
+          width: 100%;
+          padding: 10px;
+          margin: 6px 0 16px;
+          border: 1px solid #ccc;
+          border-radius: 6px;
+          font-size: 14px;
+        }
+      `}</style>
+    </div>
   );
 }
