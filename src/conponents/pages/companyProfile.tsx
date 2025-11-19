@@ -11,6 +11,7 @@ import DocumentUpload from "../common/DocumentUpload";
 
 const CompanyProfile = () => {
   const [open, setOpen] = useState(false);
+  //  const [time, setTime] = useState(dropdownValues.options[0].label);
   const {
     companyData,
     updateCompanyData,
@@ -38,11 +39,9 @@ const CompanyProfile = () => {
     console.log("Previous step");
   };
 
-  const [time, setTime] = useState(dropdownValues.options[0].label);
-
-  function handleTimeChange(value: any) {
-    setTime(value.label);
-  }
+  // function handleTimeChange(value: any) {
+  //   setTime(value.label);
+  // }
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-3">
       <Card className="order-1 lg:order-1 col-span-1 lg:col-span-3">

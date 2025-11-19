@@ -12,6 +12,7 @@ import { TiIconStarFilled } from "../icons";
 import { ReviewsDrawer } from "../reviewsDrawer";
 import ServicesReviews from "../servicesReviews";
 import { useState } from "react";
+import ReviewCard from "../reviewCard";
 
 const dropdownValuesTime = {
   options: [
@@ -197,48 +198,9 @@ const Reviews = () => {
       <div>
         <ServicesReviews />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 my-2">
-        {userReviews?.map((review, index) => {
-          return (
-            <div key={index} className="col-span-1 ">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="w-full flex items-center justify-between">
-                    <div className="w-2/3  flex items-center  gap-2">
-                      <div className="w-8 h-8 rounded-full overflow-hidden">
-                        <img
-                          className="w-full h-full object-cover"
-                          src={review.image}
-                          alt="profile-picture"
-                        />
-                      </div>
-                      <span className="text-[13px]">{review.name}</span>
-                      <span className="text-[12px]">{review.date}</span>
-                    </div>
-                    <div className="w-1/3  flex items-center justify-center gap-1">
-                      <TiIconStarFilled size="14" color="gold" />
-                      <TiIconStarFilled size="14" color="gold" />
-                      <TiIconStarFilled size="14" color="gold" />
-                      <TiIconStarFilled size="14" color="gold" />
-                      <TiIconStarFilled size="14" color="gold" />
-                    </div>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>{review.review}</CardContent>
-                <CardFooter className="w-full items-center justify-end">
-                  <Button
-                    onClick={() => drawerHandler(review)}
-                    className="text-yellow-500"
-                    variant="ghost"
-                  >
-                    View More
-                  </Button>
-                </CardFooter>
-              </Card>
-            </div>
-          );
-        })}
-      </div>
+     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 my-2">
+       <ReviewCard drawerHandler={drawerHandler} userReviews={userReviews}/>
+    </div>
     </>
   );
 };
