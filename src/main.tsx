@@ -15,6 +15,7 @@ import { Booking, Reviews } from "./conponents/pages";
 import Calendar from "./conponents/pages/calendar";
 import ForgetPassword from "./conponents/pages/forgetPassword";
 import ProtectRoute from "./conponents/protectRoute";
+import { Toaster } from "./components/ui";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +56,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={routes} />
+      <Toaster position="top-center" />
     </QueryClientProvider>
   </React.StrictMode>
 );

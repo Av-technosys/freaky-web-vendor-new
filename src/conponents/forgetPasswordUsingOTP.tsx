@@ -15,6 +15,7 @@ import {
   Label,
 } from "../components/ui";
 import { useUserForgetPasswordUsingOTPMutation } from "../services/useCreateOrLoginUser";
+import { toast } from "sonner";
 
 export type otpProps = {
   userEmail: any;
@@ -26,7 +27,7 @@ const ForgetPasswordUsingOTP = ({ userEmail }: otpProps) => {
     event.preventDefault();
     const code = event.target.code.value;
     if (!code) {
-      alert("Please enter OTP");
+      toast.warning("Please enter OTP");
     } else {
       const userData = {
         username: event.target.email.value,

@@ -1,32 +1,59 @@
 import { axiosInstance } from "./api";
+import { apiConstant } from "./apiConstant";
 
 export const loginUser = async (userData: any) => {
-  const response = await axiosInstance.post("v1/auth/signin", userData);
+  try {
+    const response = await axiosInstance.post(
+    apiConstant.authentication.login,
+    userData
+  );
   return response.data;
+  } catch (error) {
+   console.error("Error while sending request:", error);
+  }
 };
 
 export const signUpUser = async (userData: any) => {
-  const response = await axiosInstance.post("v1/auth/signup", userData);
-  console.log("response", response);
+ try {
+   await axiosInstance.post(apiConstant.authentication.signUp, userData);
   return userData.username;
+ } catch (error) {
+  console.error("Error while sending request:", error);
+ }
 };
 
 export const otpSignUpUser = async (userData: any) => {
-  const response = await axiosInstance.post("v1/auth/confirm", userData);
+  try {
+    const response = await axiosInstance.post(
+    apiConstant.authentication.otpSignUp,
+    userData
+  );
   return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+  }
 };
 
 export const forgetPasswordUsingEmail = async (userData: any) => {
-  const response = await axiosInstance.post("/forgot-password", userData);
-  console.log("response", response);
+  try {
+    await axiosInstance.post(
+    apiConstant.authentication.forgetPasswordUsingEmail,
+    userData
+  );
   return userData.username;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+  }
 };
 
 export const forgetPasswordUsingOTP = async (userData: any) => {
-  const response = await axiosInstance.post(
-    "/confirm-forgot-password",
+  try {
+    await axiosInstance.post(
+    apiConstant.authentication.forgetPasswordUsingOTP,
     userData
   );
-  console.log("response", response);
   return userData.username;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+  }
 };

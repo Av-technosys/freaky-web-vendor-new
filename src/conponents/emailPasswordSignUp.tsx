@@ -12,6 +12,7 @@ import {
   Label,
 } from "../components/ui";
 import { useUserSignUpMutation } from "../services/useCreateOrLoginUser";
+import { toast } from "sonner";
 
 export type signUpProps = {
   setOtpPopup: any;
@@ -30,7 +31,7 @@ const EmailPasswordSignUp = ({
     const confirmPassword = event.target.confirm_password.value;
     const password = event.target.password.value;
     if (confirmPassword != password) {
-      alert("Confirm password not match with password");
+      toast.warning("Confirm password not match with password");
     } else {
       const userData = {
         email: event.target.email.value,

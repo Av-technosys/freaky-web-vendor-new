@@ -21,6 +21,7 @@ import {
 } from "./icons";
 import { Button, Separator } from "../components/ui";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 // Menu items.
 const items = [
@@ -75,7 +76,7 @@ function AppSidebar() {
 
   const logoutHandler = () => {
     localStorage.removeItem("access_token");
-    alert("Logout successfully...");
+    toast.success("Logout successfully...");
     navigate("/login");
   };
 
@@ -84,7 +85,7 @@ function AppSidebar() {
       <div className=" p-2 pr-0 bg-transparent h-full   ">
         <SidebarContent className=" rounded-2xl shadow-2xl h-full  p-1 overflow-y-auto ">
           <SidebarGroup className="w-full h-full overflow-y-auto">
-            <div className="flex items-center justify-center p-4">
+            <div className="flex items-center justify-center p-4 md:p-0 lg:p-4">
               <img src={logo} alt="Freaky Chimp Logo" className="w-32 h-14" />
             </div>
             <Separator />
@@ -122,10 +123,10 @@ function AppSidebar() {
                       }`}
                       asChild
                     >
-                      <a href={item.url}>
+                      <Link to={item.url}>
                         <item.icon />
                         <span>{item.title}</span>
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}

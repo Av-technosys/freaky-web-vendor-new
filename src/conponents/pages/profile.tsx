@@ -1,3 +1,4 @@
+import { useState } from "react";
 import profileImage from "../../assets/testingProfilePicture.jpg";
 import {
   Button,
@@ -15,10 +16,27 @@ import { TiIconCameraFilled } from "../icons";
 
 const dropdownValues = {
   Title: "Gender",
-  Options: ["Male", "Female", "Other"],
+  options: [
+    {
+      label: "Male",
+      value: "male",
+    },
+    {
+      label: "Female",
+      value: "female",
+    },
+    {
+      label: "Other",
+      value: "other",
+    },
+  ],
 };
 
 const Profile = () => {
+  const [gender, setGender] = useState(dropdownValues.options[0].label);
+  function handleGenderChange(value: any) {
+    setGender(value.label);
+  }
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4  gap-3">
       <Card className="col-span-1 order-2  lg:col-span-3  py-4 bg-white shadow-lg rounded-xl">
@@ -50,7 +68,11 @@ const Profile = () => {
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <DropdownSelector values={dropdownValues} />
+              <DropdownSelector
+                values={dropdownValues}
+                selectedValue={gender}
+                onChange={handleGenderChange}
+              />
               <div className="col-span-1  flex flex-col items-start justify-center gap-3">
                 <Label htmlFor="address">Address</Label>
                 <Input name="address" id="address" type="text" required />
