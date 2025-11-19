@@ -1,14 +1,6 @@
-import {
-  Button,
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../../components/ui";
+
 import DropdownSelector from "../dropdownSelector";
 import profileImage from "../../assets/testingProfilePicture.jpg";
-import { TiIconStarFilled } from "../icons";
 import { ReviewsDrawer } from "../reviewsDrawer";
 import ServicesReviews from "../servicesReviews";
 import { useState } from "react";
