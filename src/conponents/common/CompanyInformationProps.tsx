@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CardContent, CardTitle } from "../../components/ui/card";
+import { Card, CardContent, CardTitle } from "../../components/ui/card";
 import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "../../components/ui/input-group";
@@ -20,7 +20,8 @@ interface CompanyInformationProps {
 
 const CompanyInformation = ({ data, onUpdate, open, setOpen }: CompanyInformationProps) => {
     return (
-        <CardContent className=" p-5 mt-6 rounded-xl shadow-sm">
+        <Card>
+            <CardContent >
             <div className="flex flex-col  gap-6">
                 <CardTitle>Company Information</CardTitle>
 
@@ -144,6 +145,7 @@ const CompanyInformation = ({ data, onUpdate, open, setOpen }: CompanyInformatio
                 </div>
             </div>
         </CardContent>
+        </Card>
     );
 };
 

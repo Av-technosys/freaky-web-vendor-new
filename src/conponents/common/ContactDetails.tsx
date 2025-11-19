@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CardContent, CardTitle } from "../../components/ui/card";
+import { Card, CardContent, CardTitle } from "../../components/ui/card";
 import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
 import { type CompanyData } from "../../types/company";
@@ -11,7 +11,8 @@ interface ContactDetailsProps {
 
 const ContactDetails = ({ data, onUpdate }: ContactDetailsProps) => {
     return (
-        <CardContent className=" p-5 mt-6 rounded-xl shadow-sm">
+       <Card>
+         <CardContent >
             <CardTitle className="mb-5">Contact Details</CardTitle>
             <div className="flex flex-col gap-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -97,6 +98,7 @@ const ContactDetails = ({ data, onUpdate }: ContactDetailsProps) => {
                 </div>
             </div>
         </CardContent>
+       </Card>
     );
 };
 
