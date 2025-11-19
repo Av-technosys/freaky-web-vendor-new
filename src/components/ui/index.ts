@@ -12,4 +12,5 @@ export * from "./sheet";
 export * from "./skeleton";
 export * from "./tooltip";
 export * from "./drawer";
+export * from "./avatar";
 export * from "./sonner";
