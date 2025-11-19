@@ -17,6 +17,10 @@ import {
   IconBell,
   IconX,
   IconStarFilled,
+  IconCircleMinus,
+  IconClockHour2,
+  IconFlag3,
+  IconCircleCheck,
 } from "@tabler/icons-react";
 
 export function TiconLayoutDashboard(props: any) {
@@ -70,7 +74,18 @@ export function TiIconBell(props: any) {
 export function TiIconX(props: any) {
   return <IconX {...props} />;
 }
-
+export function TiIconCircleCheck(props: any) {
+  return <IconCircleCheck{...props} />;
+}
+export function TiIconCircleMinus(props: any) {
+  return <IconCircleMinus {...props} />;
+}
+export function TiIconClockHour2(props: any) {
+  return <IconClockHour2 {...props} />;
+}
+export function TiIconFlag3(props: any) {
+  return <IconFlag3 {...props} />;
+}
 export function TiIconStarFilled(props: any) {
   return <IconStarFilled {...props} />;
 }

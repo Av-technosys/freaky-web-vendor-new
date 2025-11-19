@@ -55,6 +55,11 @@ const items = [
     url: "/company-profile",
     icon: TiIconUser,
   },
+   {
+    title: "Payments",
+    url: "/payments",
+    icon: TiIconUser,
+  },
 ];
 
 const item = [
