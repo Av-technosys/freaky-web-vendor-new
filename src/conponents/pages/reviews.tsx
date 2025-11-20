@@ -1,4 +1,3 @@
-
 import DropdownSelector from "../dropdownSelector";
 import profileImage from "../../assets/testingProfilePicture.jpg";
 import { ReviewsDrawer } from "../reviewsDrawer";
@@ -149,8 +148,6 @@ const Reviews = () => {
   }
 
   const drawerHandler = (review: any) => {
-    console.log("value", review);
-    console.log("drawer", openDrawer);
     setReviewFulldata(review);
     setOpenDrawer(true);
   };
@@ -190,9 +187,9 @@ const Reviews = () => {
       <div>
         <ServicesReviews />
       </div>
-     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 my-2">
-       <ReviewCard drawerHandler={drawerHandler} userReviews={userReviews}/>
-    </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 my-2">
+        <ReviewCard drawerHandler={drawerHandler} userReviews={userReviews} />
+      </div>
     </>
   );
 };

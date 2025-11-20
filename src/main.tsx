@@ -16,6 +16,8 @@ import Calendar from "./conponents/pages/calendar";
 import ForgetPassword from "./conponents/pages/forgetPassword";
 import ProtectRoute from "./conponents/protectRoute";
 import { Toaster } from "./components/ui";
+import SelectCompany from "./conponents/pages/selectCompany";
+import CreateCompany from "./conponents/pages/createCompany";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +51,13 @@ const routes = createBrowserRouter([
   {
     path: "/forget-password",
     element: <ForgetPassword />,
+  },
+  {
+    element: <ProtectRoute />,
+    children:[
+      {path: "/select-company",element:<SelectCompany/>},
+      {path: "/create-company",element:<CreateCompany/>}
+    ]
   },
 ]);
 
