@@ -6,4 +6,10 @@ export const apiConstant = {
     forgetPasswordUsingEmail: "v1/auth/forgot-password",
     forgetPasswordUsingOTP: "v1/auth/confirm-forgot-password",
   },
+  vendor: {
+    createCompanyInformation: "v1/vendor/cerate",
+    createContactInformation: "v1/vendor/update_contact_details",
+    createBusinessInformation: "v1/vendor/update_address",
+    createBankAccountInformation: "v1/vendor/update_bank_details",
+  },
 };
