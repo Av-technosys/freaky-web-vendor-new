@@ -15,6 +15,7 @@ import { Booking, Reviews } from "./conponents/pages";
 import Calendar from "./conponents/pages/calendar";
 import ForgetPassword from "./conponents/pages/forgetPassword";
 import ProtectRoute from "./conponents/protectRoute";
+import Payment from "./conponents/pages/payments";
 import { Toaster } from "./components/ui";
 import SelectCompany from "./conponents/pages/selectCompany";
 import CreateCompany from "./conponents/pages/createCompany";
@@ -36,6 +37,8 @@ const routes = createBrowserRouter([
           { path: "/reviews", element: <Reviews /> },
           { path: "/calendar", element: <Calendar /> },
           { path: "/booking", element: <Booking /> },
+          { path: "/payments", element: <Payment /> },
+          
         ],
       },
     ],

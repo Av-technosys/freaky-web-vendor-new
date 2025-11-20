@@ -32,6 +32,7 @@ const navItems = [
   { to: "/company-profile", label: "Company Profile", Icon: TiIconBriefcase },
   { to: "/profile", label: "Profile", Icon: TiIconUser },
   { to: "/users", label: "Manage Users", Icon: TiIconUsers },
+   { to: "/payments", label: "Payments", Icon: TiIconUsers },
 ];
 
 export function SidebarDrawer() {
