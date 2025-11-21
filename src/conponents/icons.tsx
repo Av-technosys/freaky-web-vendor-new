@@ -21,6 +21,8 @@ import {
   IconClockHour2,
   IconFlag3,
   IconCircleCheck,
+  IconPencilPlus,
+  IconTrash,
 } from "@tabler/icons-react";
 
 export function TiconLayoutDashboard(props: any) {
@@ -75,7 +77,7 @@ export function TiIconX(props: any) {
   return <IconX {...props} />;
 }
 export function TiIconCircleCheck(props: any) {
-  return <IconCircleCheck{...props} />;
+  return <IconCircleCheck {...props} />;
 }
 export function TiIconCircleMinus(props: any) {
   return <IconCircleMinus {...props} />;
@@ -88,4 +90,10 @@ export function TiIconFlag3(props: any) {
 }
 export function TiIconStarFilled(props: any) {
   return <IconStarFilled {...props} />;
+}
+export function TiIconPencilPlus(props: any) {
+  return <IconPencilPlus {...props} />;
+}
+export function TiIconTrash(props: any) {
+  return <IconTrash {...props} />;
 }

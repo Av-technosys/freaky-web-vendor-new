@@ -35,7 +35,7 @@ export default function DropdownSelector({
             id={values.Title}
             className="flex w-full items-center justify-between rounded-md border focus:border-black bg-white px-3 py-2 text-sm text-slate-900 shadow-sm "
           >
-            <span>{selectedValue}</span>
+            <span className="text-[#8B8D97]">{selectedValue}</span>
             <ChevronDown className="h-4 w-4 text-slate-500" />
           </button>
         </DropdownMenuTrigger>
