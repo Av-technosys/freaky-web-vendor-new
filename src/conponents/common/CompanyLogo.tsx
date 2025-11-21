@@ -9,8 +9,8 @@ const CompanyLogo = () => {
             <CardHeader className="w-full">
                 <CardTitle className="text-xl">Company Logo</CardTitle>
             </CardHeader>
-            <CardContent>
-                <div className="w-32 h-32 rounded-full overflow-hidden">
+<CardContent className="flex flex-col items-center">
+                <div className="w-32 h-32  rounded-full overflow-hidden">
                     <img
                         className="w-full h-full object-cover"
                         src={profileImage}
@@ -18,7 +18,7 @@ const CompanyLogo = () => {
                     />
                 </div>
             </CardContent>
-            <CardFooter>
+<CardFooter className="flex justify-center">
                 <Button type="submit">
                     <TiIconCameraFilled />
                     Upload Logo

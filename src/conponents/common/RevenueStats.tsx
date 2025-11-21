@@ -1,4 +1,5 @@
 import { Card, CardContent } from "../../components/ui/card";
+import { cn } from "../../lib/utils"
 
 export default function RevenueStats() {
   const previousMonth = [
@@ -21,13 +22,7 @@ export default function RevenueStats() {
         Previous Month
       </h2>
 
-      {/* MOBILE → ROW | DESKTOP → GRID */}
-      <div
-        className="
-          max-sm:flex max-sm:flex-row max-sm:gap-3 max-sm:overflow-x-auto
-          grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8
-        "
-      >
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
         {previousMonth.map((item, index) => (
           <Card
             key={index}
@@ -42,7 +37,7 @@ export default function RevenueStats() {
                 {item.title}
               </p>
 
-              <p className={`mt-2 text-[22px] font-bold ${item.color}`}>
+              <p className={cn("mt-2 text-[22px] font-bold", item.color)}>
                 {item.amount}
               </p>
             </CardContent>

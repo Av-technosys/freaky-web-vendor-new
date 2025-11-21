@@ -1,4 +1,3 @@
-"use client";
 
 import { Card, CardContent } from "../../components/ui/card";
 import MetricsCardsFrame1 from "../../assets/Images/MetricsCards-frame1.png";
