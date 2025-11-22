@@ -37,11 +37,11 @@ const ReviewCard = ({userReviews,drawerHandler}:reviewsProps) => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>{review.review}</CardContent>
-                <CardFooter className="w-full items-center justify-end">
+                <CardFooter className="w-full -mt-6 items-center justify-end">
                   <Button
                     onClick={() => drawerHandler(review)}
                     className="text-yellow-500"
-                    variant="ghost"
+                    variant="link"
                   >
                     View More
                   </Button>

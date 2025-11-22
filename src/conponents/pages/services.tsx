@@ -221,7 +221,7 @@ const Services = () => {
           </CardContent>
         </Card>
       </div>
-      <div className="max-w-[400px] overflow-x-scroll lg:overflow-hidden md:max-w-full p-3 shadow-lg rounded-lg">
+      <div className="max-w-[400px] bg-white overflow-x-scroll lg:overflow-hidden md:max-w-full p-3 shadow-lg rounded-lg">
         <TableDemo tableData={tableData} />
       </div>
     </div>
