@@ -92,7 +92,7 @@ const data = [
 export default function Payment() {
   return (
     <div className="my-2 space-y-3">
-      <div className="  max-w-[400px] overflow-x-scroll lg:overflow-hidden md:max-w-full p-3 shadow-lg rounded-lg border">
+      <div className=" bg-white  max-w-[400px] overflow-x-scroll lg:overflow-hidden md:max-w-full p-3 shadow-lg rounded-lg border">
         <Table>
           <TableHeader>
             <TableRow className="text-[#374151]">

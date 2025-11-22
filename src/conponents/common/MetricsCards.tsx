@@ -16,7 +16,7 @@ export default function MetricsCards() {
       className="
         max-sm:flex max-sm:flex-row max-sm:overflow-x-auto max-sm:gap-2
         grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 md:gap-2
-        w-full md:max-w-5xl mx-auto
+        w-full
       "
     >
       {data.map((item, index) => (

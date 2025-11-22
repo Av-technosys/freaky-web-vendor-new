@@ -113,7 +113,7 @@ const data = [
 const Booking = () => {
   return (
     <div className="my-2 space-y-3">
-      <div className="max-w-[400px] overflow-x-scroll lg:overflow-hidden md:max-w-full p-3 shadow-lg rounded-lg border">
+      <div className="max-w-[400px] bg-white overflow-x-scroll lg:overflow-hidden md:max-w-full p-3 shadow-lg rounded-lg border">
         <Table>
           <TableHeader className="text-[#89868D]  ">
             <TableRow>
