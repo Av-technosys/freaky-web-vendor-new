@@ -1,8 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import { Button, Card, CardContent, CardHeader } from "../../components/ui";
 import { TiIconBriefcase } from "../icons";
 import { TableDemo } from "../table";
 
 const Services = () => {
+  const navigate=useNavigate();
   const tableData = {
     Headings: [
       "ID",
@@ -179,7 +181,7 @@ const Services = () => {
   return (
     <div className="my-2 space-y-3">
       <div className="w-full! flex gap-3 items-center justify-start">
-        <Button className=" px-6" type="submit">
+        <Button onClick={()=> navigate("/services/create-service")}  className=" px-6">
           Add New
         </Button>
       </div>
@@ -219,7 +221,7 @@ const Services = () => {
           </CardContent>
         </Card>
       </div>
-      <div className="max-w-[400px] overflow-x-scroll lg:overflow-hidden md:max-w-full p-3 shadow-lg rounded-lg">
+      <div className="max-w-[400px] bg-white overflow-x-scroll lg:overflow-hidden md:max-w-full p-3 shadow-lg rounded-lg">
         <TableDemo tableData={tableData} />
       </div>
     </div>

@@ -11,7 +11,7 @@ const App = () => {
         <AppSidebar />
 
         {/* Main Content Area */}
-        <div className="flex-1 flex flex-col px-2">
+        <div className="flex-1 bg-[#FAF7EF]  flex flex-col px-2">
           <Header />
           <main className="flex-1 mt-4">
             <Outlet />

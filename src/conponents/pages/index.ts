@@ -1,4 +1,4 @@
-export { default as Home } from "./home";
+export { default as Home } from "./dashboard";
 export { default as Login } from "./login";
 export { default as SignUp } from "./signUp";
 export { default as SocialsLogin } from "../socialsLogin";

@@ -14,6 +14,7 @@ import OwnershipInformation from "../common/OwnershipInformation";
 import BankAccountInformation from "../common/BankAccountInformation";
 import CompanyLogo from "../common/CompanyLogo";
 import DocumentUpload from "../common/DocumentUpload";
+import { Button } from "../../components/ui";
 
 // ------------------------ INITIAL VALUES ------------------------
 
@@ -251,13 +252,16 @@ const handleSave = () => {
           onRemoveDocumentFile={removeDocumentFile}
         />
               {/* 🚀 FINAL SUBMIT BUTTON */}
-      <div className="flex justify-end mt-6">
-        <button
-          onClick={handleSave}
+      <div className=" pb-6 flex justify-end mt-6">
+        <Button           onClick={handleSave}
+>
+          Submit
+        </Button>
+        {/* <button
           className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
         >
           Submit All Data
-        </button>
+        </button> */}
       </div>
       </div>
 

@@ -4,7 +4,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from "./conponents/pages/home";
+import Home from "./conponents/pages/dashboard";
 import Login from "./conponents/pages/login";
 import SignUp from "./conponents/pages/signUp";
 import CompanyProfile from "./conponents/pages/companyProfile";
@@ -19,6 +19,7 @@ import Payment from "./conponents/pages/payments";
 import { Toaster } from "./components/ui";
 import SelectCompany from "./conponents/pages/selectCompany";
 import CreateCompany from "./conponents/pages/createCompany";
+import CreateService from "./conponents/pages/createService";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ const routes = createBrowserRouter([
           { path: "/", element: <Home /> },
           { path: "/company-profile", element: <CompanyProfile /> },
           { path: "/services", element: <Services /> },
+          { path: "/services/create-service", element: <CreateService /> },
           { path: "/profile", element: <Profile /> },
           { path: "/reviews", element: <Reviews /> },
           { path: "/calendar", element: <Calendar /> },
