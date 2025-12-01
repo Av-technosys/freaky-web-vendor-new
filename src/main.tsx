@@ -11,7 +11,7 @@ import CompanyProfile from "./conponents/pages/companyProfile";
 import Services from "./conponents/pages/services";
 import Profile from "./conponents/pages/profile";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Booking, Reviews } from "./conponents/pages";
+import { Booking, Reviews, Users } from "./conponents/pages";
 import Calendar from "./conponents/pages/calendar";
 import ForgetPassword from "./conponents/pages/forgetPassword";
 import ProtectRoute from "./conponents/protectRoute";
@@ -41,6 +41,7 @@ const routes = createBrowserRouter([
           { path: "/booking", element: <Booking /> },
           { path: "/payments", element: <Payment /> },
           
+          { path: "/users", element: <Users /> },
         ],
       },
     ],

@@ -7,3 +7,4 @@ export { default as Booking } from "./booking";
 export { default as Reviews } from "./reviews";
 export { default as Profile } from "./profile";
 export { default as Calender } from "./calendar";
+export { default as Users } from "./users";

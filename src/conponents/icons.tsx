@@ -23,6 +23,7 @@ import {
   IconCircleCheck,
   IconPencilPlus,
   IconTrash,
+  IconAlertTriangleFilled,
 } from "@tabler/icons-react";
 
 export function TiconLayoutDashboard(props: any) {
@@ -96,4 +97,7 @@ export function TiIconPencilPlus(props: any) {
 }
 export function TiIconTrash(props: any) {
   return <IconTrash {...props} />;
+}
+export function TiIconAlertTriangleFilled(props: any) {
+  return <IconAlertTriangleFilled  {...props} />;
 }
