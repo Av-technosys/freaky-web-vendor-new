@@ -184,6 +184,9 @@ const Services = () => {
         <Button onClick={()=> navigate("/services/create-service")}  className=" px-6">
           Add New
         </Button>
+        <Button onClick={()=> navigate("/services/manage-payment-book")}  className=" px-6">
+          Manage Payment Book
+        </Button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <Card className="col-span-1 flex flex-col  gap-5">
