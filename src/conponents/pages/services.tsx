@@ -1,190 +1,48 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button, Card, CardContent, CardHeader } from "../../components/ui";
 import { TiIconBriefcase } from "../icons";
-import { TableDemo } from "../table";
+import { ServicesTable } from "../serviceTable";
+import { useGetVendorServices } from "../../services/useGetVendorServices";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "../../components/ui/pagination";
 
 const Services = () => {
-  const navigate=useNavigate();
+  const navigate = useNavigate();
+  const pageSize = 1;
+  const [searchParams] = useSearchParams();
+  const page = Number(searchParams.get("page")) || 1;
+
+  const token = localStorage.getItem("access_token");
+  const { data } = useGetVendorServices(token, page, pageSize);
+
+  const services = data?.data;
+
+  const totalPages = data?.pagination?.total_pages;
+
   const tableData = {
-    Headings: [
-      "ID",
-      "Services",
-      "Categories",
-      "Price",
-      "Discount",
-      "Status",
-      "Action",
-    ],
-    ListData: [
-      {
-        id: 1,
-        service: "service-1",
-        category: "general",
-        price: "₹199",
-        discount: "10%",
-        status: "Published",
-      },
-      {
-        id: 2,
-        service: "service-2",
-        category: "cleaning",
-        price: "₹299",
-        discount: "15%",
-        status: "Draft",
-      },
-      {
-        id: 3,
-        service: "service-3",
-        category: "maintenance",
-        price: "₹499",
-        discount: "20%",
-        status: "Published",
-      },
-      {
-        id: 4,
-        service: "service-4",
-        category: "plumbing",
-        price: "₹249",
-        discount: "5%",
-        status: "Published",
-      },
-      {
-        id: 5,
-        service: "service-5",
-        category: "general",
-        price: "₹350",
-        discount: "25%",
-        status: "Unpublished",
-      },
-      {
-        id: 6,
-        service: "service-6",
-        category: "electric",
-        price: "₹600",
-        discount: "10%",
-        status: "Published",
-      },
-      {
-        id: 7,
-        service: "service-7",
-        category: "repair",
-        price: "₹450",
-        discount: "12%",
-        status: "Draft",
-      },
-      {
-        id: 8,
-        service: "service-8",
-        category: "general",
-        price: "₹150",
-        discount: "8%",
-        status: "Published",
-      },
-      {
-        id: 9,
-        service: "service-9",
-        category: "cleaning",
-        price: "₹220",
-        discount: "10%",
-        status: "Published",
-      },
-      {
-        id: 10,
-        service: "service-10",
-        category: "maintenance",
-        price: "₹550",
-        discount: "15%",
-        status: "Published",
-      },
-      {
-        id: 11,
-        service: "service-11",
-        category: "electric",
-        price: "₹700",
-        discount: "18%",
-        status: "Unpublished",
-      },
-      {
-        id: 12,
-        service: "service-12",
-        category: "plumbing",
-        price: "₹144",
-        discount: "10%",
-        status: "Published",
-      },
-      {
-        id: 13,
-        service: "service-13",
-        category: "general",
-        price: "₹320",
-        discount: "12%",
-        status: "Draft",
-      },
-      {
-        id: 14,
-        service: "service-14",
-        category: "repair",
-        price: "₹270",
-        discount: "20%",
-        status: "Published",
-      },
-      {
-        id: 15,
-        service: "service-15",
-        category: "cleaning",
-        price: "₹190",
-        discount: "10%",
-        status: "Published",
-      },
-      {
-        id: 16,
-        service: "service-16",
-        category: "general",
-        price: "₹250",
-        discount: "15%",
-        status: "Unpublished",
-      },
-      {
-        id: 17,
-        service: "service-17",
-        category: "electric",
-        price: "₹520",
-        discount: "10%",
-        status: "Published",
-      },
-      {
-        id: 18,
-        service: "service-18",
-        category: "repair",
-        price: "₹470",
-        discount: "5%",
-        status: "Published",
-      },
-      {
-        id: 19,
-        service: "service-19",
-        category: "maintenance",
-        price: "₹390",
-        discount: "25%",
-        status: "Draft",
-      },
-      {
-        id: 20,
-        service: "service-20",
-        category: "general",
-        price: "₹310",
-        discount: "10%",
-        status: "Published",
-      },
-    ],
+    Headings: ["ID", "Services", "Categories", "Status", "Action"],
+    ListData: services,
   };
+
   return (
     <div className="my-2 space-y-3">
       <div className="w-full! flex gap-3 items-center justify-start">
-        <Button onClick={()=> navigate("/services/create-service")}  className=" px-6">
+        <Button
+          onClick={() => navigate("/services/manage-service")}
+          className=" px-6 cursor-pointer"
+        >
           Add New
         </Button>
-        <Button onClick={()=> navigate("/services/manage-payment-book")}  className=" px-6">
+        <Button
+          onClick={() => navigate("/services/manage-payment-book")}
+          className=" px-6 cursor-pointer"
+        >
           Manage Payment Book
         </Button>
       </div>
@@ -225,7 +83,47 @@ const Services = () => {
         </Card>
       </div>
       <div className="max-w-[400px] bg-white overflow-x-scroll lg:overflow-hidden md:max-w-full p-3 shadow-lg rounded-lg">
-        <TableDemo tableData={tableData} />
+        <ServicesTable tableData={tableData} />
+        <div className="mt-5">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem className="border border-gray-200 rounded-md">
+                <PaginationPrevious
+                  className={`cursor-pointer ${
+                    page == 1 && "pointer-events-none opacity-50"
+                  }`}
+                  onClick={() =>
+                    navigate(`?page=${page - 1}&page_size=${pageSize}`)
+                  }
+                />
+              </PaginationItem>
+              {Array.from({ length: totalPages }).map((_, index: any) => {
+                return (
+                  <PaginationItem
+                    onClick={() =>
+                      navigate(`?page=${index + 1}&page_size=${pageSize}`)
+                    }
+                    className={`border border-gray-200 rounded-md ${
+                      page == index + 1 && "text-orange-500"
+                    }`}
+                  >
+                    <PaginationLink href="#">{index + 1}</PaginationLink>
+                  </PaginationItem>
+                );
+              })}
+              <PaginationItem className="border border-gray-200 rounded-md">
+                <PaginationNext
+                  className={`cursor-pointer  ${
+                    page == totalPages && "pointer-events-none opacity-50"
+                  }`}
+                  onClick={() =>
+                    navigate(`?page=${page + 1}&page_size=${pageSize}`)
+                  }
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
       </div>
     </div>
   );

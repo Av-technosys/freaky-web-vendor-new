@@ -14,7 +14,7 @@ import {
 } from "../components/ui/alert-dialog";
 import { TiIconTrash } from "./icons";
 
-const DeleteServiceDialog = () => {
+const DeletePriceListDialog = () => {
   return (
     <>
       <AlertDialog>
@@ -31,7 +31,8 @@ const DeleteServiceDialog = () => {
                 <TriangleAlertIcon />
                 <AlertTitle>Warning</AlertTitle>
                 <AlertDescription className="text-destructive/80">
-                  Deleting from this will permanent delete it from services
+                  Deleting from this will permanent delete it from current price
+                  list
                 </AlertDescription>
               </Alert>
             </AlertDialogDescription>
@@ -46,4 +47,4 @@ const DeleteServiceDialog = () => {
   );
 };
 
-export default DeleteServiceDialog;
+export default DeletePriceListDialog;

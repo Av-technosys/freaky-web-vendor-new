@@ -59,8 +59,12 @@ const EmailPasswordLogin = () => {
                   />
                 </div>
                 <div>
-                  <Button type="submit" className="w-full ">
-                    Log in
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    disabled={mutation.isPending}
+                  >
+                    {mutation.isPending ? "Logging in..." : "Log in"}
                   </Button>
                 </div>
               </div>
