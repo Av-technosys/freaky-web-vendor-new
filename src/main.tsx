@@ -19,8 +19,8 @@ import Payment from "./conponents/pages/payments";
 import { Toaster } from "./components/ui";
 import SelectCompany from "./conponents/pages/selectCompany";
 import CreateCompany from "./conponents/pages/createCompany";
-import CreateService from "./conponents/pages/createService";
 import ManagePaymentBook from "./conponents/pages/managePaymentBook";
+import ManageService from "./conponents/pages/manageService";
 
 const queryClient = new QueryClient();
 
@@ -35,14 +35,20 @@ const routes = createBrowserRouter([
           { path: "/", element: <Home /> },
           { path: "/company-profile", element: <CompanyProfile /> },
           { path: "/services", element: <Services /> },
-          { path: "/services/create-service", element: <CreateService /> },
-          { path: "/services/manage-payment-book", element: <ManagePaymentBook /> },
+          {
+            path: "/services/manage-service/:productId?",
+            element: <ManageService />,
+          },
+          {
+            path: "/services/manage-payment-book",
+            element: <ManagePaymentBook />,
+          },
           { path: "/profile", element: <Profile /> },
           { path: "/reviews", element: <Reviews /> },
           { path: "/calendar", element: <Calendar /> },
           { path: "/booking", element: <Booking /> },
           { path: "/payments", element: <Payment /> },
-          
+
           { path: "/users", element: <Users /> },
         ],
       },
@@ -62,10 +68,10 @@ const routes = createBrowserRouter([
   },
   {
     element: <ProtectRoute />,
-    children:[
-      {path: "/select-company",element:<SelectCompany/>},
-      {path: "/create-company",element:<CreateCompany/>}
-    ]
+    children: [
+      { path: "/select-company", element: <SelectCompany /> },
+      { path: "/create-company", element: <CreateCompany /> },
+    ],
   },
 ]);
 

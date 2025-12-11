@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Card,
@@ -18,9 +18,10 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../../components/ui/calender";
 import { TiIconPencilPlus } from "../icons";
 import uploadImage from "../../assets/uploadImage.png";
-import { useNavigate } from "react-router-dom";
-import DeleteServiceDialog from "../deleteServiceDialog";
+import { useNavigate, useParams } from "react-router-dom";
 import EditPricebookDialog from "../editPricebookDialog";
+import DeletePriceListDialog from "../deletePricelistDialog";
+import { useGetVendorServiceByServiceId } from "../../services/useGetVendorServices";
 
 const dropdownValuesProductCategories = {
   options: [
@@ -75,8 +76,7 @@ function isValidDate(date: Date | undefined) {
   return !isNaN(date.getTime());
 }
 
-const CreateService = () => {
-  const [categoryName, setCategoryName] = useState("Select Product Category");
+const ManageService = () => {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [month, setMonth] = useState<Date | undefined>(date);
@@ -84,7 +84,25 @@ const CreateService = () => {
   const [time, setTime] = useState("12:00");
   const [addPhoto, setAddPhoto] = useState<number[]>([0]);
 
+  const [serviceName, setServiceName] = useState("");
+  const [categoryName, setCategoryName] = useState("Select Product Category");
+  const [description, setDescription] = useState("");
+  const [longDescription, setLongDescription] = useState("");
+
   const navigate = useNavigate();
+  const { productId } = useParams();
+
+  const token = localStorage.getItem("access_token");
+  const { data } = useGetVendorServiceByServiceId(token, productId);
+
+  useEffect(() => {
+    if (data?.product && productId) {
+      setServiceName(data.product.title || "");
+      setCategoryName(data.product.type || "Select Product Category");
+      setDescription(data.product.description || "");
+      setLongDescription(data.product.description || "");
+    }
+  }, [data, productId]);
 
   function handleProductCategoryChange(value: any) {
     setCategoryName(value.label);
@@ -108,6 +126,8 @@ const CreateService = () => {
                     name="service-name"
                     id="service-name"
                     type="text"
+                    value={serviceName}
+                    onChange={(e) => setServiceName(e.target.value)}
                     required
                   />
                   <DropdownSelector
@@ -202,7 +222,7 @@ const CreateService = () => {
                             <div>{service.price}</div>
                             <div className="flex gap-1">
                               <EditPricebookDialog />
-                              <DeleteServiceDialog />
+                              <DeletePriceListDialog />
                             </div>
                           </div>
                         );
@@ -215,6 +235,8 @@ const CreateService = () => {
                     placeholder="Short Description"
                     className="min-h-[150px] bg-[#F4F5FA]"
                     id="message-2"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
                   />
                   <div className="w-full items-start gap-2 mt-3 flex flex-col">
                     <Label className="text-[#5E6366]" htmlFor="password">
@@ -225,6 +247,8 @@ const CreateService = () => {
                         placeholder="Short Description"
                         className="min-h-[150px] bg-[#F4F5FA]"
                         id="message-2"
+                        value={longDescription}
+                        onChange={(e) => setLongDescription(e.target.value)}
                       />
                       <span className="text-[11px] text-[#5E6366]">
                         Add a long description for your product
@@ -332,4 +356,4 @@ const CreateService = () => {
   );
 };
 
-export default CreateService;
+export default ManageService;

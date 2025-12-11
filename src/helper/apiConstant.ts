@@ -11,5 +11,7 @@ export const apiConstant = {
     createContactInformation: "v1/vendor/update_contact_details",
     createBusinessInformation: "v1/vendor/update_address",
     createBankAccountInformation: "v1/vendor/update_bank_details",
+    getAllServices: "/v1/vendor/products",
+    getServiceById: "/v1/product/info?productId",
   },
 };
