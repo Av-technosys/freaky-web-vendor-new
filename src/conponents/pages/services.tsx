@@ -14,7 +14,7 @@ import {
 
 const Services = () => {
   const navigate = useNavigate();
-  const pageSize = 1;
+  const pageSize = 2;
   const [searchParams] = useSearchParams();
   const page = Number(searchParams.get("page")) || 1;
 

@@ -13,5 +13,6 @@ export const apiConstant = {
     createBankAccountInformation: "v1/vendor/update_bank_details",
     getAllServices: "/v1/vendor/products",
     getServiceById: "/v1/product/info?productId",
+    getAllPriceBookById: "/v1/vendor/pricebooks",
   },
 };

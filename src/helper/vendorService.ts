@@ -42,3 +42,22 @@ export const getVendorServiceById = async (token: string, productId: any) => {
     throw error;
   }
 };
+
+export const getPriceBookListById = async (token: string, productId: any) => {
+  try {
+    const cleanedToken = token.replace(/"/g, "");
+    const response = await axiosInstance.get(
+      `${apiConstant.vendor.getAllPriceBookById}/${productId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${cleanedToken}`,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+    throw error;
+  }
+};
