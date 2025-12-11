@@ -21,7 +21,10 @@ import uploadImage from "../../assets/uploadImage.png";
 import { useNavigate, useParams } from "react-router-dom";
 import EditPricebookDialog from "../editPricebookDialog";
 import DeletePriceListDialog from "../deletePricelistDialog";
-import { useGetVendorServiceByServiceId } from "../../services/useGetVendorServices";
+import {
+  useGetPriceBookListByServiceId,
+  useGetVendorServiceByServiceId,
+} from "../../services/useGetVendorServices";
 
 const dropdownValuesProductCategories = {
   options: [
@@ -94,6 +97,8 @@ const ManageService = () => {
 
   const token = localStorage.getItem("access_token");
   const { data } = useGetVendorServiceByServiceId(token, productId);
+  const { data: priceBooks } = useGetPriceBookListByServiceId(token, productId);
+  console.log("priceBooks", priceBooks);
 
   useEffect(() => {
     if (data?.product && productId) {
@@ -214,12 +219,20 @@ const ManageService = () => {
                   <div className="w-full text-[#8B8D97] flex flex-col items-start gap-2">
                     <span>Price Book List</span>
                     <div className="w-full flex flex-col items-start gap-2">
-                      {serviceList.map((service, index) => {
+                      {priceBooks?.data?.map((service: any, index: number) => {
                         return (
                           <div className="w-full flex items-center justify-between border border-gray-300 bg-[#F4F5FA] p-1 rounded-md">
                             <div>{index + 1}</div>
-                            <div>{service.name}</div>
-                            <div>{service.price}</div>
+                            <div className="text-[13px]">{service.name}</div>
+                            <div
+                              className={`text-[11px] ${
+                                service.isActive == true
+                                  ? "text-green-500"
+                                  : "text-red-500"
+                              }`}
+                            >
+                              {service.isActive == true ? "Active" : "Inactive"}
+                            </div>
                             <div className="flex gap-1">
                               <EditPricebookDialog />
                               <DeletePriceListDialog />

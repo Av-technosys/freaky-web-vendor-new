@@ -56,6 +56,10 @@ const EditPricebookDialog = () => {
                   Tier Price
                 </Button>
               </div>
+              <p className="text-[12px] mt-3 text-center font-bold text-orange-600">
+                You have a fixed price to this price book associate with the
+                service by adding tire price the fixed price will be deleted.
+              </p>
             </AlertDialogTitle>
             <AlertDialogDescription
               className={`${addMore.length > 1 && "h-52 overflow-y-auto"}`}
