@@ -14,4 +14,7 @@ export const apiConstant = {
     getAllServices: "/v1/vendor/products",
     getServiceById: "/v1/product/info?productId",
   },
+  uploadImage:{
+    getS3Url:"/v1/upload/get_S3_url"
+  }
 };
