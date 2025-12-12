@@ -22,6 +22,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import EditPricebookDialog from "../editPricebookDialog";
 import DeletePriceListDialog from "../deletePricelistDialog";
 import { useGetVendorServiceByServiceId } from "../../services/useGetVendorServices";
+import { useGetImageUrl, useUploadImage } from "../../services/useUploadImage";
+import { useUpdateVendorService } from "../../services/useCreateOrUpdateVendorService";
 
 const dropdownValuesProductCategories = {
   options: [
@@ -83,17 +85,20 @@ const ManageService = () => {
   const [value, setValue] = useState(formatDate(date));
   const [time, setTime] = useState("12:00");
   const [addPhoto, setAddPhoto] = useState<number[]>([0]);
+  const [bannerImageUrl,setBannerImageUrl]=useState("");
+  const [additionalImagesUrl,setAdditionalImagesUrl]=useState<any>([]);
+
 
   const [serviceName, setServiceName] = useState("");
   const [categoryName, setCategoryName] = useState("Select Product Category");
   const [description, setDescription] = useState("");
   const [longDescription, setLongDescription] = useState("");
-
   const navigate = useNavigate();
   const { productId } = useParams();
 
-  const token = localStorage.getItem("access_token");
-  const { data } = useGetVendorServiceByServiceId(token, productId);
+  const { data } = useGetVendorServiceByServiceId( productId);
+  const getImageUrlMutation = useGetImageUrl();
+  const uploadImageMutation = useUploadImage();
 
   useEffect(() => {
     if (data?.product && productId) {
@@ -111,6 +116,54 @@ const ManageService = () => {
   const addPhotoHandler = () => {
     setAddPhoto((prev) => [...prev, prev.length]);
   };
+
+  const handleBannerImage = async (e: any) => {
+    const file = e.target.files?.[0];
+    const imageData = {
+      fileName: file.name,
+      fileType: file.type,
+      path: "productBanner",
+    };
+    if (file.name) {
+      const UploadUrl = await getImageUrlMutation.mutateAsync({
+        data: imageData,
+      });
+      setBannerImageUrl(UploadUrl?.data.filePath)
+      if (UploadUrl?.data.uploadUrl) {
+        const url=UploadUrl?.data.uploadUrl;
+        uploadImageMutation.mutate({ url, file });
+      }
+    }
+  };
+
+  const handleAdditionalImages = async (e: any) => {
+    const file = e.target.files?.[0];
+    const imageData = {
+      fileName: file.name,
+      fileType: file.type,
+      path: "productMedia",
+    };
+    if (file.name) {
+      const UploadUrl = await getImageUrlMutation.mutateAsync({
+        data:imageData,
+      });
+      setAdditionalImagesUrl((prev:any)=> [...prev, UploadUrl?.data.filePath])
+      if (UploadUrl?.data.uploadUrl) {
+        const url = UploadUrl?.data.uploadUrl;
+        uploadImageMutation.mutate({ url, file });
+      }
+    }
+  };
+
+  const mutation =useUpdateVendorService();
+
+  const submitHandler=()=>{
+    const serviceData = {
+      bannerImage:bannerImageUrl,
+      additionalImages:additionalImagesUrl
+    }
+    mutation.mutate({productId,serviceData})
+  }
 
   return (
     <>
@@ -262,7 +315,7 @@ const ManageService = () => {
                     >
                       Back
                     </Button>
-                    <Button>Publish</Button>
+                    <Button onClick={submitHandler}>Save</Button>
                   </div>
                 </div>
               </div>
@@ -283,6 +336,7 @@ const ManageService = () => {
                 className="w-30 bg-[#E1E2E9] rounded-md p-1 text-[9px] cursor-pointer"
                 placeholder="Upload Image"
                 type="file"
+                onChange={(e) => handleBannerImage(e)}
               />
               <div>
                 <p className="text-[12px]">
@@ -308,6 +362,7 @@ const ManageService = () => {
                       className="w-24 bg-[#E1E2E9] rounded-md p-1 text-[9px] cursor-pointer"
                       placeholder="Upload Image"
                       type="file"
+                      onChange={(e) => handleAdditionalImages(e)}
                     />
                   </div>
                 </Card>
@@ -341,6 +396,7 @@ const ManageService = () => {
                             className="w-24 bg-[#E1E2E9] rounded-md p-1 text-[9px] cursor-pointer"
                             placeholder="Upload Image"
                             type="file"
+                            onChange={(e) => handleAdditionalImages(e)}
                           />
                         </div>
                       </Card>
