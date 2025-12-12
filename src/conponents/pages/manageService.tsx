@@ -23,6 +23,7 @@ import EditPricebookDialog from "../editPricebookDialog";
 import DeletePriceListDialog from "../deletePricelistDialog";
 import { useGetVendorServiceByServiceId } from "../../services/useGetVendorServices";
 import { useGetImageUrl, useUploadImage } from "../../services/useUploadImage";
+import { useUpdateVendorService } from "../../services/useCreateOrUpdateVendorService";
 
 const dropdownValuesProductCategories = {
   options: [
@@ -84,6 +85,9 @@ const ManageService = () => {
   const [value, setValue] = useState(formatDate(date));
   const [time, setTime] = useState("12:00");
   const [addPhoto, setAddPhoto] = useState<number[]>([0]);
+  const [bannerImageUrl,setBannerImageUrl]=useState("");
+  const [additionalImagesUrl,setAdditionalImagesUrl]=useState<any>([]);
+
 
   const [serviceName, setServiceName] = useState("");
   const [categoryName, setCategoryName] = useState("Select Product Category");
@@ -124,8 +128,9 @@ const ManageService = () => {
       const UploadUrl = await getImageUrlMutation.mutateAsync({
         data: imageData,
       });
+      setBannerImageUrl(UploadUrl?.data.filePath)
       if (UploadUrl?.data.uploadUrl) {
-        const url = UploadUrl?.data.uploadUrl;
+        const url=UploadUrl?.data.uploadUrl;
         uploadImageMutation.mutate({ url, file });
       }
     }
@@ -140,14 +145,25 @@ const ManageService = () => {
     };
     if (file.name) {
       const UploadUrl = await getImageUrlMutation.mutateAsync({
-        imageData,
+        data:imageData,
       });
+      setAdditionalImagesUrl((prev:any)=> [...prev, UploadUrl?.data.filePath])
       if (UploadUrl?.data.uploadUrl) {
         const url = UploadUrl?.data.uploadUrl;
         uploadImageMutation.mutate({ url, file });
       }
     }
   };
+
+  const mutation =useUpdateVendorService();
+
+  const submitHandler=()=>{
+    const serviceData = {
+      bannerImage:bannerImageUrl,
+      additionalImages:additionalImagesUrl
+    }
+    mutation.mutate({productId,serviceData})
+  }
 
   return (
     <>
@@ -299,7 +315,7 @@ const ManageService = () => {
                     >
                       Back
                     </Button>
-                    <Button>Publish</Button>
+                    <Button onClick={submitHandler}>Save</Button>
                   </div>
                 </div>
               </div>
