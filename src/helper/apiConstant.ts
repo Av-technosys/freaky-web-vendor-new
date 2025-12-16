@@ -13,9 +13,10 @@ export const apiConstant = {
     createBankAccountInformation: "v1/vendor/update_bank_details",
     getAllServices: "/v1/vendor/products",
     getServiceById: "/v1/product/info?productId",
-    updateServiceById:"/v1/product/update"
+    updateServiceById: "/v1/product/update",
+    deleteImageById: "/v1/product/image",
   },
-  uploadImage:{
-    getS3Url:"/v1/upload/get_S3_url"
-  }
+  uploadImage: {
+    getS3Url: "/v1/upload/get_S3_url",
+  },
 };

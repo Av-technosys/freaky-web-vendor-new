@@ -24,6 +24,7 @@ import {
   IconPencilPlus,
   IconTrash,
   IconAlertTriangleFilled,
+  IconPlayerPlay,
 } from "@tabler/icons-react";
 
 export function TiconLayoutDashboard(props: any) {
@@ -99,5 +100,8 @@ export function TiIconTrash(props: any) {
   return <IconTrash {...props} />;
 }
 export function TiIconAlertTriangleFilled(props: any) {
-  return <IconAlertTriangleFilled  {...props} />;
+  return <IconAlertTriangleFilled {...props} />;
+}
+export function TiIconPlayerPlay(props: any) {
+  return <IconPlayerPlay {...props} />;
 }
