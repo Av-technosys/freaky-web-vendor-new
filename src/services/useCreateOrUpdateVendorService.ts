@@ -1,6 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { updateVendorService } from "../helper/vendorService";
+import {
+  deleteImageHandler,
+  updateVendorService,
+} from "../helper/vendorService";
 
 export const useUpdateVendorService = () => {
   return useMutation({
@@ -10,6 +13,18 @@ export const useUpdateVendorService = () => {
     },
     onError: () => {
       toast.error("Unable to update service.");
+    },
+  });
+};
+
+export const useDeleteAdditionalImage = () => {
+  return useMutation({
+    mutationFn: deleteImageHandler,
+    onSuccess: () => {
+      toast.success("Image Deleted Successfully.");
+    },
+    onError: () => {
+      toast.error("Unable to delete image.");
     },
   });
 };

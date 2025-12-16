@@ -16,7 +16,6 @@ import {
 } from "../../components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../../components/ui/calender";
-import { TiIconPencilPlus } from "../icons";
 import uploadImage from "../../assets/uploadImage.png";
 import { useNavigate, useParams } from "react-router-dom";
 import EditPricebookDialog from "../editPricebookDialog";
@@ -24,24 +23,18 @@ import DeletePriceListDialog from "../deletePricelistDialog";
 import { useGetVendorServiceByServiceId } from "../../services/useGetVendorServices";
 import { useGetImageUrl, useUploadImage } from "../../services/useUploadImage";
 import { useUpdateVendorService } from "../../services/useCreateOrUpdateVendorService";
+import { useQueryClient } from "@tanstack/react-query";
+import ServiceAdditionalPhotos from "../serviceAdditionalPhotos";
 
 const dropdownValuesProductCategories = {
   options: [
     {
-      label: "All Time",
-      value: "all_time",
+      label: "product",
+      value: "product",
     },
     {
-      label: "Recent",
-      value: "recent",
-    },
-    {
-      label: "Last Week",
-      value: "last_week",
-    },
-    {
-      label: "Last Month",
-      value: "last_month",
+      label: "addon",
+      value: "addon",
     },
   ],
 };
@@ -84,28 +77,35 @@ const ManageService = () => {
   const [month, setMonth] = useState<Date | undefined>(date);
   const [value, setValue] = useState(formatDate(date));
   const [time, setTime] = useState("12:00");
-  const [addPhoto, setAddPhoto] = useState<number[]>([0]);
-  const [bannerImageUrl,setBannerImageUrl]=useState("");
-  const [additionalImagesUrl,setAdditionalImagesUrl]=useState<any>([]);
-
 
   const [serviceName, setServiceName] = useState("");
-  const [categoryName, setCategoryName] = useState("Select Product Category");
+  const [categoryName, setCategoryName] = useState("Select Product Type");
   const [description, setDescription] = useState("");
   const [longDescription, setLongDescription] = useState("");
+
+  const queryClient = useQueryClient();
+
   const navigate = useNavigate();
   const { productId } = useParams();
 
-  const { data } = useGetVendorServiceByServiceId( productId);
+  const { data } = useGetVendorServiceByServiceId(productId);
+
+  const [mediaImages, setMediaImages] = useState<any>([]);
+  const [mediaBanner, setMediaBanner] = useState<any>("");
+  const [additionalImagesUrl, setAdditionalImagesUrl] = useState<any>([]);
+  const [videoUrl, setVideoUrl] = useState("");
+
   const getImageUrlMutation = useGetImageUrl();
   const uploadImageMutation = useUploadImage();
 
   useEffect(() => {
     if (data?.product && productId) {
+      setMediaImages(data.product.media);
       setServiceName(data.product.title || "");
       setCategoryName(data.product.type || "Select Product Category");
       setDescription(data.product.description || "");
       setLongDescription(data.product.description || "");
+      setMediaBanner(data.product.bannerImage);
     }
   }, [data, productId]);
 
@@ -113,57 +113,51 @@ const ManageService = () => {
     setCategoryName(value.label);
   }
 
-  const addPhotoHandler = () => {
-    setAddPhoto((prev) => [...prev, prev.length]);
-  };
-
   const handleBannerImage = async (e: any) => {
     const file = e.target.files?.[0];
+    if (!file) return;
+
     const imageData = {
       fileName: file.name,
       fileType: file.type,
       path: "productBanner",
     };
-    if (file.name) {
-      const UploadUrl = await getImageUrlMutation.mutateAsync({
-        data: imageData,
+
+    const uploadRes = await getImageUrlMutation.mutateAsync({
+      data: imageData,
+    });
+
+    if (uploadRes?.data?.uploadUrl) {
+      await uploadImageMutation.mutateAsync({
+        url: uploadRes.data.uploadUrl,
+        file,
       });
-      setBannerImageUrl(UploadUrl?.data.filePath)
-      if (UploadUrl?.data.uploadUrl) {
-        const url=UploadUrl?.data.uploadUrl;
-        uploadImageMutation.mutate({ url, file });
-      }
+      setMediaBanner(uploadRes.data.filePath);
     }
   };
 
-  const handleAdditionalImages = async (e: any) => {
-    const file = e.target.files?.[0];
-    const imageData = {
-      fileName: file.name,
-      fileType: file.type,
-      path: "productMedia",
-    };
-    if (file.name) {
-      const UploadUrl = await getImageUrlMutation.mutateAsync({
-        data:imageData,
-      });
-      setAdditionalImagesUrl((prev:any)=> [...prev, UploadUrl?.data.filePath])
-      if (UploadUrl?.data.uploadUrl) {
-        const url = UploadUrl?.data.uploadUrl;
-        uploadImageMutation.mutate({ url, file });
-      }
-    }
-  };
+  const mutation = useUpdateVendorService();
 
-  const mutation =useUpdateVendorService();
-
-  const submitHandler=()=>{
+  const submitHandler = () => {
     const serviceData = {
-      bannerImage:bannerImageUrl,
-      additionalImages:additionalImagesUrl
-    }
-    mutation.mutate({productId,serviceData})
-  }
+      title: serviceName,
+      description: description,
+      type: categoryName,
+      bannerImage: mediaBanner,
+      additionalImages: additionalImagesUrl,
+      videoUrl: videoUrl,
+    };
+    mutation.mutate(
+      { productId, serviceData },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: ["vendor-services-by-id"],
+          });
+        },
+      }
+    );
+  };
 
   return (
     <>
@@ -325,13 +319,25 @@ const ManageService = () => {
         <Card className="col-span-1 px-2  rounded-lg">
           <Card className="w-full  h-40 flex items-center justify-center  rounded-lg bg-[#F4F5FA]">
             <div className="w-full gap-1 flex flex-col items-center">
-              <div className="w-10 h-10 flex items-center justify-center p-1 rounded-lg overflow-hidden">
-                <img
-                  className="object-cover"
-                  src={uploadImage}
-                  alt="uploadImage"
-                />
-              </div>
+              {productId ? (
+                <div className="w-24 h-24 rounded-full overflow-hidden">
+                  <img
+                    className="object-cover"
+                    src={`${
+                      import.meta.env.VITE_IMAGE_BASE_URL
+                    }/${mediaBanner}`}
+                    alt="uploaded-image"
+                  />
+                </div>
+              ) : (
+                <div className="w-10 h-10 flex items-center justify-center p-1 rounded-lg overflow-hidden">
+                  <img
+                    className="object-cover"
+                    src={uploadImage}
+                    alt="uploadImage"
+                  />
+                </div>
+              )}
               <input
                 className="w-30 bg-[#E1E2E9] rounded-md p-1 text-[9px] cursor-pointer"
                 placeholder="Upload Image"
@@ -345,67 +351,12 @@ const ManageService = () => {
               </div>
             </div>
           </Card>
-          <div>
-            <span className="text-[#5E6366]">Additional Photos</span>
-            <div className="grid grid-cols-2 gap-2">
-              <div className="col-span-1">
-                <Card className="w-full h-30 flex items-center justify-center  rounded-lg bg-[#F4F5FA]">
-                  <div className="w-full gap-1 flex flex-col items-center">
-                    <div className="w-10 h-10 flex items-center justify-center p-1 rounded-lg overflow-hidden">
-                      <img
-                        className="object-cover"
-                        src={uploadImage}
-                        alt="uploadImage"
-                      />
-                    </div>
-                    <input
-                      className="w-24 bg-[#E1E2E9] rounded-md p-1 text-[9px] cursor-pointer"
-                      placeholder="Upload Image"
-                      type="file"
-                      onChange={(e) => handleAdditionalImages(e)}
-                    />
-                  </div>
-                </Card>
-              </div>
-              <div className="col-span-1">
-                <Card className="w-full h-30 flex items-center justify-center  rounded-lg bg-[#F4F5FA]">
-                  <Button
-                    className="w-24 cursor-pointer"
-                    onClick={addPhotoHandler}
-                    variant={"ghost"}
-                  >
-                    <TiIconPencilPlus color="#D30000" />{" "}
-                    <span className="text-[#5E6366]">Add Photo</span>
-                  </Button>
-                </Card>
-              </div>
-              {addPhoto.map((index) => {
-                if (index < addPhoto.length - 1) {
-                  return (
-                    <div className="col-span-1">
-                      <Card className="w-full h-30 flex items-center justify-center  rounded-lg bg-[#F4F5FA]">
-                        <div className="w-full gap-1 flex flex-col items-center">
-                          <div className="w-10 h-10 flex items-center justify-center p-1 rounded-lg overflow-hidden">
-                            <img
-                              className="object-cover"
-                              src={uploadImage}
-                              alt="uploadImage"
-                            />
-                          </div>
-                          <input
-                            className="w-24 bg-[#E1E2E9] rounded-md p-1 text-[9px] cursor-pointer"
-                            placeholder="Upload Image"
-                            type="file"
-                            onChange={(e) => handleAdditionalImages(e)}
-                          />
-                        </div>
-                      </Card>
-                    </div>
-                  );
-                }
-              })}
-            </div>
-          </div>
+          <ServiceAdditionalPhotos
+            mediaImages={mediaImages}
+            setVideoUrl={setVideoUrl}
+            setMediaImages={setMediaImages}
+            setAdditionalImagesUrl={setAdditionalImagesUrl}
+          />
         </Card>
       </div>
     </>

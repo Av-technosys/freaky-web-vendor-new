@@ -1,13 +1,10 @@
 import { axiosInstance } from "./api";
 import { apiConstant } from "./apiConstant";
 
-export const getVendorServices = async (
-  page: number,
-  page_size: number
-) => {
+export const getVendorServices = async (page: number, page_size: number) => {
   try {
     const response = await axiosInstance.get(
-      `${apiConstant.vendor.getAllServices}?page=${page}&page_size=${page_size}`,
+      `${apiConstant.vendor.getAllServices}?page=${page}&page_size=${page_size}`
     );
 
     return response.data;
@@ -17,10 +14,10 @@ export const getVendorServices = async (
   }
 };
 
-export const getVendorServiceById = async ( productId: any) => {
+export const getVendorServiceById = async (productId: any) => {
   try {
     const response = await axiosInstance.get(
-      `${apiConstant.vendor.getServiceById}=${productId}`,
+      `${apiConstant.vendor.getServiceById}=${productId}`
     );
     return response.data;
   } catch (error) {
@@ -29,8 +26,7 @@ export const getVendorServiceById = async ( productId: any) => {
   }
 };
 
-
-export const updateVendorService = async ({productId,serviceData}:any)=>{
+export const updateVendorService = async ({ productId, serviceData }: any) => {
   try {
     const response = await axiosInstance.put(
       `${apiConstant.vendor.updateServiceById}/${productId}`,
@@ -41,4 +37,16 @@ export const updateVendorService = async ({productId,serviceData}:any)=>{
     console.error("Error while sending request:", error);
     throw error;
   }
-}
+};
+
+export const deleteImageHandler = async (id: any) => {
+  try {
+    const response = await axiosInstance.delete(
+      `${apiConstant.vendor.deleteImageById}/${id}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+    throw error;
+  }
+};
