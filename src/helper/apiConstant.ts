@@ -7,10 +7,15 @@ export const apiConstant = {
     forgetPasswordUsingOTP: "v1/auth/confirm-forgot-password",
   },
   vendor: {
-    createCompanyInformation: "v1/vendor/cerate",
-    createContactInformation: "v1/vendor/update_contact_details",
-    createBusinessInformation: "v1/vendor/update_address",
-    createBankAccountInformation: "v1/vendor/update_bank_details",
+    getVendorDetails: "/v1/vendor/vendor_details",
+    getVendorDocuments: "/v1/vendor/documents",
+    createCompanyInformation: "v1/vendor/company_details",
+    createContactInformation: "v1/vendor/contact_details",
+    createBusinessInformation: "v1/vendor/address",
+    createBankAccountInformation: "v1/vendor/bank_details",
+    createOwnershipInformation: "/v1/vendor/ownership_details",
+    createVendorDocument: "/v1/vendor/create_document",
+    deleteVendorDocument: "/v1/vendor/document",
     getAllServices: "/v1/vendor/products",
     getServiceById: "/v1/product/info?productId",
     updateServiceById: "/v1/product/update",
@@ -18,5 +23,9 @@ export const apiConstant = {
   },
   uploadImage: {
     getS3Url: "/v1/upload/get_S3_url",
+  },
+  user: {
+    getUserDetails: "/v1/user/personal_details",
+    updateUserDetails: "/v1/user/update_details",
   },
 };

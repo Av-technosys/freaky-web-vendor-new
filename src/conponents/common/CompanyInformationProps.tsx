@@ -116,12 +116,13 @@ const CompanyInformation = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1  gap-3">
             <div className="col-span-1 flex flex-col items-start justify-center gap-3">
               <Label htmlFor="einNumber">EIN Number</Label>
               <InputOTP
                 maxLength={9}
-                value={data.einNumber}
+                value={String(data.einNumber)}
+                className="text-black"
                 onChange={(value) => onUpdate("einNumber", value)}
               >
                 <InputOTPGroup>
@@ -141,7 +142,7 @@ const CompanyInformation = ({
               </InputOTP>
             </div>
 
-            <div className="col-span-1 flex flex-col items-start justify-center gap-3">
+            <div className="col-span-1 w-1/2 flex flex-col items-start justify-center gap-3">
               <Label htmlFor="businessType">Business Type</Label>
               <Select
                 onValueChange={(value) => onUpdate("businessType", value)}
@@ -163,7 +164,7 @@ const CompanyInformation = ({
               </Select>
             </div>
 
-            <div className="col-span-1 flex flex-col items-start justify-center gap-3">
+            <div className="col-span-1 w-1/2 flex flex-col items-start justify-center gap-3">
               <Label htmlFor="incorporationDate">Incorporation Date</Label>
               <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>

@@ -43,7 +43,7 @@ const OwnershipInformation = ({
           )}
         </div>
 
-        {data.owners.map((owner, index) => (
+        {data?.owners.map((owner, index) => (
           <div
             key={index}
             className="border border-gray-200 rounded-lg p-6 mb-6 last:mb-0"
@@ -94,8 +94,8 @@ const OwnershipInformation = ({
                 <Label>SSN</Label>
                 <InputOTP
                   maxLength={9}
-                  value={owner.ssn}
-                  onChange={(value) => onUpdateOwner(index, "ssn", value)}
+                  value={String(owner.ssnNumber)}
+                  onChange={(value) => onUpdateOwner(index, "ssnNumber", value)}
                   required
                 >
                   <InputOTPGroup>
@@ -127,9 +127,13 @@ const OwnershipInformation = ({
                   <div className="flex flex-col gap-3">
                     <Label>Street Address Line 1</Label>
                     <Input
-                      value={owner.address1}
+                      value={owner.streetAddressLine1}
                       onChange={(e) =>
-                        onUpdateOwner(index, "address1", e.target.value)
+                        onUpdateOwner(
+                          index,
+                          "streetAddressLine1",
+                          e.target.value
+                        )
                       }
                       placeholder="Enter Street Address Line 1"
                       required
@@ -139,9 +143,13 @@ const OwnershipInformation = ({
                   <div className="flex flex-col gap-3">
                     <Label>Street Address Line 2</Label>
                     <Input
-                      value={owner.address2}
+                      value={owner.streetAddressLine2}
                       onChange={(e) =>
-                        onUpdateOwner(index, "address2", e.target.value)
+                        onUpdateOwner(
+                          index,
+                          "streetAddressLine2",
+                          e.target.value
+                        )
                       }
                       placeholder="Enter Street Address Line 2"
                       required
@@ -190,9 +198,9 @@ const OwnershipInformation = ({
                     <Label>Zip Code</Label>
                     <Input
                       type="number"
-                      value={owner.zipCode}
+                      value={owner.zipcode}
                       onChange={(e) =>
-                        onUpdateOwner(index, "zipCode", e.target.value)
+                        onUpdateOwner(index, "zipcode", e.target.value)
                       }
                       placeholder="Enter Zip Code"
                       required
@@ -205,9 +213,9 @@ const OwnershipInformation = ({
                 <Label>Ownership Percentage (%)</Label>
                 <Input
                   type="number"
-                  value={owner.percentage}
+                  value={owner.ownershipPercentage}
                   onChange={(e) =>
-                    onUpdateOwner(index, "percentage", e.target.value)
+                    onUpdateOwner(index, "ownershipPercentage", e.target.value)
                   }
                   min={25}
                   placeholder="Min 25%"
