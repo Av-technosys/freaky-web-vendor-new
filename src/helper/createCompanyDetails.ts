@@ -71,9 +71,7 @@ export const createVendorDocuments = async (vendorDocuments: any) => {
   try {
     const response = await axiosInstance.post(
       apiConstant.vendor.createVendorDocument,
-      {
-        Documents: vendorDocuments,
-      }
+      vendorDocuments
     );
     return response.data;
   } catch (error) {
@@ -81,10 +79,10 @@ export const createVendorDocuments = async (vendorDocuments: any) => {
   }
 };
 
-export const deleteVendorDocument = async (documentURL: any) => {
+export const deleteVendorDocument = async (documentId: any) => {
   try {
     const response = await axiosInstance.delete(
-      `${apiConstant.vendor.deleteVendorDocument}?url=${documentURL}`
+      `${apiConstant.vendor.deleteVendorDocument}/${documentId}`
     );
     return response.data;
   } catch (error) {

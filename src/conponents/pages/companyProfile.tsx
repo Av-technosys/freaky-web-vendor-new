@@ -78,6 +78,7 @@ const CompanyProfile = () => {
   const [documentInputs, setDocumentInputs] = useState<any[]>([
     { documentType: "business_license", documentUrl: "choose file" },
   ]);
+  
 
   const getImageUrlMutation = useGetImageUrl();
   const uploadImageMutation = useUploadImage();
@@ -258,9 +259,7 @@ const CompanyProfile = () => {
       bankType: companyData.bankType,
     };
 
-    const companyOwnershipInformation = {
-      owners: companyData.owners,
-    };
+    const companyOwnershipInformation =  companyData.owners;
 
     CompanyInformationMutation.mutate(companyInformationData);
     ContactInformationMutation.mutate(companyContactDetails);
@@ -351,7 +350,6 @@ const CompanyProfile = () => {
       ...prev,
       { documentType: "Business License", documentUrl: "choose file" },
     ]);
-    console.log("documentsingput", documentInputs);
   };
 
   const handleCompanyLogo = async (e: any) => {
@@ -377,8 +375,8 @@ const CompanyProfile = () => {
     }
   };
 
-  const documentDeleteHandler = (url: any) => {
-    documentDeleteMutation.mutate(url);
+  const documentDeleteHandler = (id: any) => {
+    documentDeleteMutation.mutate(id);
   };
 
   return (
@@ -462,7 +460,7 @@ const CompanyProfile = () => {
               Add more
             </Button>
             <div className="grid grid-cols-3 gap-3">
-              {documentInputs.map((doc, index) => (
+              {documentInputs?.map((doc, index) => (
                 <div key={index} className="contents">
                   <div className="col-span-1">
                     <DropdownSelector
@@ -497,7 +495,7 @@ const CompanyProfile = () => {
                       <div className="w-1/2 flex gap-2">
                         <Button>Edit</Button>
                         <Button
-                          onClick={() => documentDeleteHandler(doc.documentUrl)}
+                          onClick={() => documentDeleteHandler(doc?.id)}
                         >
                           Delete
                         </Button>

@@ -106,7 +106,6 @@ const Profile = () => {
     const userInfo = {
       firstName: userDetails?.firstName,
       lastName: userDetails?.lastName,
-      email: userDetails?.email,
       number: userDetails?.number,
       profileImage: userDetails?.profileImage,
     };
@@ -157,7 +156,7 @@ const Profile = () => {
                 <Label htmlFor="email">Email</Label>
                 <Input
                   value={userDetails?.email}
-                  onChange={(e) => valueChangeHandler("email", e.target.value)}
+                  readOnly
                   name="email"
                   id="email"
                   type="text"
