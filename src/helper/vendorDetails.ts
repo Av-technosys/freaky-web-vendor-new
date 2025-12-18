@@ -24,3 +24,15 @@ export const getVendorDocuments = async () => {
     throw error;
   }
 };
+
+export const getVendorOwners = async () => {
+  try {
+    const response = await axiosInstance.get(
+      `${apiConstant.vendor.getVendorOwners}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+    throw error;
+  }
+};

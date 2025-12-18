@@ -9,6 +9,7 @@ export const apiConstant = {
   vendor: {
     getVendorDetails: "/v1/vendor/vendor_details",
     getVendorDocuments: "/v1/vendor/documents",
+    getVendorOwners: "/v1/vendor/ownership_details",
     createCompanyInformation: "v1/vendor/company_details",
     createContactInformation: "v1/vendor/contact_details",
     createBusinessInformation: "v1/vendor/address",

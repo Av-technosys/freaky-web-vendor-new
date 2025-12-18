@@ -24,6 +24,7 @@ import { toast } from "sonner";
 import {
   useGetVendorDetails,
   useGetVendorDocuments,
+  useGetVendorOwnershipDetails,
 } from "../../services/useGetVendorCompanyDetails";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -84,6 +85,7 @@ const CompanyProfile = () => {
   const uploadImageMutation = useUploadImage();
 
   const { data: vendorData } = useGetVendorDetails();
+  const { data: vendorOwnership}=useGetVendorOwnershipDetails();
   const { data: allVendorDocuments } = useGetVendorDocuments();
 
   const queryClient = useQueryClient();
@@ -134,9 +136,9 @@ const CompanyProfile = () => {
   const [companyLogo, setCompanyLogo] = useState<any>("");
 
   useEffect(() => {
+     const companyOwners = vendorOwnership?.data;
     if (vendorData) {
-      const companyInfo = vendorData?.data?.vendor;
-      const companyOwners = vendorData?.data.vendor_ownership;
+      const companyInfo = vendorData?.data;
       setCompanyData((prev) => ({
         ...prev,
         accountNumber: companyInfo?.bankAccountNumber ?? "",
@@ -158,7 +160,7 @@ const CompanyProfile = () => {
         city: companyInfo?.city ?? "",
         zipCode: companyInfo?.zipcode ?? "",
 
-        owners: [companyOwners],
+        owners: companyOwners,
 
         businessName: companyInfo?.businessName ?? "",
         website: companyInfo?.websiteURL ?? "",
@@ -273,6 +275,9 @@ const CompanyProfile = () => {
     setVendorDocuments([]);
     queryClient.invalidateQueries({
       queryKey: ["vendor-details"],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["vendor-owners"],
     });
   };
 
