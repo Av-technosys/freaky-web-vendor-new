@@ -1,9 +1,11 @@
-const Calendar = () => {
-  return (
-    <div className="h-full flex items-center justify-center">
-      <h1 className="text-4xl font-bold">Calendar Page</h1>
-    </div>
-  );
-};
+import { Calendar } from "@/components/calendar/calendar";
+import { CalendarSkeleton } from "@/components/calendar/skeletons/calendar-skeleton";
+import React, { Suspense } from "react"; 
 
-export default Calendar;
+export default function CalendarPage() {
+  return (
+    <Suspense fallback={<CalendarSkeleton />}>
+      <Calendar />
+    </Suspense>
+  );
+}

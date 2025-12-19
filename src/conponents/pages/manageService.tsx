@@ -80,7 +80,7 @@ const ManageService = () => {
   const [time, setTime] = useState("12:00");
 
   const [serviceName, setServiceName] = useState("");
-  const [categoryName, setCategoryName] = useState("Select Product Type");
+  const [categoryName, setCategoryName] = useState("product");
   const [description, setDescription] = useState("");
   const [longDescription, setLongDescription] = useState("");
 
@@ -185,14 +185,15 @@ const ManageService = () => {
                   />
                   <div className="w-full flex items-center justify-between">
                     <span className="text-[#8B8D97]">Return Policy</span>
-                    <div className="flex gap-3">
+                    {/* <div className="flex gap-3">
                       <Label className="text-[#8B8D97]" htmlFor="airplane-mode">
                         Add Discount
                       </Label>
                       <Switch id="airplane-mode" />
-                    </div>
+                    </div> */}
                   </div>
-                  <div className="w-full flex gap-3">
+                  <Input placeholder="Upload document" type="file" className=" -mt-2" />
+                  {/* <div className="w-full flex gap-3">
                     <div className="relative flex gap-2">
                       <Input
                         id="date"
@@ -257,7 +258,7 @@ const ManageService = () => {
                         required
                       />
                     </div>
-                  </div>
+                  </div> */}
 
                   <div className="w-full text-[#8B8D97] flex flex-col items-start gap-2">
                     <span>Price Book List</span>
