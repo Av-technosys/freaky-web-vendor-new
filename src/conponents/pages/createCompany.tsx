@@ -31,14 +31,14 @@ import {
 const initialOwner: Owner = {
   firstName: "",
   lastName: "",
-  ssn: "",
-  address1: "",
-  address2: "",
+  ssnNumber: "",
+  streetAddressLine1: "",
+  streetAddressLine2: "",
   country: "",
   state: "",
   city: "",
-  zipCode: "",
-  percentage: "",
+  zipcode: "",
+  ownershipPercentage: "",
 };
 
 const defaultDocuments: Document[] = [

@@ -25,6 +25,7 @@ import { useGetImageUrl, useUploadImage } from "../../services/useUploadImage";
 import { useUpdateVendorService } from "../../services/useCreateOrUpdateVendorService";
 import { useQueryClient } from "@tanstack/react-query";
 import ServiceAdditionalPhotos from "../serviceAdditionalPhotos";
+import ImageViewerDialog from "../imageViewerDialog";
 
 const dropdownValuesProductCategories = {
   options: [
@@ -318,8 +319,10 @@ const ManageService = () => {
         </div>
         <Card className="col-span-1 px-2  rounded-lg">
           <Card className="w-full  h-40 flex items-center justify-center  rounded-lg bg-[#F4F5FA]">
-            <div className="w-full gap-1 flex flex-col items-center">
+            <div className="w-full group relative gap-1 flex flex-col items-center">
               {productId ? (
+                <>
+                <ImageViewerDialog mediaUrl={mediaBanner} />
                 <div className="w-24 h-24 rounded-full overflow-hidden">
                   <img
                     className="object-cover"
@@ -329,6 +332,7 @@ const ManageService = () => {
                     alt="uploaded-image"
                   />
                 </div>
+                </>
               ) : (
                 <div className="w-10 h-10 flex items-center justify-center p-1 rounded-lg overflow-hidden">
                   <img

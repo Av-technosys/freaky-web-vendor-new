@@ -2,14 +2,14 @@
 export interface Owner {
   firstName: string;
   lastName: string;
-  ssn: string;
-  address1: string;
-  address2: string;
+  ssnNumber: string;
+  streetAddressLine1: string;
+  streetAddressLine2: string;
   country: string;
   state: string;
   city: string;
-  zipCode: string;
-  percentage: string;
+  zipcode: string;
+  ownershipPercentage: string;
 }
 
 export interface DocumentFile {
@@ -17,7 +17,7 @@ export interface DocumentFile {
   fileName: string;
   fileUrl: string;
   uploadedAt: Date | null;
-  status: 'uploaded' | 'verified';
+  status: "uploaded" | "verified";
 }
 
 export interface Document {

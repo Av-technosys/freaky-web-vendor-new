@@ -98,7 +98,7 @@ const CompanyInformation = ({
                 id="dbaName"
                 type="text"
                 value={data.dbaName}
-                onChange={(e) => onUpdate("dbaName", e.target.value)}
+                readOnly
                 required
               />
             </div>
@@ -116,32 +116,8 @@ const CompanyInformation = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div className="col-span-1 flex flex-col items-start justify-center gap-3">
-              <Label htmlFor="einNumber">EIN Number</Label>
-              <InputOTP
-                maxLength={9}
-                value={data.einNumber}
-                onChange={(value) => onUpdate("einNumber", value)}
-              >
-                <InputOTPGroup>
-                  <InputOTPSlot index={0} />
-                  <InputOTPSlot index={1} />
-                </InputOTPGroup>
-                <InputOTPSeparator />
-                <InputOTPGroup>
-                  <InputOTPSlot index={2} />
-                  <InputOTPSlot index={3} />
-                  <InputOTPSlot index={4} />
-                  <InputOTPSlot index={5} />
-                  <InputOTPSlot index={6} />
-                  <InputOTPSlot index={7} />
-                  <InputOTPSlot index={8} />
-                </InputOTPGroup>
-              </InputOTP>
-            </div>
-
-            <div className="col-span-1 flex flex-col items-start justify-center gap-3">
+          <div className="grid grid-cols-2  gap-3">
+            <div className="col-span-1  flex flex-col items-start justify-center gap-3">
               <Label htmlFor="businessType">Business Type</Label>
               <Select
                 onValueChange={(value) => onUpdate("businessType", value)}
@@ -163,7 +139,7 @@ const CompanyInformation = ({
               </Select>
             </div>
 
-            <div className="col-span-1 flex flex-col items-start justify-center gap-3">
+            <div className="col-span-1  flex flex-col items-start justify-center gap-3">
               <Label htmlFor="incorporationDate">Incorporation Date</Label>
               <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
@@ -189,6 +165,30 @@ const CompanyInformation = ({
                   />
                 </PopoverContent>
               </Popover>
+            </div>
+            <div className="col-span-1 flex flex-col items-start justify-center gap-3">
+              <Label htmlFor="einNumber">EIN Number</Label>
+              <InputOTP
+                maxLength={9}
+                value={String(data.einNumber)}
+                className="text-black"
+                readOnly
+              >
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                </InputOTPGroup>
+                <InputOTPSeparator />
+                <InputOTPGroup>
+                  <InputOTPSlot index={2} />
+                  <InputOTPSlot index={3} />
+                  <InputOTPSlot index={4} />
+                  <InputOTPSlot index={5} />
+                  <InputOTPSlot index={6} />
+                  <InputOTPSlot index={7} />
+                  <InputOTPSlot index={8} />
+                </InputOTPGroup>
+              </InputOTP>
             </div>
           </div>
         </div>

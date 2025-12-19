@@ -1,11 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
-import type {
-  Owner,
-  CompanyData,
-  Document,
-  DocumentFile,
-} from "../../types/company";
+import { useEffect, useState } from "react";
+import type { Owner, CompanyData, Document } from "../../types/company";
 
 import CompanyInformation from "../common/CompanyInformationProps";
 import ContactDetails from "../common/ContactDetails";
@@ -13,22 +8,39 @@ import BusinessAddress from "../common/BusinessAddress";
 import OwnershipInformation from "../common/OwnershipInformation";
 import BankAccountInformation from "../common/BankAccountInformation";
 import CompanyLogo from "../common/CompanyLogo";
-import DocumentUpload from "../common/DocumentUpload";
-import { Button } from "../../components/ui";
+import { Button, Card, CardContent, CardTitle } from "../../components/ui";
+import DropdownSelector from "../dropdownSelector";
+import { useGetImageUrl, useUploadImage } from "../../services/useUploadImage";
+import {
+  useCreateBankAccountInformation,
+  useCreateBusinessAddressInformation,
+  useCreateCompanyInformation,
+  useCreateContactInformation,
+  useCreateOwnershipInformation,
+  useCreateVendorDocument,
+  useDeleteVendorDocument,
+} from "../../services/useCreateOrUpdateCompanyDetails";
+import { toast } from "sonner";
+import {
+  useGetVendorDetails,
+  useGetVendorDocuments,
+  useGetVendorOwnershipDetails,
+} from "../../services/useGetVendorCompanyDetails";
+import { useQueryClient } from "@tanstack/react-query";
 
 // ------------------------ INITIAL VALUES ------------------------
 
 const initialOwner: Owner = {
   firstName: "",
   lastName: "",
-  ssn: "",
-  address1: "",
-  address2: "",
+  ssnNumber: "",
+  streetAddressLine1: "",
+  streetAddressLine2: "",
   country: "",
   state: "",
   city: "",
-  zipCode: "",
-  percentage: "",
+  zipcode: "",
+  ownershipPercentage: "",
 };
 
 const defaultDocuments: Document[] = [
@@ -38,12 +50,54 @@ const defaultDocuments: Document[] = [
   { id: "4", type: "bank_statement", files: [], maxFiles: 5 },
 ];
 
+const documentDropdownValues = {
+  options: [
+    {
+      label: "Business License",
+      value: "business_license",
+    },
+    {
+      label: "Tax Certificate",
+      value: "tax_certificate",
+    },
+    {
+      label: "Proof of ownership",
+      value: "proof_of_ownership",
+    },
+    {
+      label: "Bank Statement",
+      value: "bank_statement",
+    },
+  ],
+};
+
 // -------------------------- MAIN COMPONENT ------------------------
 
 const CompanyProfile = () => {
   const [open, setOpen] = useState(false);
+  const [vendorDocuments, setVendorDocuments] = useState<any>([]);
+  const [documentInputs, setDocumentInputs] = useState<any[]>([
+    { documentType: "business_license", documentUrl: "choose file" },
+  ]);
+  
 
-  // ----------------------- STATE -----------------------
+  const getImageUrlMutation = useGetImageUrl();
+  const uploadImageMutation = useUploadImage();
+
+  const { data: vendorData } = useGetVendorDetails();
+  const { data: vendorOwnership}=useGetVendorOwnershipDetails();
+  const { data: allVendorDocuments } = useGetVendorDocuments();
+
+  const queryClient = useQueryClient();
+
+  const CompanyInformationMutation = useCreateCompanyInformation();
+  const ContactInformationMutation = useCreateContactInformation();
+  const BusinessAddressMutation = useCreateBusinessAddressInformation();
+  const BankAccountMutation = useCreateBankAccountInformation();
+  const OwnershipInformationMutation = useCreateOwnershipInformation();
+  const vendorDocumentMutation = useCreateVendorDocument();
+  const documentDeleteMutation = useDeleteVendorDocument();
+
   const [companyData, setCompanyData] = useState<CompanyData>({
     businessName: "",
     website: "",
@@ -78,6 +132,51 @@ const CompanyProfile = () => {
 
     documents: defaultDocuments,
   });
+
+  const [companyLogo, setCompanyLogo] = useState<any>("");
+
+  useEffect(() => {
+     const companyOwners = vendorOwnership?.data;
+    if (vendorData) {
+      const companyInfo = vendorData?.data;
+      setCompanyData((prev) => ({
+        ...prev,
+        accountNumber: companyInfo?.bankAccountNumber ?? "",
+        bankName: companyInfo?.bankName ?? "",
+        payeeName: companyInfo?.payeeName ?? "",
+        routingNumber: companyInfo?.routingNumber ?? "",
+        bankType: companyInfo?.bankType ?? "",
+        contactName: companyInfo?.primaryContactName ?? "",
+        primaryEmail: companyInfo?.businessName ?? "",
+        primaryPhoneNumber: companyInfo?.primaryPhoneNumber ?? "",
+        instagramLink: companyInfo?.instagramURL ?? "",
+        youtubeLink: companyInfo?.youtubeURL ?? "",
+        facebookLink: companyInfo?.facebookURL ?? "",
+
+        address1: companyInfo?.streetAddressLine1 ?? "",
+        address2: companyInfo?.streetAddressLine2 ?? "",
+        country: companyInfo?.country ?? "",
+        state: companyInfo?.state ?? "",
+        city: companyInfo?.city ?? "",
+        zipCode: companyInfo?.zipcode ?? "",
+
+        owners: companyOwners,
+
+        businessName: companyInfo?.businessName ?? "",
+        website: companyInfo?.websiteURL ?? "",
+        dbaName: companyInfo?.DBAname ?? "",
+        legalEntityName: companyInfo?.legalEntityName ?? "",
+        einNumber: companyInfo?.einNumber ?? "",
+        businessType: companyInfo?.businessType ?? "",
+        incorporationDate: companyInfo?.incorporationDate
+          ? new Date(companyInfo?.incorporationDate)
+          : undefined,
+      }));
+
+      setCompanyLogo(companyInfo?.logoUrl);
+      setDocumentInputs(allVendorDocuments?.data);
+    }
+  }, [vendorData, allVendorDocuments]);
 
   // --------------------- UPDATE FUNCTIONS ---------------------
 
@@ -124,58 +223,166 @@ const CompanyProfile = () => {
     });
   };
 
-  const uploadDocument = (documentId: string, file: File) => {
-    setCompanyData((prev) => {
-      const updatedDocuments = prev.documents.map((doc) =>
-        doc.id === documentId && doc.files.length < doc.maxFiles
-          ? {
-              ...doc,
-              files: [
-                ...doc.files,
-                {
-                  id: Date.now().toString(),
-                  fileName: file.name,
-                  fileUrl: URL.createObjectURL(file),
-                  uploadedAt: new Date(),
-                  status: "uploaded",
-                } as DocumentFile,
-              ],
-            }
-          : doc
-      );
+  const handleSave = () => {
+    const companyInformationData = {
+      businessName: companyData.businessName || "",
+      websiteURL: companyData.website || "",
+      DBAname: companyData.dbaName || "",
+      legalEntityName: companyData.legalEntityName || "",
+      einNumber: companyData.einNumber || "",
+      businessType: companyData.businessType || "",
+      incorporationDate: companyData.incorporationDate || Date.now(),
+      companyLogo: companyLogo || "",
+    };
 
-      return { ...prev, documents: updatedDocuments };
+    const companyContactDetails = {
+      primaryContactName: companyData.contactName || "",
+      primaryEmail: companyData.primaryEmail || "",
+      primaryPhoneNumber: companyData.primaryPhoneNumber || "",
+      instagramURL: companyData.instagramLink || "",
+      youtubeURL: companyData.youtubeLink || "",
+      facebookURL: companyData.facebookLink || "",
+    };
+
+    const companyBusinessAddress = {
+      streetAddressLine1: companyData.address1,
+      streetAddressLine2: companyData.address2,
+      city: companyData.city,
+      state: companyData.state,
+      country: companyData.country,
+      zipcode: companyData.zipCode,
+    };
+
+    const companyBankAccountInformation = {
+      bankAccountNumber: companyData.accountNumber,
+      bankName: companyData.bankName,
+      payeeName: companyData.payeeName,
+      routingNumber: companyData.routingNumber,
+      bankType: companyData.bankType,
+    };
+
+    const companyOwnershipInformation =  companyData.owners;
+
+    CompanyInformationMutation.mutate(companyInformationData);
+    ContactInformationMutation.mutate(companyContactDetails);
+    BusinessAddressMutation.mutate(companyBusinessAddress);
+    BankAccountMutation.mutate(companyBankAccountInformation);
+    OwnershipInformationMutation.mutate(companyOwnershipInformation);
+
+    if (vendorDocuments.length > 0) {
+      vendorDocumentMutation.mutate(vendorDocuments);
+    }
+    setVendorDocuments([]);
+    queryClient.invalidateQueries({
+      queryKey: ["vendor-details"],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["vendor-owners"],
     });
   };
-
-  const removeDocumentFile = (documentId: string, fileId: string) => {
-    setCompanyData((prev) => {
-      const updatedDocuments = prev.documents.map((doc) =>
-        doc.id === documentId
-          ? { ...doc, files: doc.files.filter((f) => f.id !== fileId) }
-          : doc
-      );
-      return { ...prev, documents: updatedDocuments };
-    });
-  };
-
-  // Convert companyData to Map
-  const getCompanyDataMap = () => new Map(Object.entries(companyData));
-
-  // -------------------------- HANDLERS --------------------------
-
-const handleSave = () => {
-  const map = getCompanyDataMap();
-  console.log("Company Data (Map):", map);
-  console.log("Company Data (Object):", companyData);
-
-  const dataObject = Object.fromEntries(map);
-  console.log("Converted to Object:", dataObject);
-};
 
   const handlePrevious = () => console.log("Previous step");
 
-  // --------------------------- JSX ---------------------------
+  const handleDocumentChange = (index: number, value: any) => {
+    setDocumentInputs((prev) =>
+      prev.map((item, i) =>
+        i === index ? { ...item, documentType: value.value } : item
+      )
+    );
+  };
+
+  const handleDocumentUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const toastId = toast.loading("Uploading document...");
+
+    try {
+      const currentDoc = documentInputs[index];
+
+      if (!currentDoc?.documentType) {
+        toast.error("Please select document type first", { id: toastId });
+        return;
+      }
+      const imageData = {
+        fileName: file.name,
+        fileType: file.type,
+        path: "vendorDocument",
+      };
+
+      const uploadRes = await getImageUrlMutation.mutateAsync({
+        data: imageData,
+      });
+
+      const filePath = uploadRes?.data?.filePath;
+      const uploadUrl = uploadRes?.data?.uploadUrl;
+
+      if (!filePath || !uploadUrl) {
+        throw new Error("Upload URL not received");
+      }
+      await uploadImageMutation.mutateAsync({
+        url: uploadUrl,
+        file,
+      });
+      setDocumentInputs((prev) =>
+        prev.map((item, i) =>
+          i === index ? { ...item, documentUrl: filePath } : item
+        )
+      );
+
+      setVendorDocuments((prev: any[]) => [
+        ...prev,
+        {
+          filePath,
+          documentType: currentDoc.documentType,
+        },
+      ]);
+
+      toast.success("Document uploaded successfully", { id: toastId });
+    } catch (error) {
+      console.error(error);
+      toast.error("Document upload failed", { id: toastId });
+    } finally {
+      e.target.value = "";
+    }
+  };
+
+  const handleAddMore = () => {
+    setDocumentInputs((prev: any) => [
+      ...prev,
+      { documentType: "Business License", documentUrl: "choose file" },
+    ]);
+  };
+
+  const handleCompanyLogo = async (e: any) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const imageData = {
+      fileName: file.name,
+      fileType: file.type,
+      path: "companyLogo",
+    };
+
+    const uploadRes = await getImageUrlMutation.mutateAsync({
+      data: imageData,
+    });
+
+    if (uploadRes?.data?.uploadUrl) {
+      await uploadImageMutation.mutateAsync({
+        url: uploadRes.data.uploadUrl,
+        file,
+      });
+      setCompanyLogo(uploadRes.data.filePath);
+    }
+  };
+
+  const documentDeleteHandler = (id: any) => {
+    documentDeleteMutation.mutate(id);
+  };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 mt-2">
@@ -246,27 +453,75 @@ const handleSave = () => {
           onSave={handleSave}
         />
 
-        <DocumentUpload
-          documents={companyData.documents}
-          onUploadDocument={uploadDocument}
-          onRemoveDocumentFile={removeDocumentFile}
-        />
-              {/* 🚀 FINAL SUBMIT BUTTON */}
-      <div className=" pb-6 flex justify-end mt-6">
-        <Button           onClick={handleSave}
->
-          Submit
-        </Button>
-        {/* <button
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-        >
-          Submit All Data
-        </button> */}
-      </div>
+        <Card>
+          <CardContent>
+            <CardTitle>Document Upload</CardTitle>
+            <Button
+              className="mb-2 mt-3 cursor-pointer text-orange-600 border border-orange-600"
+              variant={"outline"}
+              type="button"
+              onClick={handleAddMore}
+            >
+              Add more
+            </Button>
+            <div className="grid grid-cols-3 gap-3">
+              {documentInputs?.map((doc, index) => (
+                <div key={index} className="contents">
+                  <div className="col-span-1">
+                    <DropdownSelector
+                      values={documentDropdownValues}
+                      selectedValue={doc.documentType}
+                      onChange={(value: any) =>
+                        handleDocumentChange(index, value)
+                      }
+                    />
+                  </div>
+
+                  <div className="col-span-2 flex gap-3 items-start">
+                    <div className="w-1/2">
+                      <input
+                        type="file"
+                        accept="*/*"
+                        className="hidden"
+                        id={`file-upload-${index}`}
+                        onChange={(e) => handleDocumentUpload(e, index)}
+                      />
+                      <label
+                        htmlFor={`file-upload-${index}`}
+                        className="w-full bg-[#E1E2E9] rounded-md p-2 text-[11px] cursor-pointer text-gray-600 block"
+                      >
+                        {doc.documentUrl !== "choose file"
+                          ? doc.documentUrl.split("/").pop()
+                          : "Choose file"}
+                      </label>
+                    </div>
+
+                    {doc.documentUrl !== "choose file" && (
+                      <div className="w-1/2 flex gap-2">
+                        <Button>Edit</Button>
+                        <Button
+                          onClick={() => documentDeleteHandler(doc?.id)}
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <div className=" pb-6 flex justify-end mt-6">
+          <Button onClick={handleSave}>Submit</Button>
+        </div>
       </div>
 
-      <CompanyLogo />
-
+      <CompanyLogo
+        companyLogo={companyLogo}
+        handleCompanyLogo={handleCompanyLogo}
+      />
     </div>
   );
 };
