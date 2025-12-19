@@ -1,5 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { getVendorDetails, getVendorDocuments, getVendorOwners } from "../helper/vendorDetails";
+import {
+  getVendorDetails,
+  getVendorDocuments,
+  getVendorEmployees,
+  getVendorOwners,
+} from "../helper/vendorDetails";
 
 export const useGetVendorDetails = () => {
   return useQuery({
@@ -19,5 +24,12 @@ export const useGetVendorOwnershipDetails = () => {
   return useQuery({
     queryKey: ["vendor-owners"],
     queryFn: () => getVendorOwners(),
+  });
+};
+
+export const useGetVendorEmployees = () => {
+  return useQuery({
+    queryKey: ["vendor-employees"],
+    queryFn: () => getVendorEmployees(),
   });
 };
