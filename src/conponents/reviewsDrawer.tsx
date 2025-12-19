@@ -1,98 +1,115 @@
-import user from "../assets/testingProfilePicture.jpg";
-
-import { TiIconStarFilled, TiIconX } from "./icons";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-  Separator,
+import { TiIconStarFilled } from "./icons";
+import { 
+  Sheet,
+  SheetContent, 
+  SidebarGroup,
+  SidebarGroupLabel,
 } from "../components/ui";
+import { getVendorReviewById } from "../services/userGetVendorReview";
+import { useEffect, useState } from "react";
+import { ProfilePicture } from "./common/ProfileIcon";
 
 type reviewDrawerProps = {
   open: any;
   setOpen: any;
-  reviewData: any;
+  reviewId: number | undefined;
 };
 
 export function ReviewsDrawer({
   open,
   setOpen,
-  reviewData,
+  reviewId,
 }: reviewDrawerProps) {
+  const { data, isPending } = getVendorReviewById(reviewId!);
+
+  const [reviewData, setReviewData] = useState<any>();
+  useEffect(() => {
+    setReviewData(data?.data[0]);
+  }, [data])
   return (
-    <Drawer direction="right" open={open}>
-      <DrawerContent>
-        <div className=" w-full h-full  overflow-y-scroll">
-          <DrawerHeader>
-            <DrawerTitle>
-              <div className="mb-4 flex items-center justify-between  ">
-                <span className="text-xl text-gray-600 font-bold">
-                  {" "}
-                  Details
-                </span>
-                <DrawerTrigger>
-                  <button onClick={() => setOpen(!open)}>
-                    <TiIconX className="text-gray-600" />
-                  </button>
-                </DrawerTrigger>
-              </div>
-              <div className="mb-4 w-full flex items-center gap-3 justify-between  ">
-                <div className="w-1/3">
-                  <div className="h-20 w-20 rounded-full overflow-hidden">
-                    <img className="object-cover" src={user} alt="user-Image" />
-                  </div>
-                </div>
-                <div className="w-full">
-                  <p className="text-gray-800 text-xl">{reviewData?.name}</p>
-                  <p className="text-gray-600 ">Jaipur Rajasthan</p>
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetContent className=" duration-200!">
+        <div className=" w-full h-full">
+          <SidebarGroup>
+            <SidebarGroupLabel>
+              Details
+
+            </SidebarGroupLabel>
+          </SidebarGroup>
+
+          {isPending ? <div>Loading...</div> : 
+          <div className=" px-4">
+            <div className=" border my-4 rounded-xl shadow-xs p-2 w-full flex items-center gap-3 justify-between  ">
+              <div className="">
+                <div className="h-12 w-12 rounded-full overflow-hidden">
+                  <ProfilePicture url={reviewData?.userImage} name={reviewData?.userFirstName} />
                 </div>
               </div>
-              <Separator />
-            </DrawerTitle>
-          </DrawerHeader>
-          <DrawerDescription>
-            <div className=" w-full px-4 mb-5 md:mb-0 flex flex-col gap-2  items-start ">
-              <div className="w-full  flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-bold">User Reviews:</h3>
-                  <span>Reviewed on 7 June 2025</span>
-                </div>
-                <div className=" flex items-center gap-2">
-                  <div className="flex gap-1">
-                    <TiIconStarFilled size="10" color="gold" />
-                    <TiIconStarFilled size="10" color="gold" />
-                    <TiIconStarFilled size="10" color="gold" />
-                    <TiIconStarFilled size="10" color="gold" />
-                    <TiIconStarFilled size="10" color="gold" />
-                  </div>
-                  <span>4.5/5</span>
-                </div>
-              </div>
-              <div className="w-full">
-                <h3 className="text-lg font-bold">Comment:</h3>
-                <p>{reviewData?.review}</p>
-              </div>
-              <div className="w-full">
-                <h3 className="text-lg font-bold">Photos:</h3>
-                <div className="w-full grid grid-cols-3 gap-1">
-                  <div className=" w-full flex justify-center items-center">
-                    <img src={user} alt="userImage" />
-                  </div>
-                  <div className="w-full flex justify-center items-center">
-                    <img src={user} alt="userImage" />
-                  </div>
-                  <div className=" w-full flex justify-center items-center">
-                    <img src={user} alt="userImage" />
-                  </div>
-                </div>
+              <div className="w-full flex flex-col gap-0">
+                <p className="text-gray-800 text-lg ">{reviewData?.userFirstName + " " + reviewData?.userLastName}</p>
+                <p className="text-gray-600 text-sm font-medium">Jaipur Rajasthan</p>
               </div>
             </div>
-          </DrawerDescription>
+            <div>
+              <div className=" w-full py-3  flex flex-col gap-2  items-start ">
+                <div className="w-full flex flex-col ">
+                  <div className=" flex w-full justify-between ">
+                    <Heading>User Reviews</Heading>
+                    <span className=" text-black"> {new Date(reviewData?.createdAt).toDateString()}</span>
+
+                  </div>
+                  <div className=" flex items-center gap-2">
+                    <div className="flex gap-1">
+                      {
+                        Array(reviewData?.rating).fill(0).map((_, index) => {
+                          return <TiIconStarFilled key={index} size="20" color="gold" />
+                        })
+                      }
+                    </div>
+                  </div>
+                </div>
+                <div className=" mt-3">
+                  <Heading>Service Name</Heading>
+                  <Text>Lorem, ipsum dolor.</Text>
+                </div>
+                <div className=" mt-3">
+                  <Heading>Comment</Heading>
+                  <Text>{reviewData?.description}</Text>
+                </div>
+                {
+                  reviewData?.reviewMedia?.length > 0 && (
+                    <div className="mt-3">
+                      <Heading>Photos:</Heading>
+                      <div className="w-full grid grid-cols-3 gap-1">
+                        {
+                          reviewData?.reviewMedia?.map((item: any, index: number) => {
+                            return (
+                              <div key={index} className=" w-full flex justify-center items-center">
+                                <img src={item.mediaUrl} alt={reviewData.userFirstName} />
+                              </div>
+                            )
+                          })
+                        }
+                      </div>
+                    </div>
+                  )
+                }
+
+              </div>
+            </div>
+          </div>
+          }
         </div>
-      </DrawerContent>
-    </Drawer>
+      </SheetContent>
+    </Sheet>
   );
+}
+
+
+const Heading = ({ children }: { children: React.ReactNode }) => {
+  return <p className=" text-black text-base font-semibold">{children}</p>
+}
+
+const Text = ({ children }: { children: React.ReactNode }) => {
+  return <p className=" text-black ">{children}</p>
 }

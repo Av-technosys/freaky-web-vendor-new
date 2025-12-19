@@ -8,7 +8,7 @@ import {
 } from "../components/ui";
 
 export type dropdownValuesProps = {
-  Title?: string;
+  title?: string;
   options: string[];
 };
 
@@ -22,20 +22,20 @@ export default function DropdownSelector({
   selectedValue?: number | string | any;
 }) {
   return (
-    <div className="flex flex-col gap-2">
-      {values.Title && (
-        <Label htmlFor="dropdown value selector" className="text-sm font-[400]">
-          {values.Title}
+    <div className="flex flex-col gap-0.5">
+      {values.title && (
+        <Label htmlFor="dropdown value selector" className="text-sm text-gray-600 font-semibold">
+          {values.title}
         </Label>
       )}
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button
-            id={values.Title}
-            className="flex w-full items-center justify-between rounded-md border focus:border-black bg-white px-3 py-2 text-sm text-slate-900 shadow-sm "
+            id={values.title}
+            className="flex w-full items-center justify-between rounded-lg border focus:border-black bg-white px-3 py-2 text-sm text-slate-900 shadow-xs "
           >
-            <span className="text-[#8B8D97]">{selectedValue}</span>
+            <span className="text-[#8B8D97]">{values?.options?.filter((item: any) => item?.value === selectedValue)[0]?.label}</span>
             <ChevronDown className="h-4 w-4 text-slate-500" />
           </button>
         </DropdownMenuTrigger>

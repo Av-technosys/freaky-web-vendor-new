@@ -1,5 +1,6 @@
 
 import { Button, Card, CardContent, CardFooter, CardHeader, CardTitle } from '../components/ui';
+import { ProfilePicture } from './common/ProfileIcon';
 import { TiIconStarFilled } from './icons';
 
 type reviewsProps={
@@ -16,30 +17,28 @@ const ReviewCard = ({userReviews,drawerHandler}:reviewsProps) => {
               <Card>
                 <CardHeader>
                   <CardTitle className="w-full flex items-center justify-between">
-                    <div className="w-2/3  flex items-center  gap-2">
+                    <div className="  flex items-center  gap-2">
                       <div className="w-8 h-8 rounded-full overflow-hidden">
-                        <img
-                          className="w-full h-full object-cover"
-                          src={review.image}
-                          alt="profile-picture"
-                        />
+                        <ProfilePicture url={review.userImage} name={review.userName} />
                       </div>
-                      <span className="text-[13px]">{review.name}</span>
-                      <span className="text-[12px]">{review.date}</span>
+                     <div className=' flex flex-col gap-0'>
+                       <span className="text-sm font-semibold">{review.userName}</span>
+                      <span className="text-xs font-semibold text-gray-600">{new Date(review.createdAt).toDateString()}</span>
+                     </div>
                     </div>
-                    <div className="w-1/3  flex items-center justify-center gap-1">
-                      <TiIconStarFilled size="14" color="gold" />
-                      <TiIconStarFilled size="14" color="gold" />
-                      <TiIconStarFilled size="14" color="gold" />
-                      <TiIconStarFilled size="14" color="gold" />
-                      <TiIconStarFilled size="14" color="gold" />
+                    <div className="flex items-center justify-center gap-1">
+                    {
+                      Array(review.rating).fill(0).map((_,index)=>{
+                        return <TiIconStarFilled key={index} size="14" color="gold" />
+                      })
+                    }
                     </div>
                   </CardTitle>
                 </CardHeader>
-                <CardContent>{review.review}</CardContent>
-                <CardFooter className="w-full -mt-6 items-center justify-end">
+                <CardContent className=' line-clamp-3'>{review.description}</CardContent>
+                <CardFooter className="w-full items-center justify-end">
                   <Button
-                    onClick={() => drawerHandler(review)}
+                    onClick={() => drawerHandler(review.id)}
                     className="text-yellow-500"
                     variant="link"
                   >

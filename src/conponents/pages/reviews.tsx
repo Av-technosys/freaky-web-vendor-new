@@ -1,11 +1,12 @@
 import DropdownSelector from "../dropdownSelector";
-import profileImage from "../../assets/testingProfilePicture.jpg";
 import { ReviewsDrawer } from "../reviewsDrawer";
-import ServicesReviews from "../servicesReviews";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReviewCard from "../reviewCard";
+import { getVendorReviews } from "../../services/userGetVendorReview";
+import { useQueryClient } from "@tanstack/react-query";
 
 const dropdownValuesTime = {
+  title: "Time",
   options: [
     {
       label: "All Time",
@@ -26,6 +27,7 @@ const dropdownValuesTime = {
   ],
 };
 const dropdownValuesLocation = {
+  title: "Location",
   options: [
     {
       label: "Jaipur",
@@ -42,6 +44,7 @@ const dropdownValuesLocation = {
   ],
 };
 const dropdownValuesServices = {
+  title: "Services",
   options: [
     {
       label: "Service1",
@@ -58,99 +61,57 @@ const dropdownValuesServices = {
   ],
 };
 
-const userReviews = [
-  {
-    name: "Peter Parker",
-    image: profileImage,
-    date: "24 July",
-    review:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quibusdam praesentium cumque, sapiente iusto, at, deserunt omnis quam culpa accusantium reiciendis nisi libero est eaque soluta quo repellat similique harum consequatur!",
-  },
-  {
-    name: "Peter Parker",
-    image: profileImage,
-    date: "24 July",
-    review:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quibusdam praesentium cumque, sapiente iusto, at, deserunt omnis quam culpa accusantium reiciendis nisi libero est eaque soluta quo repellat similique harum consequatur!",
-  },
-  {
-    name: "Peter Parker",
-    image: profileImage,
-    date: "24 July",
-    review:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quibusdam praesentium cumque, sapiente iusto, at, deserunt omnis quam culpa accusantium reiciendis nisi libero est eaque soluta quo repellat similique harum consequatur!",
-  },
-  {
-    name: "Peter Parker",
-    image: profileImage,
-    date: "24 July",
-    review:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quibusdam praesentium cumque, sapiente iusto, at, deserunt omnis quam culpa accusantium reiciendis nisi libero est eaque soluta quo repellat similique harum consequatur!",
-  },
-  {
-    name: "Peter Parker",
-    image: profileImage,
-    date: "24 July",
-    review:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quibusdam praesentium cumque, sapiente iusto, at, deserunt omnis quam culpa accusantium reiciendis nisi libero est eaque soluta quo repellat similique harum consequatur!",
-  },
-  {
-    name: "Peter Parker",
-    image: profileImage,
-    date: "24 July",
-    review:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quibusdam praesentium cumque, sapiente iusto, at, deserunt omnis quam culpa accusantium reiciendis nisi libero est eaque soluta quo repellat similique harum consequatur!",
-  },
-  {
-    name: "Peter Parker",
-    image: profileImage,
-    date: "24 July",
-    review:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quibusdam praesentium cumque, sapiente iusto, at, deserunt omnis quam culpa accusantium reiciendis nisi libero est eaque soluta quo repellat similique harum consequatur!",
-  },
-  {
-    name: "Peter Parker",
-    image: profileImage,
-    date: "24 July",
-    review:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quibusdam praesentium cumque, sapiente iusto, at, deserunt omnis quam culpa accusantium reiciendis nisi libero est eaque soluta quo repellat similique harum consequatur!",
-  },
-  {
-    name: "Peter Parker",
-    image: profileImage,
-    date: "24 July",
-    review:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quibusdam praesentium cumque, sapiente iusto, at, deserunt omnis quam culpa accusantium reiciendis nisi libero est eaque soluta quo repellat similique harum consequatur!",
-  },
-];
-
+ 
 const Reviews = () => {
-  const [time, setTime] = useState(dropdownValuesTime.options[0].label);
+
+  const queryClient =useQueryClient()
+
+  // const {data, isPending} = getVendorReviews({
+  //   page: 1,
+  //   page_size: 10,
+  //   vendorId: 27,
+  //   time: "all_time"
+  // }); 
+  const [time, setTime] = useState(dropdownValuesTime.options[0].value);
+  const {data, isPending} = getVendorReviews(1, 10 , 27 , time); 
+  const [reviews, setReviews] = useState([]);
+  useEffect(() => {
+    setReviews(data?.data);
+  },[data])
+
   const [location, setLocation] = useState(
-    dropdownValuesLocation.options[0].label
+    dropdownValuesLocation.options[0].value
   );
   const [service, setService] = useState(
-    dropdownValuesServices.options[0].label
+    dropdownValuesServices.options[0].value
   );
   const [openDrawer, setOpenDrawer] = useState(false);
-  const [reviewFulldata, setReviewFulldata] = useState();
+  const [activeDrawerReviewId, setActiveDrawerReviewId] = useState<number>();
 
   function handleTimeChange(value: any) {
-    setTime(value.label);
+    queryClient.invalidateQueries({
+      queryKey: ["vendor-reviews"],
+    })
+    setTime(value.value);
   }
 
   function handleLocationChange(value: any) {
-    setLocation(value.label);
+    setLocation(value.value);
   }
 
   function handleServiceChange(value: any) {
-    setService(value.label);
+    setService(value.value);
   }
 
-  const drawerHandler = (review: any) => {
-    setReviewFulldata(review);
+  const drawerHandler = (reviewId: number) => {
+    setActiveDrawerReviewId(reviewId);
     setOpenDrawer(true);
   };
+
+
+  if(isPending){
+    return <p>Loading</p>
+  }
 
   return (
     <>
@@ -158,10 +119,10 @@ const Reviews = () => {
         <ReviewsDrawer
           open={openDrawer}
           setOpen={setOpenDrawer}
-          reviewData={reviewFulldata}
+          reviewId={activeDrawerReviewId}
         />
       )}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-2 gap-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-1 gap-3">
         <div className="col-span-1">
           <DropdownSelector
             values={dropdownValuesTime}
@@ -184,11 +145,11 @@ const Reviews = () => {
           />{" "}
         </div>
       </div>
-      <div>
+      {/* <div>
         <ServicesReviews />
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 my-2">
-        <ReviewCard drawerHandler={drawerHandler} userReviews={userReviews} />
+      </div> */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-4">
+        <ReviewCard drawerHandler={drawerHandler} userReviews={reviews} />
       </div>
     </>
   );

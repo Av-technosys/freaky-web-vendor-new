@@ -22,6 +22,11 @@ export const apiConstant = {
     updateServiceById: "/v1/product/update",
     deleteImageById: "/v1/product/image",
   },
+  review:{
+    getAllReview:"/v1/vendor/review",
+    getReviewById:"/v1/vendor/review",
+    getCalendar:"/v1/vendor/calendar/get_events",
+  },
   uploadImage: {
     getS3Url: "/v1/upload/get_S3_url",
   },
