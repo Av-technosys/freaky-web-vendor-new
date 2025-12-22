@@ -26,8 +26,9 @@ interface GroupOption {
 }
 
 interface MultipleSelectorProps {
-  inviteAddHandler: any;
   field: any;
+  index: any;
+  updateField: any;
   value?: Option[];
   defaultOptions?: Option[];
 
@@ -192,8 +193,9 @@ const CommandEmpty = ({
 CommandEmpty.displayName = "CommandEmpty";
 
 const MultipleSelector = ({
-  inviteAddHandler,
   field,
+  index,
+  updateField,
   value,
   onChange,
   placeholder,
@@ -228,8 +230,7 @@ const MultipleSelector = ({
 
   useEffect(() => {
     if (!field) return;
-
-    inviteAddHandler({
+    updateField(index, field, {
       email: field,
       permissions: selected,
     });

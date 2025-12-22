@@ -6,7 +6,7 @@ import {
   InputGroupInput,
 } from "../../components/ui/input-group";
 import { useState } from "react";
-import { Label, Separator } from "../../components/ui";
+import { Button, Label, Separator } from "../../components/ui";
 import { IconMailFilled, IconPlus, IconTrash } from "@tabler/icons-react";
 import MultiselectorDialog from "../teamRoleMultiselectordialogbox";
 import MultipleSelector from "../../components/ui/multi-select";
@@ -28,37 +28,34 @@ const categories = [
 ];
 
 const Users = () => {
-  const [fields, setFields] = useState([
-    { email: "" },
-    { email: "" },
-    { email: "" },
+  const [fields, setFields] = useState<any>([
+    { email: "", permissions: [] },
+    { email: "", permissions: [] },
+    { email: "", permissions: [] },
   ]);
 
-  const [invite, setInvite] = useState<any>([]);
-
-  const inviteAddHandler = (inviteDetails: any) => {
-    setInvite((prev: any[]) => {
-      const exists = prev.find((item) => item.email === inviteDetails.email);
-
-      if (exists) {
-        return prev.map((item) =>
-          item.email === inviteDetails.email ? inviteDetails : item
-        );
-      }
-      return [...prev, inviteDetails];
-    });
-  };
-
-  const updateField = (index: number, value: string) => {
-    setFields((prev) => {
-      const updated = [...prev];
-      updated[index] = { ...updated[index], email: value };
-      return updated;
-    });
+  const updateField = (index: number, value: string, fieldData: any) => {
+    if (fieldData) {
+      setFields((prev: any) => {
+        const updated = [...prev];
+        updated[index] = {
+          ...updated[index],
+          email: value,
+          permissions: fieldData.permissions,
+        };
+        return updated;
+      });
+    } else {
+      setFields((prev: any) => {
+        const updated = [...prev];
+        updated[index] = { ...updated[index], email: value, permissions: [] };
+        return updated;
+      });
+    }
   };
 
   const addField = () => {
-    setFields([...fields, { email: "" }]);
+    setFields([...fields, { email: "", permissions: [] }]);
   };
 
   const { data: vendorEmployees } = useGetVendorEmployees();
@@ -70,8 +67,21 @@ const Users = () => {
   };
 
   const sendInvitationHandler = () => {
-    inviteEmloyeeMutation.mutate(invite);
-    setFields([{ email: "" }, { email: "" }, { email: "" }]);
+    if (fields.length > 0) {
+      const fieldsData = fields.filter((field: any) => {
+        return field.email != "";
+      });
+
+      inviteEmloyeeMutation.mutate(fieldsData, {
+        onSuccess: () => {
+          setFields([
+            { email: "", permissions: [] },
+            { email: "", permissions: [] },
+            { email: "", permissions: [] },
+          ]);
+        },
+      });
+    }
   };
 
   return (
@@ -93,18 +103,16 @@ const Users = () => {
             </p>
           </div>
           <div className="w-full lg:mt-0 mt-10  space-y-4 text-black">
-            {fields.map((field, index) => (
+            {fields.map((field: any, index: number) => (
               <div key={index} className="space-y-2 space-x-4  flex">
                 <InputGroup>
                   <InputGroupInput
+                    type="email"
                     value={field.email}
                     placeholder="team@team.com"
-                    onChange={(e) => updateField(index, e.target.value)}
-                    onBlur={() => {
-                      inviteAddHandler({
-                        email: field.email,
-                        permissions: invite[index]?.permissions || [],
-                      });
+                    onChange={(e) => updateField(index, e.target.value, "")}
+                    onBlur={(e) => {
+                      e.currentTarget.reportValidity();
                     }}
                   />
 
@@ -114,8 +122,9 @@ const Users = () => {
                 </InputGroup>
 
                 <MultipleSelector
-                  inviteAddHandler={inviteAddHandler}
                   field={field.email}
+                  index={index}
+                  updateField={updateField}
                   commandProps={{ label: "Select Role" }}
                   defaultOptions={categories}
                   placeholder="Select Role"
@@ -129,8 +138,9 @@ const Users = () => {
 
                 <button
                   onClick={() => {
-                    const updated = fields.filter((_, i) => i !== index);
-                    setFields(updated);
+                    setFields((prev: any[]) =>
+                      prev.filter((_, i) => i !== index)
+                    );
                   }}
                   className="text-red-500 hover:text-red-700"
                 >
@@ -139,16 +149,20 @@ const Users = () => {
               </div>
             ))}
             <div className="flex justify-between mt-2">
-              <div className="flex gap-2 items-center cursor-pointer">
+              <Button
+                variant="ghost"
+                className="cursor-pointer"
+                onClick={addField}
+              >
                 <IconPlus size={18} />
-                <button onClick={addField}>Add another</button>
-              </div>
+                Add another
+              </Button>
 
               <div className="flex gap-2 items-center cursor-pointer">
                 <IconMailFilled size={18} className="text-orange-500" />
                 <button
                   onClick={sendInvitationHandler}
-                  className="text-orange-500"
+                  className="text-orange-500 cursor-pointer"
                 >
                   Send Invites
                 </button>

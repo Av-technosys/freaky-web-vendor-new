@@ -56,6 +56,8 @@ export default function MultiselectorDialog({
   const [allowedPermissions, setAllowedPermissions] =
     useState<any>(permissions);
 
+  const [openDialog, setOpenDialog] = useState(false);
+
   const updatePemissionMutation = useUpdateEmployeePermissions();
 
   const togglePermission = (roleKey: string, checked: boolean) => {
@@ -67,11 +69,18 @@ export default function MultiselectorDialog({
   };
 
   const updateHandler = () => {
-    updatePemissionMutation.mutate({ allowedPermissions, employeeId });
+    updatePemissionMutation.mutate(
+      { allowedPermissions, employeeId },
+      {
+        onSuccess: () => {
+          setOpenDialog(false);
+        },
+      }
+    );
   };
 
   return (
-    <Dialog>
+    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogTrigger asChild>{children}</DialogTrigger>
 
       <DialogContent className="lg:max-w-2xl  rounded-4xl">
