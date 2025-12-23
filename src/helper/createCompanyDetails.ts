@@ -79,6 +79,56 @@ export const createVendorDocuments = async (vendorDocuments: any) => {
   }
 };
 
+export const updateVendorDocument = async (vendorDocument: any) => {
+  try {
+    const response = await axiosInstance.put(
+      apiConstant.vendor.updateVendorDocument,
+      vendorDocument
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+  }
+};
+
+export const updateEmployeePermission = async ({
+  allowedPermissions,
+  employeeId,
+}: any) => {
+  try {
+    const response = await axiosInstance.put(
+      `${apiConstant.vendor.updateEmployeePermission}/${employeeId}`,
+      allowedPermissions
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+  }
+};
+
+export const deleteVendorEmployee = async (employeeId: any) => {
+  try {
+    const response = await axiosInstance.delete(
+      `${apiConstant.vendor.deleteVendorEmployee}/${employeeId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+  }
+};
+
+export const sendInvitationToEmployee = async (invite: any) => {
+  try {
+    const response = await axiosInstance.post(
+      `${apiConstant.vendor.sendEmployeeInvitation}`,
+      invite
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+  }
+};
+
 export const deleteVendorDocument = async (documentId: any) => {
   try {
     const response = await axiosInstance.delete(

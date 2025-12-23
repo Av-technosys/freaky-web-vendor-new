@@ -36,3 +36,15 @@ export const getVendorOwners = async () => {
     throw error;
   }
 };
+
+export const getVendorEmployees = async () => {
+  try {
+    const response = await axiosInstance.get(
+      `${apiConstant.vendor.getVendorEmployees}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+    throw error;
+  }
+};

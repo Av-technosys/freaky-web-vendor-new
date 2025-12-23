@@ -7,6 +7,10 @@ import {
   createOwnershipInformation,
   createVendorDocuments,
   deleteVendorDocument,
+  deleteVendorEmployee,
+  sendInvitationToEmployee,
+  updateEmployeePermission,
+  updateVendorDocument,
 } from "../helper/createCompanyDetails";
 import { toast } from "sonner";
 
@@ -86,6 +90,22 @@ export const useCreateVendorDocument = () => {
   });
 };
 
+export const useUpdateVendorDocument = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateVendorDocument,
+    onSuccess: () => {
+      toast.success("Document updated successfully.");
+      queryClient.invalidateQueries({
+        queryKey: ["vendor-documents"],
+      });
+    },
+    onError: () => {
+      toast.error("Unable to update vendor document.");
+    },
+  });
+};
+
 export const useDeleteVendorDocument = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -98,6 +118,50 @@ export const useDeleteVendorDocument = () => {
     },
     onError: () => {
       toast.error("Unable to delete vendor document.");
+    },
+  });
+};
+
+export const useDeleteVendorEmployee = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteVendorEmployee,
+    onSuccess: () => {
+      toast.success("Employee deleted successfully.");
+      queryClient.invalidateQueries({
+        queryKey: ["vendor-employees"],
+      });
+    },
+    onError: () => {
+      toast.error("Unable to delete employee.");
+    },
+  });
+};
+
+export const useInviteVendorEmployee = () => {
+  return useMutation({
+    mutationFn: sendInvitationToEmployee,
+    onSuccess: () => {
+      toast.success("Invitation sent successfully.");
+    },
+    onError: () => {
+      toast.error("Unable to send invitation.");
+    },
+  });
+};
+
+export const useUpdateEmployeePermissions = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateEmployeePermission,
+    onSuccess: () => {
+      toast.success("Permission updated successfully.");
+      queryClient.invalidateQueries({
+        queryKey: ["vendor-employees"],
+      });
+    },
+    onError: () => {
+      toast.error("Unable to update vendor document.");
     },
   });
 };
