@@ -27,6 +27,7 @@ import {
   useGetVendorOwnershipDetails,
 } from "../../services/useGetVendorCompanyDetails";
 import { useQueryClient } from "@tanstack/react-query";
+import UpdateDocumentPopup from "../updateDocumentPopup";
 
 // ------------------------ INITIAL VALUES ------------------------
 
@@ -76,16 +77,20 @@ const documentDropdownValues = {
 const CompanyProfile = () => {
   const [open, setOpen] = useState(false);
   const [vendorDocuments, setVendorDocuments] = useState<any>([]);
+  const [openUpdateDocumentPopup, setOpenUpdateDocumentPopup] = useState(false);
+  const [updatedDocumentDetails, setUpdatedDocumentDetails] = useState();
+
   const [documentInputs, setDocumentInputs] = useState<any[]>([
     { documentType: "business_license", documentUrl: "choose file" },
   ]);
-  
+
+  console.log("documentINputs",documentInputs);
 
   const getImageUrlMutation = useGetImageUrl();
   const uploadImageMutation = useUploadImage();
 
   const { data: vendorData } = useGetVendorDetails();
-  const { data: vendorOwnership}=useGetVendorOwnershipDetails();
+  const { data: vendorOwnership } = useGetVendorOwnershipDetails();
   const { data: allVendorDocuments } = useGetVendorDocuments();
 
   const queryClient = useQueryClient();
@@ -136,7 +141,7 @@ const CompanyProfile = () => {
   const [companyLogo, setCompanyLogo] = useState<any>("");
 
   useEffect(() => {
-     const companyOwners = vendorOwnership?.data;
+    const companyOwners = vendorOwnership?.data;
     if (vendorData) {
       const companyInfo = vendorData?.data;
       setCompanyData((prev) => ({
@@ -261,7 +266,7 @@ const CompanyProfile = () => {
       bankType: companyData.bankType,
     };
 
-    const companyOwnershipInformation =  companyData.owners;
+    const companyOwnershipInformation = companyData.owners;
 
     CompanyInformationMutation.mutate(companyInformationData);
     ContactInformationMutation.mutate(companyContactDetails);
@@ -353,7 +358,7 @@ const CompanyProfile = () => {
   const handleAddMore = () => {
     setDocumentInputs((prev: any) => [
       ...prev,
-      { documentType: "Business License", documentUrl: "choose file" },
+      { documentType: "business_license", documentUrl: "choose file" },
     ]);
   };
 
@@ -384,145 +389,162 @@ const CompanyProfile = () => {
     documentDeleteMutation.mutate(id);
   };
 
+  const documentUpdateHandler = (doc: any) => {
+    setOpenUpdateDocumentPopup(true);
+    setUpdatedDocumentDetails(doc);
+  };
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 mt-2">
-      <div className="order-1 lg:order-1 col-span-1 lg:col-span-3 flex flex-col gap-3">
-        <CompanyInformation
-          data={{
-            businessName: companyData.businessName,
-            website: companyData.website,
-            dbaName: companyData.dbaName,
-            legalEntityName: companyData.legalEntityName,
-            einNumber: companyData.einNumber,
-            businessType: companyData.businessType,
-            incorporationDate: companyData.incorporationDate,
-          }}
-          onUpdate={updateCompanyData}
-          open={open}
-          setOpen={setOpen}
+    <>
+      {
+        <UpdateDocumentPopup
+          openPopup={openUpdateDocumentPopup}
+          closePopup={setOpenUpdateDocumentPopup}
+          details={updatedDocumentDetails}
+          dropdownValues={documentDropdownValues}
         />
+      }
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 mt-2">
+        <div className="order-1 lg:order-1 col-span-1 lg:col-span-3 flex flex-col gap-3">
+          <CompanyInformation
+            data={{
+              businessName: companyData.businessName,
+              website: companyData.website,
+              dbaName: companyData.dbaName,
+              legalEntityName: companyData.legalEntityName,
+              einNumber: companyData.einNumber,
+              businessType: companyData.businessType,
+              incorporationDate: companyData.incorporationDate,
+            }}
+            onUpdate={updateCompanyData}
+            open={open}
+            setOpen={setOpen}
+          />
 
-        <ContactDetails
-          data={{
-            contactName: companyData.contactName,
-            primaryEmail: companyData.primaryEmail,
-            primaryPhoneNumber: companyData.primaryPhoneNumber,
-            instagramLink: companyData.instagramLink,
-            youtubeLink: companyData.youtubeLink,
-            facebookLink: companyData.facebookLink,
-          }}
-          onUpdate={updateCompanyData}
-        />
+          <ContactDetails
+            data={{
+              contactName: companyData.contactName,
+              primaryEmail: companyData.primaryEmail,
+              primaryPhoneNumber: companyData.primaryPhoneNumber,
+              instagramLink: companyData.instagramLink,
+              youtubeLink: companyData.youtubeLink,
+              facebookLink: companyData.facebookLink,
+            }}
+            onUpdate={updateCompanyData}
+          />
 
-        <BusinessAddress
-          data={{
-            address1: companyData.address1,
-            address2: companyData.address2,
-            country: companyData.country,
-            state: companyData.state,
-            city: companyData.city,
-            zipCode: companyData.zipCode,
-          }}
-          onUpdate={updateCompanyData}
-        />
+          <BusinessAddress
+            data={{
+              address1: companyData.address1,
+              address2: companyData.address2,
+              country: companyData.country,
+              state: companyData.state,
+              city: companyData.city,
+              zipCode: companyData.zipCode,
+            }}
+            onUpdate={updateCompanyData}
+          />
 
-        <OwnershipInformation
-          data={{
-            owners: companyData.owners,
-            authorizedSignatory: companyData.authorizedSignatory,
-            businessType: companyData.businessType,
-          }}
-          onUpdateOwner={updateOwner}
-          onUpdateAuthorizedSignatory={(index) =>
-            updateCompanyData("authorizedSignatory", index)
-          }
-          onAddOwner={addOwner}
-          onRemoveOwner={removeOwner}
-        />
+          <OwnershipInformation
+            data={{
+              owners: companyData.owners,
+              authorizedSignatory: companyData.authorizedSignatory,
+              businessType: companyData.businessType,
+            }}
+            onUpdateOwner={updateOwner}
+            onUpdateAuthorizedSignatory={(index) =>
+              updateCompanyData("authorizedSignatory", index)
+            }
+            onAddOwner={addOwner}
+            onRemoveOwner={removeOwner}
+          />
 
-        <BankAccountInformation
-          data={{
-            accountNumber: companyData.accountNumber,
-            bankName: companyData.bankName,
-            payeeName: companyData.payeeName,
-            routingNumber: companyData.routingNumber,
-            bankType: companyData.bankType,
-          }}
-          onUpdate={updateCompanyData}
-          onPrevious={handlePrevious}
-          onSave={handleSave}
-        />
+          <BankAccountInformation
+            data={{
+              accountNumber: companyData.accountNumber,
+              bankName: companyData.bankName,
+              payeeName: companyData.payeeName,
+              routingNumber: companyData.routingNumber,
+              bankType: companyData.bankType,
+            }}
+            onUpdate={updateCompanyData}
+            onPrevious={handlePrevious}
+            onSave={handleSave}
+          />
 
-        <Card>
-          <CardContent>
-            <CardTitle>Document Upload</CardTitle>
-            <Button
-              className="mb-2 mt-3 cursor-pointer text-orange-600 border border-orange-600"
-              variant={"outline"}
-              type="button"
-              onClick={handleAddMore}
-            >
-              Add more
-            </Button>
-            <div className="grid grid-cols-3 gap-3">
-              {documentInputs?.map((doc, index) => (
-                <div key={index} className="contents">
-                  <div className="col-span-1">
-                    <DropdownSelector
-                      values={documentDropdownValues}
-                      selectedValue={doc.documentType}
-                      onChange={(value: any) =>
-                        handleDocumentChange(index, value)
-                      }
-                    />
-                  </div>
-
-                  <div className="col-span-2 flex gap-3 items-start">
-                    <div className="w-1/2">
-                      <input
-                        type="file"
-                        accept="*/*"
-                        className="hidden"
-                        id={`file-upload-${index}`}
-                        onChange={(e) => handleDocumentUpload(e, index)}
+          <Card>
+            <CardContent>
+              <CardTitle>Document Upload</CardTitle>
+              <Button
+                className="mb-2 mt-3 cursor-pointer text-orange-600 border border-orange-600"
+                variant={"outline"}
+                type="button"
+                onClick={handleAddMore}
+              >
+                Add more
+              </Button>
+              <div className="grid grid-cols-3 gap-3">
+                {documentInputs?.map((doc, index) => (
+                  <div key={index} className="contents">
+                    <div className="col-span-1">
+                      <DropdownSelector
+                        values={documentDropdownValues}
+                        selectedValue={doc.documentType}
+                        onChange={(value: any) =>
+                          handleDocumentChange(index, value)
+                        }
                       />
-                      <label
-                        htmlFor={`file-upload-${index}`}
-                        className="w-full bg-[#E1E2E9] rounded-md p-2 text-[11px] cursor-pointer text-gray-600 block"
-                      >
-                        {doc.documentUrl !== "choose file"
-                          ? doc.documentUrl.split("/").pop()
-                          : "Choose file"}
-                      </label>
                     </div>
 
-                    {doc.documentUrl !== "choose file" && (
-                      <div className="w-1/2 flex gap-2">
-                        <Button>Edit</Button>
-                        <Button
-                          onClick={() => documentDeleteHandler(doc?.id)}
+                    <div className="col-span-2 flex gap-3 items-start">
+                      <div className="w-1/2">
+                        <input
+                          type="file"
+                          accept="*/*"
+                          className="hidden"
+                          id={`file-upload-${index}`}
+                          onChange={(e) => handleDocumentUpload(e, index)}
+                        />
+                        <label
+                          htmlFor={`file-upload-${index}`}
+                          className="w-full bg-[#E1E2E9] rounded-md p-2 text-[11px] cursor-pointer text-gray-600 block"
                         >
-                          Delete
-                        </Button>
+                          {doc.documentUrl !== "choose file"
+                            ? doc.documentUrl.split("/").pop()
+                            : "Choose file"}
+                        </label>
                       </div>
-                    )}
+
+                      {doc.documentUrl !== "choose file" && (
+                        <div className="w-1/2 flex gap-2">
+                          <Button onClick={() => documentUpdateHandler(doc)}>
+                            Edit
+                          </Button>
+                          <Button
+                            onClick={() => documentDeleteHandler(doc?.id)}
+                          >
+                            Delete
+                          </Button>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
 
-        <div className=" pb-6 flex justify-end mt-6">
-          <Button onClick={handleSave}>Submit</Button>
+          <div className=" pb-6 flex justify-end mt-6">
+            <Button onClick={handleSave}>Submit</Button>
+          </div>
         </div>
-      </div>
 
-      <CompanyLogo
-        companyLogo={companyLogo}
-        handleCompanyLogo={handleCompanyLogo}
-      />
-    </div>
+        <CompanyLogo
+          companyLogo={companyLogo}
+          handleCompanyLogo={handleCompanyLogo}
+        />
+      </div>
+    </>
   );
 };
 
