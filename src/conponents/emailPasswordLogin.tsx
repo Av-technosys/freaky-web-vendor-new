@@ -77,9 +77,8 @@ const EmailPasswordLogin = () => {
               Policy.
             </p>
             <div className="w-full mt-2 gap-3 flex items-center justify-between text-[14px]">
-              <div>
-                <u>Other issue with sign in</u>
-              </div>
+              <NavLink to="/sign-up">
+                <u>Sign Up</u></NavLink>
               <NavLink to="/forget-password">
                 <div>
                   <u>Forget Your Password</u>

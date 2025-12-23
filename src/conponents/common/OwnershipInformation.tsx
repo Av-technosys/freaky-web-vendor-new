@@ -11,6 +11,7 @@ import {
 import { Switch } from "../../components/ui/switch";
 import { type Owner } from "../../types/company";
 import { Trash2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface OwnershipInformationProps {
   data: {
@@ -22,6 +23,7 @@ interface OwnershipInformationProps {
   onUpdateAuthorizedSignatory: (index: number) => void;
   onAddOwner: () => void;
   onRemoveOwner: (index: number) => void; // Add this prop
+  className?: string
 }
 
 const OwnershipInformation = ({
@@ -30,9 +32,10 @@ const OwnershipInformation = ({
   onUpdateAuthorizedSignatory,
   onAddOwner,
   onRemoveOwner, // Add this to destructuring
+  className
 }: OwnershipInformationProps) => {
   return (
-    <Card>
+    <Card className={cn(className)}>
       <CardContent>
         <div className="flex justify-between items-center mb-5">
           <CardTitle>Ownership Information</CardTitle>
@@ -247,13 +250,13 @@ const OwnershipInformation = ({
           </div>
         ))}
 
-        {data.owners.length < 4 && data.businessType !== "solo" && (
+        {/* {data.owners.length < 4 && data.businessType !== "solo" && (
           <div className="flex justify-center mt-4">
             <Button onClick={onAddOwner} variant="outline">
               + Add Another Owner
             </Button>
           </div>
-        )}
+        )} */}
       </CardContent>
     </Card>
   );

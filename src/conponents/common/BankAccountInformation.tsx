@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "../../components/ui/select";
 import { type CompanyData } from "../../types/company";
+import { cn } from "@/lib/utils";
 
 interface BankAccountInformationProps {
   data: Pick<
@@ -23,16 +24,18 @@ interface BankAccountInformationProps {
   onUpdate: (key: keyof CompanyData, value: any) => void;
   onPrevious: () => void;
   onSave: () => void;
+  className?: string
 }
 
 const BankAccountInformation = ({
   data,
   onUpdate,
+  className
 }: //   onPrevious,
-//   onSave,
-BankAccountInformationProps) => {
+  //   onSave,
+  BankAccountInformationProps) => {
   return (
-    <Card>
+    <Card className={cn(className)}>
       <CardContent>
         <CardTitle className="mb-5">Bank Account Information</CardTitle>
 

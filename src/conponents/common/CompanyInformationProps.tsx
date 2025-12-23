@@ -30,6 +30,7 @@ import { Button } from "../../components/ui/button";
 import { Calendar } from "../../components/ui/calender";
 import { ChevronDownIcon } from "lucide-react";
 import { type CompanyData } from "../../types/company";
+import { cn } from "@/lib/utils";
 
 interface CompanyInformationProps {
   data: Pick<
@@ -45,6 +46,7 @@ interface CompanyInformationProps {
   onUpdate: (key: keyof CompanyData, value: any) => void;
   open: boolean;
   setOpen: (open: boolean) => void;
+  className?: string;
 }
 
 const CompanyInformation = ({
@@ -52,9 +54,10 @@ const CompanyInformation = ({
   onUpdate,
   open,
   setOpen,
+  className
 }: CompanyInformationProps) => {
   return (
-    <Card>
+    <Card className={cn(className)}>
       <CardContent>
         <div className="flex flex-col  gap-6">
           <CardTitle>Company Information</CardTitle>
