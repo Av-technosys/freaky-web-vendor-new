@@ -26,6 +26,9 @@ export const apiConstant = {
     getServiceById: "/v1/product/info?productId",
     updateServiceById: "/v1/product/update",
     deleteImageById: "/v1/product/image",
+    getVendorInvites: "/v1/vendor/invites",
+    createVendorEmployeeRequest: "/v1/vendor/employee_request",
+    getAllVendorsForInvitation: "/v1/vendor/request_vendors",
   },
   review: {
     getAllReview: "/v1/vendor/review",
