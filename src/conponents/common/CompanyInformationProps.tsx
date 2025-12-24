@@ -44,6 +44,7 @@ interface CompanyInformationProps {
     | "incorporationDate"
   >;
   onUpdate: (key: keyof CompanyData, value: any) => void;
+  readOnly: boolean | any;
   open: boolean;
   setOpen: (open: boolean) => void;
   className?: string;
@@ -52,10 +53,13 @@ interface CompanyInformationProps {
 const CompanyInformation = ({
   data,
   onUpdate,
+  readOnly,
   open,
   setOpen,
-  className
+  className,
 }: CompanyInformationProps) => {
+  const isReadOnly = readOnly === true;
+
   return (
     <Card className={cn(className)}>
       <CardContent>
@@ -101,7 +105,7 @@ const CompanyInformation = ({
                 id="dbaName"
                 type="text"
                 value={data.dbaName}
-                readOnly
+                readOnly={isReadOnly}
                 required
               />
             </div>

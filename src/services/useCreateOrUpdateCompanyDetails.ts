@@ -9,14 +9,19 @@ import {
   deleteVendorDocument,
   deleteVendorEmployee,
   sendInvitationToEmployee,
+  updateBankAccountInformation,
+  updateBusinessAddressInformation,
+  updateCompanyInformation,
+  updateContactInformation,
   updateEmployeePermission,
+  updateOwnershipInformation,
   updateVendorDocument,
 } from "../helper/createCompanyDetails";
 import { toast } from "sonner";
 
-export const useCreateCompanyInformation = () => {
+export const useUpdateCompanyInformation = () => {
   return useMutation({
-    mutationFn: createCompanyInformation,
+    mutationFn: updateCompanyInformation,
     onSuccess: () => {
       toast.success("Company Information updated successfully");
     },
@@ -26,9 +31,9 @@ export const useCreateCompanyInformation = () => {
   });
 };
 
-export const useCreateContactInformation = () => {
+export const useUpdateContactInformation = () => {
   return useMutation({
-    mutationFn: createContactInformation,
+    mutationFn: updateContactInformation,
     onSuccess: () => {
       toast.success("Contact Information updated successfully");
     },
@@ -38,9 +43,9 @@ export const useCreateContactInformation = () => {
   });
 };
 
-export const useCreateBusinessAddressInformation = () => {
+export const useUpdateBusinessAddressInformation = () => {
   return useMutation({
-    mutationFn: createBusinessAddressInformation,
+    mutationFn: updateBusinessAddressInformation,
     onSuccess: () => {
       toast.success("Business Information updated successfully");
     },
@@ -50,9 +55,9 @@ export const useCreateBusinessAddressInformation = () => {
   });
 };
 
-export const useCreateBankAccountInformation = () => {
+export const useUpdateBankAccountInformation = () => {
   return useMutation({
-    mutationFn: createBankAccountInformation,
+    mutationFn: updateBankAccountInformation,
     onSuccess: () => {
       toast.success("Bank Account Information updated successfully");
     },
@@ -62,14 +67,75 @@ export const useCreateBankAccountInformation = () => {
   });
 };
 
-export const useCreateOwnershipInformation = () => {
+export const useUpdateOwnershipInformation = () => {
   return useMutation({
-    mutationFn: createOwnershipInformation,
+    mutationFn: updateOwnershipInformation,
     onSuccess: () => {
       toast.success("Ownership Information updated successfully.");
     },
     onError: () => {
       toast.error("Unable to updated ownership information.");
+    },
+  });
+};
+
+
+export const useCreateCompanyInformation = () => {
+  return useMutation({
+    mutationFn: createCompanyInformation,
+    onSuccess: () => {
+      toast.success("Company Information created successfully");
+    },
+    onError: () => {
+      toast.error("Unable to created company information");
+    },
+  });
+};
+
+export const useCreateContactInformation = () => {
+  return useMutation({
+    mutationFn: createContactInformation,
+    onSuccess: () => {
+      toast.success("Contact Information created successfully");
+    },
+    onError: () => {
+      toast.error("Unable to created contact information");
+    },
+  });
+};
+
+export const useCreateBusinessAddressInformation = () => {
+  return useMutation({
+    mutationFn: createBusinessAddressInformation,
+    onSuccess: () => {
+      toast.success("Business Information created successfully");
+    },
+    onError: () => {
+      toast.error("Unable to created Business information");
+    },
+  });
+};
+
+export const useCreateBankAccountInformation = () => {
+  return useMutation({
+    mutationFn: createBankAccountInformation,
+    onSuccess: () => {
+      toast.success("Bank Account Information created successfully");
+    },
+    onError: () => {
+      toast.error("Unable to created Bank account information");
+    },
+  });
+};
+
+export const useCreateOwnershipInformation = () => {
+  return useMutation({
+    mutationFn: createOwnershipInformation,
+    onSuccess: () => {
+      toast.success("Ownership Information created successfully.");
+    },
+    onError: () => {
+      toast.error("Unable to created ownership information.");
     },
   });
 };

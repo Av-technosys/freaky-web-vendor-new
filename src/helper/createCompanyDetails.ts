@@ -1,7 +1,7 @@
 import { axiosInstance } from "./api";
 import { apiConstant } from "./apiConstant";
 
-export const createCompanyInformation = async (companyInformationData: any) => {
+export const updateCompanyInformation = async (companyInformationData: any) => {
   try {
     const response = await axiosInstance.put(
       apiConstant.vendor.createCompanyInformation,
@@ -13,7 +13,7 @@ export const createCompanyInformation = async (companyInformationData: any) => {
   }
 };
 
-export const createContactInformation = async (contactInformationData: any) => {
+export const updateContactInformation = async (contactInformationData: any) => {
   try {
     const response = await axiosInstance.put(
       apiConstant.vendor.createContactInformation,
@@ -25,7 +25,7 @@ export const createContactInformation = async (contactInformationData: any) => {
   }
 };
 
-export const createBusinessAddressInformation = async (
+export const updateBusinessAddressInformation = async (
   BusinessInformationData: any
 ) => {
   try {
@@ -39,7 +39,7 @@ export const createBusinessAddressInformation = async (
   }
 };
 
-export const createBankAccountInformation = async (
+export const updateBankAccountInformation = async (
   BankAccountInformationData: any
 ) => {
   try {
@@ -53,11 +53,77 @@ export const createBankAccountInformation = async (
   }
 };
 
-export const createOwnershipInformation = async (
+export const updateOwnershipInformation = async (
   ownershipInformationData: any
 ) => {
   try {
     const response = await axiosInstance.put(
+      apiConstant.vendor.createOwnershipInformation,
+      ownershipInformationData
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+  }
+};
+
+export const createCompanyInformation = async (companyInformationData: any) => {
+  try {
+    const response = await axiosInstance.post(
+      apiConstant.vendor.createCompanyInformation,
+      companyInformationData
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+  }
+};
+
+export const createContactInformation = async (contactInformationData: any) => {
+  try {
+    const response = await axiosInstance.post(
+      apiConstant.vendor.createContactInformation,
+      contactInformationData
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+  }
+};
+
+export const createBusinessAddressInformation = async (
+  BusinessInformationData: any
+) => {
+  try {
+    const response = await axiosInstance.post(
+      apiConstant.vendor.createBusinessInformation,
+      BusinessInformationData
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+  }
+};
+
+export const createBankAccountInformation = async (
+  BankAccountInformationData: any
+) => {
+  try {
+    const response = await axiosInstance.post(
+      apiConstant.vendor.createBankAccountInformation,
+      BankAccountInformationData
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+  }
+};
+
+export const createOwnershipInformation = async (
+  ownershipInformationData: any
+) => {
+  try {
+    const response = await axiosInstance.post(
       apiConstant.vendor.createOwnershipInformation,
       ownershipInformationData
     );

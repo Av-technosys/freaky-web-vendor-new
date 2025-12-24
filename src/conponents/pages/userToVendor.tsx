@@ -31,7 +31,6 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { SAMPLE_VENDOR } from "@/const/onboardingVendorDetail";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { AnimatePresence, motion } from "motion/react";
 import {
@@ -40,10 +39,17 @@ import {
 } from "@/services/useGetVendorInvites";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useCreateVendorEmployeeRequest } from "@/services/useCreateVendorEmployeeRequest";
+import type { CompanyData, Document, Owner } from "@/types/company";
+import {
+  useCreateBankAccountInformation,
+  useCreateBusinessAddressInformation,
+  useCreateCompanyInformation,
+  useCreateContactInformation,
+  useCreateOwnershipInformation,
+} from "@/services/useCreateOrUpdateCompanyDetails";
 
 const UserToVendor = () => {
   const [userStepNumber, setUserStepNumber] = React.useState(0);
-
   return (
     <motion.div className=" bg-linear-to-tr from-orange-200 to-orange-300 h-full min-h-screen w-full flex justify-center items-center">
       {userStepNumber == 0 ? (
@@ -200,6 +206,105 @@ const AcceptRequestFromVendor = ({ setUserStepNumber }: any) => {
 const CreateNewVendor = ({ setUserStepNumber }: any) => {
   const [vendorRegisterFormNumber, setVendorRegisterFormNumber] =
     React.useState(0);
+
+  const initialOwner: Owner = {
+    firstName: "",
+    lastName: "",
+    ssnNumber: "",
+    streetAddressLine1: "",
+    streetAddressLine2: "",
+    country: "",
+    state: "",
+    city: "",
+    zipcode: "",
+    ownershipPercentage: "",
+  };
+
+  const defaultDocuments: Document[] = [
+    { id: "1", type: "business_license", files: [], maxFiles: 5 },
+    { id: "2", type: "tax_certificate", files: [], maxFiles: 5 },
+    { id: "3", type: "ownership_proof", files: [], maxFiles: 5 },
+    { id: "4", type: "bank_statement", files: [], maxFiles: 5 },
+  ];
+
+  const [companyData, setCompanyData] = useState<CompanyData>({
+    businessName: "",
+    website: "",
+    dbaName: "",
+    legalEntityName: "",
+    einNumber: "",
+    businessType: "",
+    incorporationDate: undefined,
+
+    contactName: "",
+    primaryEmail: "",
+    primaryPhoneNumber: "",
+    instagramLink: "",
+    youtubeLink: "",
+    facebookLink: "",
+
+    address1: "",
+    address2: "",
+    country: "",
+    state: "",
+    city: "",
+    zipCode: "",
+
+    owners: [initialOwner],
+    authorizedSignatory: 0,
+
+    accountNumber: "",
+    bankName: "",
+    payeeName: "",
+    routingNumber: "",
+    bankType: "",
+
+    documents: defaultDocuments,
+  });
+
+  const updateCompanyData = (key: keyof CompanyData, value: any) => {
+    setCompanyData((prev: any) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
+
+  const updateOwner = (index: number, field: keyof Owner, value: string) => {
+    setCompanyData((prev) => {
+      const updatedOwners = [...prev.owners];
+      updatedOwners[index] = { ...updatedOwners[index], [field]: value };
+      return { ...prev, owners: updatedOwners };
+    });
+  };
+
+  const addOwner = () => {
+    if (companyData.owners.length >= 4) return;
+
+    setCompanyData((prev) => ({
+      ...prev,
+      owners: [...prev.owners, { ...initialOwner }],
+    }));
+  };
+
+  const removeOwner = (index: number) => {
+    if (companyData.owners.length <= 1) return;
+
+    setCompanyData((prev) => {
+      const updatedOwners = prev.owners.filter((_, i) => i !== index);
+
+      let newAuthorized = prev.authorizedSignatory;
+      if (index === prev.authorizedSignatory) newAuthorized = 0;
+      else if (index < prev.authorizedSignatory)
+        newAuthorized = prev.authorizedSignatory - 1;
+
+      return {
+        ...prev,
+        owners: updatedOwners,
+        authorizedSignatory: newAuthorized,
+      };
+    });
+  };
+
   const varients = {
     initial: { opacity: 0.8, scale: 0.98, translateX: 60 },
     animate: { opacity: 1, scale: 1, translateX: 0 },
@@ -222,26 +327,44 @@ const CreateNewVendor = ({ setUserStepNumber }: any) => {
             <CCompanyInfo
               setUserStepNumber={setUserStepNumber}
               setVendorRegisterFormNumber={setVendorRegisterFormNumber}
+              companyData={companyData}
+              setCompanyData={setCompanyData}
+              updateCompanyData={updateCompanyData}
             />
           )}
           {vendorRegisterFormNumber == 1 && (
             <CCompanyDetails
               setVendorRegisterFormNumber={setVendorRegisterFormNumber}
+              companyData={companyData}
+              setCompanyData={setCompanyData}
+              updateCompanyData={updateCompanyData}
             />
           )}
           {vendorRegisterFormNumber == 2 && (
             <CBusinessADdress
               setVendorRegisterFormNumber={setVendorRegisterFormNumber}
+              companyData={companyData}
+              setCompanyData={setCompanyData}
+              updateCompanyData={updateCompanyData}
             />
           )}
           {vendorRegisterFormNumber == 3 && (
             <COwnershipInformation
               setVendorRegisterFormNumber={setVendorRegisterFormNumber}
+              companyData={companyData}
+              setCompanyData={setCompanyData}
+              updateCompanyData={updateCompanyData}
+              updateOwner={updateOwner}
+              addOwner={addOwner}
+              removeOwner={removeOwner}
             />
           )}
           {vendorRegisterFormNumber == 4 && (
             <CBankAccountInformation
               setVendorRegisterFormNumber={setVendorRegisterFormNumber}
+              companyData={companyData}
+              setCompanyData={setCompanyData}
+              updateCompanyData={updateCompanyData}
             />
           )}
         </div>
@@ -428,24 +551,41 @@ function VendorCard({ vendor, index }: any) {
 const CCompanyInfo = ({
   setVendorRegisterFormNumber,
   setUserStepNumber,
+  companyData,
+  updateCompanyData,
 }: any) => {
+  // const CompanyInformationMutation = useCreateCompanyInformation();
   function handleNext() {
+    const companyInformationData = {
+      businessName: companyData.businessName || "",
+      websiteURL: companyData.website || "",
+      DBAname: companyData.dbaName || "",
+      legalEntityName: companyData.legalEntityName || "",
+      einNumber: companyData.einNumber || "",
+      businessType: companyData.businessType || "",
+      incorporationDate: companyData.incorporationDate || Date.now(),
+    };
+
+    // CompanyInformationMutation.mutate(companyInformationData);
+
     setVendorRegisterFormNumber(1);
   }
+
   return (
     <motion.div {...createNewVendorVarient}>
       <CompanyInformation
         className=" shadow-none border-none rounded-none"
         data={{
-          businessName: "",
-          website: "",
-          dbaName: "",
-          legalEntityName: "",
-          einNumber: "",
-          businessType: "",
-          incorporationDate: new Date(),
+          businessName: companyData.businessName,
+          website: companyData.website,
+          dbaName: companyData.dbaName,
+          legalEntityName: companyData.legalEntityName,
+          einNumber: companyData.einNumber,
+          businessType: companyData.businessType,
+          incorporationDate: companyData.incorporationDate,
         }}
-        onUpdate={() => {}}
+        onUpdate={updateCompanyData}
+        readOnly={false}
         open={false}
         setOpen={() => {}}
       />
@@ -460,8 +600,22 @@ const CCompanyInfo = ({
   );
 };
 
-const CCompanyDetails = ({ setVendorRegisterFormNumber }: any) => {
+const CCompanyDetails = ({
+  setVendorRegisterFormNumber,
+  companyData,
+  updateCompanyData,
+}: any) => {
+  //  const ContactInformationMutation = useCreateContactInformation();
   function handleNext() {
+    const companyContactDetails = {
+      primaryContactName: companyData.contactName || "",
+      primaryEmail: companyData.primaryEmail || "",
+      primaryPhoneNumber: companyData.primaryPhoneNumber || "",
+      instagramURL: companyData.instagramLink || "",
+      youtubeURL: companyData.youtubeLink || "",
+      facebookURL: companyData.facebookLink || "",
+    };
+    //  ContactInformationMutation.mutate(companyContactDetails);
     setVendorRegisterFormNumber(2);
   }
   return (
@@ -469,14 +623,14 @@ const CCompanyDetails = ({ setVendorRegisterFormNumber }: any) => {
       <ContactDetails
         className=" shadow-none border-none rounded-none"
         data={{
-          contactName: "",
-          primaryEmail: "",
-          primaryPhoneNumber: "",
-          instagramLink: "",
-          youtubeLink: "",
-          facebookLink: "",
+          contactName: companyData.contactName,
+          primaryEmail: companyData.primaryEmail,
+          primaryPhoneNumber: companyData.primaryPhoneNumber,
+          instagramLink: companyData.instagramLink,
+          youtubeLink: companyData.youtubeLink,
+          facebookLink: companyData.facebookLink,
         }}
-        onUpdate={() => {}}
+        onUpdate={updateCompanyData}
       />
       <div className="px-4 flex justify-end w-full">
         <Button onClick={handleNext}>Save & Continue</Button>
@@ -485,8 +639,22 @@ const CCompanyDetails = ({ setVendorRegisterFormNumber }: any) => {
   );
 };
 
-const CBusinessADdress = ({ setVendorRegisterFormNumber }: any) => {
+const CBusinessADdress = ({
+  setVendorRegisterFormNumber,
+  companyData,
+  updateCompanyData,
+}: any) => {
+  //  const BusinessAddressMutation = useCreateBusinessAddressInformation();
   function handleNext() {
+    const companyBusinessAddress = {
+      streetAddressLine1: companyData.address1,
+      streetAddressLine2: companyData.address2,
+      city: companyData.city,
+      state: companyData.state,
+      country: companyData.country,
+      zipcode: companyData.zipCode,
+    };
+    //  BusinessAddressMutation.mutate(companyBusinessAddress);
     setVendorRegisterFormNumber(3);
   }
   return (
@@ -494,14 +662,14 @@ const CBusinessADdress = ({ setVendorRegisterFormNumber }: any) => {
       <BusinessAddress
         className=" shadow-none border-none rounded-none"
         data={{
-          address1: "",
-          address2: "",
-          country: "",
-          state: "",
-          city: "",
-          zipCode: "",
+          address1: companyData.address1,
+          address2: companyData.address2,
+          country: companyData.country,
+          state: companyData.state,
+          city: companyData.city,
+          zipCode: companyData.zipCode,
         }}
-        onUpdate={() => {}}
+        onUpdate={updateCompanyData}
       />
       <div className="px-4 flex justify-end w-full">
         <Button onClick={handleNext}>Save & Continue</Button>
@@ -510,8 +678,18 @@ const CBusinessADdress = ({ setVendorRegisterFormNumber }: any) => {
   );
 };
 
-const COwnershipInformation = ({ setVendorRegisterFormNumber }: any) => {
+const COwnershipInformation = ({
+  setVendorRegisterFormNumber,
+  companyData,
+  updateCompanyData,
+  updateOwner,
+  removeOwner,
+  addOwner,
+}: any) => {
+  //  const OwnershipInformationMutation = useCreateOwnershipInformation();
   function handleNext() {
+    const companyOwnershipInformation = companyData.owners;
+    // OwnershipInformationMutation.mutate(companyOwnershipInformation);
     setVendorRegisterFormNumber(4);
   }
 
@@ -523,17 +701,16 @@ const COwnershipInformation = ({ setVendorRegisterFormNumber }: any) => {
       <OwnershipInformation
         className=" shadow-none border-none rounded-none"
         data={{
-          owners: [],
-          authorizedSignatory: 0,
-          businessType: "",
+          owners: companyData.owners,
+          authorizedSignatory: companyData.authorizedSignatory,
+          businessType: companyData.businessType,
         }}
-        onUpdateOwner={() => {}}
-        // onUpdateAuthorizedSignatory={(index) =>
-        //   updateCompanyData("authorizedSignatory", index)
-        // }
-        onUpdateAuthorizedSignatory={() => {}}
-        onAddOwner={() => {}}
-        onRemoveOwner={() => {}}
+        onUpdateOwner={updateOwner}
+        onUpdateAuthorizedSignatory={(index) =>
+          updateCompanyData("authorizedSignatory", index)
+        }
+        onAddOwner={addOwner}
+        onRemoveOwner={removeOwner}
       />
       <div className="px-4 mt-auto flex justify-end w-full">
         <Button onClick={handleNext}>Save & Continue</Button>
@@ -542,8 +719,21 @@ const COwnershipInformation = ({ setVendorRegisterFormNumber }: any) => {
   );
 };
 
-const CBankAccountInformation = ({ setVendorRegisterFormNumber }: any) => {
+const CBankAccountInformation = ({
+  setVendorRegisterFormNumber,
+  companyData,
+  updateCompanyData,
+}: any) => {
   function handleNext() {
+    // const BankAccountMutation = useCreateBankAccountInformation();
+    const companyBankAccountInformation = {
+      bankAccountNumber: companyData.accountNumber,
+      bankName: companyData.bankName,
+      payeeName: companyData.payeeName,
+      routingNumber: companyData.routingNumber,
+      bankType: companyData.bankType,
+    };
+    //  BankAccountMutation.mutate(companyBankAccountInformation);
     setVendorRegisterFormNumber(4);
   }
 
@@ -552,13 +742,13 @@ const CBankAccountInformation = ({ setVendorRegisterFormNumber }: any) => {
       <BankAccountInformation
         className=" shadow-none border-none rounded-none"
         data={{
-          accountNumber: "",
-          bankName: "",
-          payeeName: "",
-          routingNumber: "",
-          bankType: "",
+          accountNumber: companyData.accountNumber,
+          bankName: companyData.bankName,
+          payeeName: companyData.payeeName,
+          routingNumber: companyData.routingNumber,
+          bankType: companyData.bankType,
         }}
-        onUpdate={() => {}}
+        onUpdate={updateCompanyData}
         onPrevious={() => {}}
         onSave={() => {}}
       />
