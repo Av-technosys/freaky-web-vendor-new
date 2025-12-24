@@ -21,12 +21,8 @@ import BusinessAddress from "../common/BusinessAddress";
 import OwnershipInformation from "../common/OwnershipInformation";
 import BankAccountInformation from "../common/BankAccountInformation";
 import DocumentUpload from "../common/DocumentUpload";
-import {
-  useCreateBankAccountInformation,
-  useCreateBusinessAddressInformation,
-  useCreateCompanyInformation,
-  useCreateContactInformation,
-} from "../../services/useCreateOrUpdateCompanyDetails";
+import { useCreateCompanyInformation, useUpdateBankAccountInformation, useUpdateBusinessAddressInformation, useUpdateContactInformation } from "@/services/useCreateOrUpdateCompanyDetails";
+
 
 const initialOwner: Owner = {
   firstName: "",
@@ -52,9 +48,9 @@ const CreateCompany = () => {
   const [count, setCount] = useState(0);
   const [open, setOpen] = useState(false);
   const CompanyInformationMutation = useCreateCompanyInformation();
-  const ContactInformationMutation = useCreateContactInformation();
-  const BusinessAddressMutation = useCreateBusinessAddressInformation();
-  const BankAccountMutation = useCreateBankAccountInformation();
+  const ContactInformationMutation = useUpdateContactInformation();
+  const BusinessAddressMutation = useUpdateBusinessAddressInformation();
+  const BankAccountMutation = useUpdateBankAccountInformation();
 
   const nextHandler = () => {
     if (count == 0) {
@@ -313,6 +309,7 @@ const CreateCompany = () => {
                       incorporationDate: companyData.incorporationDate,
                     }}
                     onUpdate={updateCompanyData}
+                    readOnly={false}
                     open={open}
                     setOpen={setOpen}
                   />

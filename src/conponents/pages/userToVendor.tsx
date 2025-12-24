@@ -41,11 +41,11 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useCreateVendorEmployeeRequest } from "@/services/useCreateVendorEmployeeRequest";
 import type { CompanyData, Document, Owner } from "@/types/company";
 import {
-  useCreateBankAccountInformation,
-  useCreateBusinessAddressInformation,
   useCreateCompanyInformation,
-  useCreateContactInformation,
-  useCreateOwnershipInformation,
+  useUpdateBankAccountInformation,
+  useUpdateBusinessAddressInformation,
+  useUpdateContactInformation,
+  useUpdateOwnershipInformation,
 } from "@/services/useCreateOrUpdateCompanyDetails";
 
 const UserToVendor = () => {
@@ -554,7 +554,8 @@ const CCompanyInfo = ({
   companyData,
   updateCompanyData,
 }: any) => {
-  // const CompanyInformationMutation = useCreateCompanyInformation();
+  const [open, setOpen] = useState(false);
+  const CompanyInformationMutation = useCreateCompanyInformation();
   function handleNext() {
     const companyInformationData = {
       businessName: companyData.businessName || "",
@@ -566,7 +567,7 @@ const CCompanyInfo = ({
       incorporationDate: companyData.incorporationDate || Date.now(),
     };
 
-    // CompanyInformationMutation.mutate(companyInformationData);
+    CompanyInformationMutation.mutate(companyInformationData);
 
     setVendorRegisterFormNumber(1);
   }
@@ -586,8 +587,8 @@ const CCompanyInfo = ({
         }}
         onUpdate={updateCompanyData}
         readOnly={false}
-        open={false}
-        setOpen={() => {}}
+        open={open}
+        setOpen={setOpen}
       />
       <CardFooter className=" flex justify-between w-full">
         <Button onClick={() => setUserStepNumber(0)} variant={"outline"}>
@@ -605,7 +606,7 @@ const CCompanyDetails = ({
   companyData,
   updateCompanyData,
 }: any) => {
-  //  const ContactInformationMutation = useCreateContactInformation();
+  const ContactInformationMutation = useUpdateContactInformation();
   function handleNext() {
     const companyContactDetails = {
       primaryContactName: companyData.contactName || "",
@@ -615,7 +616,7 @@ const CCompanyDetails = ({
       youtubeURL: companyData.youtubeLink || "",
       facebookURL: companyData.facebookLink || "",
     };
-    //  ContactInformationMutation.mutate(companyContactDetails);
+    ContactInformationMutation.mutate(companyContactDetails);
     setVendorRegisterFormNumber(2);
   }
   return (
@@ -644,7 +645,7 @@ const CBusinessADdress = ({
   companyData,
   updateCompanyData,
 }: any) => {
-  //  const BusinessAddressMutation = useCreateBusinessAddressInformation();
+  const BusinessAddressMutation = useUpdateBusinessAddressInformation();
   function handleNext() {
     const companyBusinessAddress = {
       streetAddressLine1: companyData.address1,
@@ -654,7 +655,7 @@ const CBusinessADdress = ({
       country: companyData.country,
       zipcode: companyData.zipCode,
     };
-    //  BusinessAddressMutation.mutate(companyBusinessAddress);
+    BusinessAddressMutation.mutate(companyBusinessAddress);
     setVendorRegisterFormNumber(3);
   }
   return (
@@ -686,10 +687,10 @@ const COwnershipInformation = ({
   removeOwner,
   addOwner,
 }: any) => {
-  //  const OwnershipInformationMutation = useCreateOwnershipInformation();
+  const OwnershipInformationMutation = useUpdateOwnershipInformation();
   function handleNext() {
     const companyOwnershipInformation = companyData.owners;
-    // OwnershipInformationMutation.mutate(companyOwnershipInformation);
+    OwnershipInformationMutation.mutate(companyOwnershipInformation);
     setVendorRegisterFormNumber(4);
   }
 
@@ -725,7 +726,7 @@ const CBankAccountInformation = ({
   updateCompanyData,
 }: any) => {
   function handleNext() {
-    // const BankAccountMutation = useCreateBankAccountInformation();
+    const BankAccountMutation = useUpdateBankAccountInformation();
     const companyBankAccountInformation = {
       bankAccountNumber: companyData.accountNumber,
       bankName: companyData.bankName,
@@ -733,7 +734,7 @@ const CBankAccountInformation = ({
       routingNumber: companyData.routingNumber,
       bankType: companyData.bankType,
     };
-    //  BankAccountMutation.mutate(companyBankAccountInformation);
+    BankAccountMutation.mutate(companyBankAccountInformation);
     setVendorRegisterFormNumber(4);
   }
 

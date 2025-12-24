@@ -79,60 +79,6 @@ export const createCompanyInformation = async (companyInformationData: any) => {
   }
 };
 
-export const createContactInformation = async (contactInformationData: any) => {
-  try {
-    const response = await axiosInstance.post(
-      apiConstant.vendor.createContactInformation,
-      contactInformationData
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error while sending request:", error);
-  }
-};
-
-export const createBusinessAddressInformation = async (
-  BusinessInformationData: any
-) => {
-  try {
-    const response = await axiosInstance.post(
-      apiConstant.vendor.createBusinessInformation,
-      BusinessInformationData
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error while sending request:", error);
-  }
-};
-
-export const createBankAccountInformation = async (
-  BankAccountInformationData: any
-) => {
-  try {
-    const response = await axiosInstance.post(
-      apiConstant.vendor.createBankAccountInformation,
-      BankAccountInformationData
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error while sending request:", error);
-  }
-};
-
-export const createOwnershipInformation = async (
-  ownershipInformationData: any
-) => {
-  try {
-    const response = await axiosInstance.post(
-      apiConstant.vendor.createOwnershipInformation,
-      ownershipInformationData
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error while sending request:", error);
-  }
-};
-
 export const createVendorDocuments = async (vendorDocuments: any) => {
   try {
     const response = await axiosInstance.post(

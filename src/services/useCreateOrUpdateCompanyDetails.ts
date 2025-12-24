@@ -1,10 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  createBankAccountInformation,
-  createBusinessAddressInformation,
   createCompanyInformation,
-  createContactInformation,
-  createOwnershipInformation,
   createVendorDocuments,
   deleteVendorDocument,
   deleteVendorEmployee,
@@ -91,55 +87,6 @@ export const useCreateCompanyInformation = () => {
     },
   });
 };
-
-export const useCreateContactInformation = () => {
-  return useMutation({
-    mutationFn: createContactInformation,
-    onSuccess: () => {
-      toast.success("Contact Information created successfully");
-    },
-    onError: () => {
-      toast.error("Unable to created contact information");
-    },
-  });
-};
-
-export const useCreateBusinessAddressInformation = () => {
-  return useMutation({
-    mutationFn: createBusinessAddressInformation,
-    onSuccess: () => {
-      toast.success("Business Information created successfully");
-    },
-    onError: () => {
-      toast.error("Unable to created Business information");
-    },
-  });
-};
-
-export const useCreateBankAccountInformation = () => {
-  return useMutation({
-    mutationFn: createBankAccountInformation,
-    onSuccess: () => {
-      toast.success("Bank Account Information created successfully");
-    },
-    onError: () => {
-      toast.error("Unable to created Bank account information");
-    },
-  });
-};
-
-export const useCreateOwnershipInformation = () => {
-  return useMutation({
-    mutationFn: createOwnershipInformation,
-    onSuccess: () => {
-      toast.success("Ownership Information created successfully.");
-    },
-    onError: () => {
-      toast.error("Unable to created ownership information.");
-    },
-  });
-};
-
 export const useCreateVendorDocument = () => {
   const queryClient = useQueryClient();
   return useMutation({

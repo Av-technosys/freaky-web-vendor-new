@@ -106,6 +106,7 @@ const CompanyInformation = ({
                 type="text"
                 value={data.dbaName}
                 readOnly={isReadOnly}
+                onChange={(e) => onUpdate("dbaName", e.target.value)}
                 required
               />
             </div>
@@ -177,9 +178,10 @@ const CompanyInformation = ({
               <Label htmlFor="einNumber">EIN Number</Label>
               <InputOTP
                 maxLength={9}
-                value={String(data.einNumber)}
+                value={String(data.einNumber ?? "")}
+                onChange={(value) => onUpdate("einNumber", value)}
+                readOnly={isReadOnly}
                 className="text-black"
-                readOnly
               >
                 <InputOTPGroup>
                   <InputOTPSlot index={0} />
