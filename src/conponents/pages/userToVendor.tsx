@@ -725,8 +725,8 @@ const CBankAccountInformation = ({
   companyData,
   updateCompanyData,
 }: any) => {
+   const BankAccountMutation = useUpdateBankAccountInformation();
   function handleNext() {
-    const BankAccountMutation = useUpdateBankAccountInformation();
     const companyBankAccountInformation = {
       bankAccountNumber: companyData.accountNumber,
       bankName: companyData.bankName,
