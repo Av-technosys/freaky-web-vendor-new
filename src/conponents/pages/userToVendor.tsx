@@ -71,7 +71,7 @@ const UserToVendor = () => {
 export default UserToVendor;
 
 const MainCard = ({ setUserStepNumber }: any) => {
-  const { data: VendorInvites } = useGetVendorInvites();
+  const { data: VendorInvites, isPending } = useGetVendorInvites();
 
   const varient = {
     initial: {
@@ -105,32 +105,39 @@ const MainCard = ({ setUserStepNumber }: any) => {
           </CardHeader>
           <CardContent>
             <div className="">
-              <Label className=" mb-1 text-sm">
-                You already have a vendor request join the vendor
-              </Label>
-              {VendorInvites?.data?.map((vendor: any, index: number) => {
-                return (
-                  <>
+              {isPending && (
+                <Label className="mb-2 text-sm text-gray-500">
+                  Loading vendor requests...
+                </Label>
+              )}
+              {!isPending && VendorInvites?.data?.length > 0 && (
+                <>
+                  <Label className="mb-1 text-sm">
+                    You already have a vendor request to join
+                  </Label>
+
+                  {VendorInvites.data.map((vendor: any, index: number) => (
                     <Button
+                      key={index}
                       onClick={() => onClickHandler(1)}
-                      variant={"outline"}
-                      size={"lg"}
-                      className=" bg-green-700 text-white hover:bg-green-600 hover:text-white h-14 mt-2  flex gap-4 justify-start w-full"
+                      variant="outline"
+                      size="lg"
+                      className="bg-green-700 text-white hover:bg-green-600 hover:text-white h-14 mt-2 flex gap-4 justify-start w-full"
                     >
-                      <div key={index} className=" flex gap-2 items-center">
+                      <div className="flex gap-2 items-center">
                         <Avatar>
                           <AvatarImage
                             src="https://github.com/shadcn.png"
-                            alt="@shadcn"
+                            alt={vendor?.businessName}
                           />
                           <AvatarFallback>
-                            {vendor?.businessName}
+                            {vendor?.businessName?.[0]}
                           </AvatarFallback>
                         </Avatar>
                       </div>
-                      <div className=" text-start">
-                        <p className=" text-base font-semibold">
-                          {" "}
+
+                      <div className="text-start">
+                        <p className="text-base font-semibold">
                           {vendor?.businessName}
                         </p>
                         <p>
@@ -138,10 +145,16 @@ const MainCard = ({ setUserStepNumber }: any) => {
                         </p>
                       </div>
                     </Button>
-                  </>
-                );
-              })}
+                  ))}
+                </>
+              )}
+              {!isPending && VendorInvites?.data?.length === 0 && (
+                <Label className="mb-1 text-sm text-gray-500">
+                  No vendor request found.
+                </Label>
+              )}
             </div>
+
             {/* Create a new vendor */}
             <div className=" mt-6">
               <Label className=" mb-1">
@@ -567,9 +580,11 @@ const CCompanyInfo = ({
       incorporationDate: companyData.incorporationDate || Date.now(),
     };
 
-    CompanyInformationMutation.mutate(companyInformationData);
-
-    setVendorRegisterFormNumber(1);
+    CompanyInformationMutation.mutate(companyInformationData, {
+      onSuccess: () => {
+        setVendorRegisterFormNumber(1);
+      },
+    });
   }
 
   return (
@@ -595,7 +610,15 @@ const CCompanyInfo = ({
           {" "}
           <ArrowLeft /> Back
         </Button>
-        <Button onClick={handleNext}>Save & Continue</Button>
+        <Button
+          disabled={CompanyInformationMutation.isPending}
+          onClick={handleNext}
+        >
+          {" "}
+          {CompanyInformationMutation.isPending
+            ? "Submitting..."
+            : "Save & Continue"}
+        </Button>
       </CardFooter>
     </motion.div>
   );
@@ -616,8 +639,11 @@ const CCompanyDetails = ({
       youtubeURL: companyData.youtubeLink || "",
       facebookURL: companyData.facebookLink || "",
     };
-    ContactInformationMutation.mutate(companyContactDetails);
-    setVendorRegisterFormNumber(2);
+    ContactInformationMutation.mutate(companyContactDetails, {
+      onSuccess: () => {
+        setVendorRegisterFormNumber(2);
+      },
+    });
   }
   return (
     <motion.div {...createNewVendorVarient}>
@@ -634,7 +660,14 @@ const CCompanyDetails = ({
         onUpdate={updateCompanyData}
       />
       <div className="px-4 flex justify-end w-full">
-        <Button onClick={handleNext}>Save & Continue</Button>
+        <Button
+          disabled={ContactInformationMutation.isPending}
+          onClick={handleNext}
+        >
+          {ContactInformationMutation.isPending
+            ? "Submitting..."
+            : "Save & Continue"}
+        </Button>
       </div>
     </motion.div>
   );
@@ -655,8 +688,11 @@ const CBusinessADdress = ({
       country: companyData.country,
       zipcode: companyData.zipCode,
     };
-    BusinessAddressMutation.mutate(companyBusinessAddress);
-    setVendorRegisterFormNumber(3);
+    BusinessAddressMutation.mutate(companyBusinessAddress, {
+      onSuccess: () => {
+        setVendorRegisterFormNumber(3);
+      },
+    });
   }
   return (
     <motion.div {...createNewVendorVarient}>
@@ -673,7 +709,14 @@ const CBusinessADdress = ({
         onUpdate={updateCompanyData}
       />
       <div className="px-4 flex justify-end w-full">
-        <Button onClick={handleNext}>Save & Continue</Button>
+        <Button
+          disabled={BusinessAddressMutation.isPending}
+          onClick={handleNext}
+        >
+          {BusinessAddressMutation.isPending
+            ? "Submitting..."
+            : "Save & Continue"}
+        </Button>
       </div>
     </motion.div>
   );
@@ -690,8 +733,11 @@ const COwnershipInformation = ({
   const OwnershipInformationMutation = useUpdateOwnershipInformation();
   function handleNext() {
     const companyOwnershipInformation = companyData.owners;
-    OwnershipInformationMutation.mutate(companyOwnershipInformation);
-    setVendorRegisterFormNumber(4);
+    OwnershipInformationMutation.mutate(companyOwnershipInformation, {
+      onSuccess: () => {
+        setVendorRegisterFormNumber(4);
+      },
+    });
   }
 
   return (
@@ -714,7 +760,15 @@ const COwnershipInformation = ({
         onRemoveOwner={removeOwner}
       />
       <div className="px-4 mt-auto flex justify-end w-full">
-        <Button onClick={handleNext}>Save & Continue</Button>
+        <Button
+          disabled={OwnershipInformationMutation.isPending}
+          onClick={handleNext}
+        >
+          {" "}
+          {OwnershipInformationMutation.isPending
+            ? "Submitting..."
+            : "Save & Continue"}
+        </Button>
       </div>
     </motion.div>
   );
@@ -725,7 +779,7 @@ const CBankAccountInformation = ({
   companyData,
   updateCompanyData,
 }: any) => {
-   const BankAccountMutation = useUpdateBankAccountInformation();
+  const BankAccountMutation = useUpdateBankAccountInformation();
   function handleNext() {
     const companyBankAccountInformation = {
       bankAccountNumber: companyData.accountNumber,
@@ -734,8 +788,11 @@ const CBankAccountInformation = ({
       routingNumber: companyData.routingNumber,
       bankType: companyData.bankType,
     };
-    BankAccountMutation.mutate(companyBankAccountInformation);
-    setVendorRegisterFormNumber(4);
+    BankAccountMutation.mutate(companyBankAccountInformation, {
+      onSuccess: () => {
+        setVendorRegisterFormNumber(4);
+      },
+    });
   }
 
   return (
@@ -755,7 +812,11 @@ const CBankAccountInformation = ({
       />
 
       <div className="px-4 flex justify-end w-full">
-        <Button onClick={handleNext}>Make Admin Request</Button>
+        <Button disabled={BankAccountMutation.isPending} onClick={handleNext}>
+          {BankAccountMutation.isPending
+            ? "Submitting..."
+            : "Make Admin Request"}
+        </Button>
       </div>
     </motion.div>
   );

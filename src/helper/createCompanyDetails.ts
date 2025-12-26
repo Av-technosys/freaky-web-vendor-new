@@ -10,6 +10,7 @@ export const updateCompanyInformation = async (companyInformationData: any) => {
     return response.data;
   } catch (error) {
     console.error("Error while sending request:", error);
+    throw error;
   }
 };
 
@@ -22,6 +23,7 @@ export const updateContactInformation = async (contactInformationData: any) => {
     return response.data;
   } catch (error) {
     console.error("Error while sending request:", error);
+    throw error;
   }
 };
 
@@ -36,6 +38,7 @@ export const updateBusinessAddressInformation = async (
     return response.data;
   } catch (error) {
     console.error("Error while sending request:", error);
+    throw error;
   }
 };
 
@@ -50,6 +53,7 @@ export const updateBankAccountInformation = async (
     return response.data;
   } catch (error) {
     console.error("Error while sending request:", error);
+    throw error;
   }
 };
 
@@ -64,6 +68,7 @@ export const updateOwnershipInformation = async (
     return response.data;
   } catch (error) {
     console.error("Error while sending request:", error);
+    throw error;
   }
 };
 
@@ -76,6 +81,7 @@ export const createCompanyInformation = async (companyInformationData: any) => {
     return response.data;
   } catch (error) {
     console.error("Error while sending request:", error);
+    throw error;
   }
 };
 
