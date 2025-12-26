@@ -10,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../components/ui/select";
+import { cn } from "@/lib/utils";
 
 interface BusinessAddressProps {
   data: Pick<
@@ -17,6 +18,7 @@ interface BusinessAddressProps {
     "address1" | "address2" | "country" | "state" | "city" | "zipCode"
   >;
   onUpdate: (key: keyof CompanyData, value: any) => void;
+  className?: string;
 }
 const US_STATES = [
   "Alabama",
@@ -71,9 +73,9 @@ const US_STATES = [
   "Wyoming",
 ];
 
-const BusinessAddress = ({ data, onUpdate }: BusinessAddressProps) => {
+const BusinessAddress = ({ data, onUpdate, className }: BusinessAddressProps) => {
   return (
-    <Card>
+    <Card className={cn(className)}>
       <CardContent>
         <CardTitle className="mb-5">Business Address</CardTitle>
         <div className="flex flex-col gap-6">
@@ -111,8 +113,8 @@ const BusinessAddress = ({ data, onUpdate }: BusinessAddressProps) => {
 
               <Select
                 value={data.country || "united_states"}
-                onValueChange={() => {}} // prevents selecting anything else
-                //   disabled   // disables dropdown opening
+                onValueChange={() => { }} // prevents selecting anything else
+              //   disabled   // disables dropdown opening
               >
                 <SelectTrigger className="w-full" id="country">
                   <SelectValue placeholder="United States" />

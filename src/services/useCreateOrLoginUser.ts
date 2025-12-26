@@ -45,7 +45,7 @@ export const useUserOtpSignUpMutation = () => {
       toast.success(`User Create successful`);
       const Token = JSON.stringify(data.idToken);
       localStorage.setItem("access_token", Token);
-      navigate("/select-company");
+      navigate("/map-vnedor");
     },
     onError: () => {
       toast.error("Something went wrong!");

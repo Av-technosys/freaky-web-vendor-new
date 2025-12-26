@@ -30,6 +30,7 @@ import { Button } from "../../components/ui/button";
 import { Calendar } from "../../components/ui/calender";
 import { ChevronDownIcon } from "lucide-react";
 import { type CompanyData } from "../../types/company";
+import { cn } from "@/lib/utils";
 
 interface CompanyInformationProps {
   data: Pick<
@@ -43,18 +44,24 @@ interface CompanyInformationProps {
     | "incorporationDate"
   >;
   onUpdate: (key: keyof CompanyData, value: any) => void;
+  readOnly: boolean | any;
   open: boolean;
   setOpen: (open: boolean) => void;
+  className?: string;
 }
 
 const CompanyInformation = ({
   data,
   onUpdate,
+  readOnly,
   open,
   setOpen,
+  className,
 }: CompanyInformationProps) => {
+  const isReadOnly = readOnly === true;
+
   return (
-    <Card>
+    <Card className={cn(className)}>
       <CardContent>
         <div className="flex flex-col  gap-6">
           <CardTitle>Company Information</CardTitle>
@@ -98,7 +105,8 @@ const CompanyInformation = ({
                 id="dbaName"
                 type="text"
                 value={data.dbaName}
-                readOnly
+                readOnly={isReadOnly}
+                onChange={(e) => onUpdate("dbaName", e.target.value)}
                 required
               />
             </div>
@@ -170,9 +178,10 @@ const CompanyInformation = ({
               <Label htmlFor="einNumber">EIN Number</Label>
               <InputOTP
                 maxLength={9}
-                value={String(data.einNumber)}
+                value={String(data.einNumber ?? "")}
+                onChange={(value) => onUpdate("einNumber", value)}
+                readOnly={isReadOnly}
                 className="text-black"
-                readOnly
               >
                 <InputOTPGroup>
                   <InputOTPSlot index={0} />

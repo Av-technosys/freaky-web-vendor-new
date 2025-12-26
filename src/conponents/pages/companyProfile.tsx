@@ -12,13 +12,13 @@ import { Button, Card, CardContent, CardTitle } from "../../components/ui";
 import DropdownSelector from "../dropdownSelector";
 import { useGetImageUrl, useUploadImage } from "../../services/useUploadImage";
 import {
-  useCreateBankAccountInformation,
-  useCreateBusinessAddressInformation,
-  useCreateCompanyInformation,
-  useCreateContactInformation,
-  useCreateOwnershipInformation,
   useCreateVendorDocument,
   useDeleteVendorDocument,
+  useUpdateBankAccountInformation,
+  useUpdateBusinessAddressInformation,
+  useUpdateCompanyInformation,
+  useUpdateContactInformation,
+  useUpdateOwnershipInformation,
 } from "../../services/useCreateOrUpdateCompanyDetails";
 import { toast } from "sonner";
 import {
@@ -84,7 +84,7 @@ const CompanyProfile = () => {
     { documentType: "business_license", documentUrl: "choose file" },
   ]);
 
-  console.log("documentINputs",documentInputs);
+  console.log("documentINputs", documentInputs);
 
   const getImageUrlMutation = useGetImageUrl();
   const uploadImageMutation = useUploadImage();
@@ -95,11 +95,11 @@ const CompanyProfile = () => {
 
   const queryClient = useQueryClient();
 
-  const CompanyInformationMutation = useCreateCompanyInformation();
-  const ContactInformationMutation = useCreateContactInformation();
-  const BusinessAddressMutation = useCreateBusinessAddressInformation();
-  const BankAccountMutation = useCreateBankAccountInformation();
-  const OwnershipInformationMutation = useCreateOwnershipInformation();
+  const CompanyInformationMutation = useUpdateCompanyInformation();
+  const ContactInformationMutation = useUpdateContactInformation();
+  const BusinessAddressMutation = useUpdateBusinessAddressInformation();
+  const BankAccountMutation = useUpdateBankAccountInformation();
+  const OwnershipInformationMutation = useUpdateOwnershipInformation();
   const vendorDocumentMutation = useCreateVendorDocument();
   const documentDeleteMutation = useDeleteVendorDocument();
 
@@ -201,7 +201,7 @@ const CompanyProfile = () => {
   };
 
   const addOwner = () => {
-    if (companyData.owners.length >= 4) return;
+    if (companyData?.owners?.length >= 4) return;
 
     setCompanyData((prev) => ({
       ...prev,
@@ -210,7 +210,7 @@ const CompanyProfile = () => {
   };
 
   const removeOwner = (index: number) => {
-    if (companyData.owners.length <= 1) return;
+    if (companyData?.owners?.length <= 1) return;
 
     setCompanyData((prev) => {
       const updatedOwners = prev.owners.filter((_, i) => i !== index);
@@ -274,7 +274,7 @@ const CompanyProfile = () => {
     BankAccountMutation.mutate(companyBankAccountInformation);
     OwnershipInformationMutation.mutate(companyOwnershipInformation);
 
-    if (vendorDocuments.length > 0) {
+    if (vendorDocuments?.length > 0) {
       vendorDocumentMutation.mutate(vendorDocuments);
     }
     setVendorDocuments([]);
@@ -417,6 +417,7 @@ const CompanyProfile = () => {
               incorporationDate: companyData.incorporationDate,
             }}
             onUpdate={updateCompanyData}
+            readOnly={true}
             open={open}
             setOpen={setOpen}
           />

@@ -48,3 +48,15 @@ export const getVendorEmployees = async () => {
     throw error;
   }
 };
+
+export const getAllVendors = async (search: string) => {
+  try {
+    const response = await axiosInstance.get(
+      `${apiConstant.vendor.getAllVendorsForInvitation}?text=${search}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+    throw error;
+  }
+};
