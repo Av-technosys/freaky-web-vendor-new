@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "../components/ui";
 import { TiIconPencilPlus } from "./icons";
-import DeleteServiceDialog from "./deleteServiceDialog";
+// import DeleteServiceDialog from "./deleteServiceDialog";
 
 export function ServicesTable({ tableData }: any) {
   const [searchParams] = useSearchParams();
@@ -56,7 +56,7 @@ export function ServicesTable({ tableData }: any) {
                   >
                     <TiIconPencilPlus color="#D30000" />
                   </Button>
-                  <DeleteServiceDialog />
+                  {/* <DeleteServiceDialog /> */}
                 </div>
               </TableCell>
             </TableRow>

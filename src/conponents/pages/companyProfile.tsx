@@ -84,7 +84,6 @@ const CompanyProfile = () => {
     { documentType: "business_license", documentUrl: "choose file" },
   ]);
 
-  console.log("documentINputs", documentInputs);
 
   const getImageUrlMutation = useGetImageUrl();
   const uploadImageMutation = useUploadImage();

@@ -8,14 +8,14 @@ import {
   Textarea,
 } from "../../components/ui";
 import DropdownSelector from "../dropdownSelector";
-import { Switch } from "../../components/ui/switch";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "../../components/ui/popover";
-import { CalendarIcon } from "lucide-react";
-import { Calendar } from "../../components/ui/calender";
+// import { Switch } from "../../components/ui/switch";
+// import {
+//   Popover,
+//   PopoverContent,
+//   PopoverTrigger,
+// } from "../../components/ui/popover";
+// import { CalendarIcon } from "lucide-react";
+// import { Calendar } from "../../components/ui/calender";
 import uploadImage from "../../assets/uploadImage.png";
 import { useNavigate, useParams } from "react-router-dom";
 import EditPricebookDialog from "../editPricebookDialog";
@@ -73,11 +73,11 @@ function isValidDate(date: Date | undefined) {
 }
 
 const ManageService = () => {
-  const [open, setOpen] = useState(false);
-  const [date, setDate] = useState<Date | undefined>(undefined);
-  const [month, setMonth] = useState<Date | undefined>(date);
-  const [value, setValue] = useState(formatDate(date));
-  const [time, setTime] = useState("12:00");
+  // const [open, setOpen] = useState(false);
+  // const [date, setDate] = useState<Date | undefined>(undefined);
+  // const [month, setMonth] = useState<Date | undefined>(date);
+  // const [value, setValue] = useState(formatDate(date));
+  // const [time, setTime] = useState("12:00");
 
   const [serviceName, setServiceName] = useState("");
   const [categoryName, setCategoryName] = useState("product");
@@ -323,16 +323,15 @@ const ManageService = () => {
             <div className="w-full group relative gap-1 flex flex-col items-center">
               {productId ? (
                 <>
-                <ImageViewerDialog mediaUrl={mediaBanner} />
-                <div className="w-24 h-24 rounded-full overflow-hidden">
-                  <img
-                    className="object-cover"
-                    src={`${
-                      import.meta.env.VITE_IMAGE_BASE_URL
-                    }/${mediaBanner}`}
-                    alt="uploaded-image"
-                  />
-                </div>
+                  <ImageViewerDialog mediaUrl={mediaBanner} />
+                  <div className="w-24 h-24 rounded-full overflow-hidden">
+                    <img
+                      className="object-cover"
+                      src={`${import.meta.env.VITE_IMAGE_BASE_URL
+                        }/${mediaBanner}`}
+                      alt="uploaded-image"
+                    />
+                  </div>
                 </>
               ) : (
                 <div className="w-10 h-10 flex items-center justify-center p-1 rounded-lg overflow-hidden">

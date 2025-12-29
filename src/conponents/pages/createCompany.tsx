@@ -207,18 +207,18 @@ const CreateCompany = () => {
       const updatedDocuments = prev.documents.map((doc) =>
         doc.id === documentId && doc.files.length < doc.maxFiles
           ? {
-              ...doc,
-              files: [
-                ...doc.files,
-                {
-                  id: Date.now().toString(),
-                  fileName: file.name,
-                  fileUrl: URL.createObjectURL(file),
-                  uploadedAt: new Date(),
-                  status: "uploaded",
-                } as DocumentFile,
-              ],
-            }
+            ...doc,
+            files: [
+              ...doc.files,
+              {
+                id: Date.now().toString(),
+                fileName: file.name,
+                fileUrl: URL.createObjectURL(file),
+                uploadedAt: new Date(),
+                status: "uploaded",
+              } as DocumentFile,
+            ],
+          }
           : doc
       );
 
@@ -243,7 +243,6 @@ const CreateCompany = () => {
   const handleSave = () => {
     const map = getCompanyDataMap();
     const dataObject = Object.fromEntries(map);
-    console.log("Converted to Object:", dataObject);
   };
 
   const handlePrevious = () => console.log("Previous step");
@@ -267,11 +266,9 @@ const CreateCompany = () => {
                           <div className="w-10 h-10 border border-black flex justify-center items-center rounded-full">
                             <Avatar className="size-12">
                               <AvatarFallback
-                                className={`bg-white border border-gray-300 text-black ${
-                                  count == index && "bg-black text-white"
-                                } ${
-                                  count > index && "bg-green-500 text-white"
-                                }`}
+                                className={`bg-white border border-gray-300 text-black ${count == index && "bg-black text-white"
+                                  } ${count > index && "bg-green-500 text-white"
+                                  }`}
                               >
                                 {comp.name?.charAt(0)?.toUpperCase()}
                               </AvatarFallback>

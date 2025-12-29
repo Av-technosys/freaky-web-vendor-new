@@ -49,7 +49,6 @@ const Profile = () => {
   const getImageUrlMutation = useGetImageUrl();
   const uploadImageMutation = useUploadImage();
 
-  console.log("data", userData?.data);
 
   useEffect(() => {
     if (userData) {
@@ -206,9 +205,8 @@ const Profile = () => {
           <div className="w-32 h-32  rounded-full overflow-hidden">
             <img
               className="object-cover"
-              src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${
-                userDetails?.profileImage
-              }`}
+              src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${userDetails?.profileImage
+                }`}
               alt="uploaded-image"
             />
           </div>
