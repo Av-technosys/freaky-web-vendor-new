@@ -7,13 +7,12 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "../components/ui/alert-dialog";
 import { Button, Input, InputOTPSeparator, Label } from "../components/ui";
-import { TiIconPencilPlus, TiIconX } from "./icons";
+import { TiIconX } from "./icons";
 import { useState } from "react";
 
-const EditPricebookDialog = () => {
+const EditProdcutPricebookPriceDialog = ({ pricebook, isEditOpen, setIsEditOpen }: any) => {
   const [tierPrice, setTierPrice] = useState(false);
   const [addMore, setAddMore] = useState<number[]>([0]);
 
@@ -27,107 +26,82 @@ const EditPricebookDialog = () => {
 
   return (
     <>
-      <AlertDialog>
-        <AlertDialogTrigger asChild>
-          <Button variant={"outline"}>
-            <TiIconPencilPlus color="#D30000" />
-          </Button>
-        </AlertDialogTrigger>
+      <AlertDialog open={isEditOpen} onOpenChange={setIsEditOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>
-              <div className="w-full   flex gap-2 items-center justify-between">
-                <Button
-                  onClick={() => setTierPrice(false)}
-                  className={` w-1/2 border border-orange-600 text-orange-600 ${
-                    !tierPrice && "text-white "
-                  }`}
-                  variant={tierPrice === false ? undefined : "outline"}
-                >
-                  Fixed Price
-                </Button>
-                <Button
-                  onClick={() => setTierPrice(true)}
-                  className={` w-1/2  border border-orange-600 text-orange-600 ${
-                    tierPrice && "text-white "
-                  }`}
-                  variant={tierPrice === true ? undefined : "outline"}
-                >
-                  Tier Price
-                </Button>
-              </div>
-            </AlertDialogTitle>
-            <AlertDialogDescription
-              className={`${addMore.length > 1 && "h-52 overflow-y-auto"}`}
-            >
-              <>
-                {!tierPrice ? (
-                  <div className="flex my-3 flex-col items-start gap-2">
-                    <Label htmlFor="email">Price</Label>
-                    <Input
-                      placeholder="Enter Your Fixed Price "
-                      name="price"
-                      id="price"
-                      type="number"
-                      required
-                    />
-                  </div>
-                ) : (
-                  addMore.map((index) => {
-                    return (
-                      <div
-                        key={index}
-                        className="w-full flex gap-2 items-center justify-between"
-                      >
-                        <div className="w-1/2 flex my-3 flex-col items-start gap-2">
-                          <Label htmlFor="email">Range</Label>
-                          <div className="flex gap-2 items-center">
-                            <Input
-                              placeholder="From"
-                              name="price"
-                              type="number"
-                              required
-                            />
-                            <InputOTPSeparator />
-                            <Input
-                              placeholder="To"
-                              name="price"
-                              type="number"
-                              required
-                            />
-                          </div>
-                        </div>
-                        <div className="w-1/2 flex my-3 flex-col items-start gap-2">
-                          <Label htmlFor="email">Price</Label>
+            <AlertDialogTitle>{`Edit ${pricebook?.name}`}</AlertDialogTitle>
+          </AlertDialogHeader>
+
+          <AlertDialogDescription
+            className={`${addMore.length > 1 && "h-52 overflow-y-auto"}`}
+          >
+            <>
+              {!tierPrice ? (
+                <div className="flex my-3 flex-col items-start gap-2">
+                  <Label htmlFor="email">Price</Label>
+                  <Input
+                    placeholder="Enter Your Fixed Price "
+                    name="price"
+                    id="price"
+                    type="number"
+                    required
+                  />
+                </div>
+              ) : (
+                addMore.map((index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="w-full flex gap-2 items-center justify-between"
+                    >
+                      <div className="w-1/2 flex my-3 flex-col items-start gap-2">
+                        <Label htmlFor="email">Range</Label>
+                        <div className="flex gap-2 items-center">
                           <Input
-                            placeholder="Price"
+                            placeholder="From"
+                            name="price"
+                            type="number"
+                            required
+                          />
+                          <InputOTPSeparator />
+                          <Input
+                            placeholder="To"
                             name="price"
                             type="number"
                             required
                           />
                         </div>
-                        <Button
-                          className="mt-5"
-                          variant={"outline"}
-                          onClick={removeAddmoreHandler}
-                        >
-                          <TiIconX color="#D30000" />
-                        </Button>
                       </div>
-                    );
-                  })
-                )}
+                      <div className="w-1/2 flex my-3 flex-col items-start gap-2">
+                        <Label htmlFor="email">Price</Label>
+                        <Input
+                          placeholder="Price"
+                          name="price"
+                          type="number"
+                          required
+                        />
+                      </div>
+                      <Button
+                        className="mt-5"
+                        variant={"outline"}
+                        onClick={removeAddmoreHandler}
+                      >
+                        <TiIconX color="#D30000" />
+                      </Button>
+                    </div>
+                  );
+                })
+              )}
 
-                <Button
-                  className={`${tierPrice ? "block" : "hidden"}`}
-                  onClick={addMoreHandler}
-                  variant={"ghost"}
-                >
-                  + Add More
-                </Button>
-              </>
-            </AlertDialogDescription>
-          </AlertDialogHeader>
+              <Button
+                className={`${tierPrice ? "block" : "hidden"}`}
+                onClick={addMoreHandler}
+                variant={"ghost"}
+              >
+                + Add More
+              </Button>
+            </>
+          </AlertDialogDescription>
           <AlertDialogFooter>
             <AlertDialogCancel>Back</AlertDialogCancel>
             <AlertDialogAction>Done</AlertDialogAction>
@@ -138,4 +112,4 @@ const EditPricebookDialog = () => {
   );
 };
 
-export default EditPricebookDialog;
+export default EditProdcutPricebookPriceDialog;

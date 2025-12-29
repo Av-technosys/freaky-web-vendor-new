@@ -18,14 +18,16 @@ import DropdownSelector from "../dropdownSelector";
 // import { Calendar } from "../../components/ui/calender";
 import uploadImage from "../../assets/uploadImage.png";
 import { useNavigate, useParams } from "react-router-dom";
-import EditPricebookDialog from "../editPricebookDialog";
-import DeletePriceListDialog from "../deletePricelistDialog";
 import { useGetVendorServiceByServiceId } from "../../services/useGetVendorServices";
 import { useGetImageUrl, useUploadImage } from "../../services/useUploadImage";
 import { useUpdateVendorService } from "../../services/useCreateOrUpdateVendorService";
 import { useQueryClient } from "@tanstack/react-query";
 import ServiceAdditionalPhotos from "../serviceAdditionalPhotos";
 import ImageViewerDialog from "../imageViewerDialog";
+import { useGetAllPriceBook } from "@/services/useGetAllPricebooks";
+import Spin from "@/components/spin";
+import EditProdcutPricebookPriceDialog from "../editPricebookDialog";
+import { TiIconPencilPlus } from "../icons";
 
 const dropdownValuesProductCategories = {
   options: [
@@ -95,6 +97,7 @@ const ManageService = () => {
   const [mediaBanner, setMediaBanner] = useState<any>("");
   const [additionalImagesUrl, setAdditionalImagesUrl] = useState<any>([]);
   const [videoUrl, setVideoUrl] = useState("");
+  const [pricingType, setPricingType] = useState("fixed");
 
   const getImageUrlMutation = useGetImageUrl();
   const uploadImageMutation = useUploadImage();
@@ -107,6 +110,7 @@ const ManageService = () => {
       setDescription(data.product.description || "");
       setLongDescription(data.product.description || "");
       setMediaBanner(data.product.bannerImage);
+      setPricingType(data.product.pricingType);
     }
   }, [data, productId]);
 
@@ -259,25 +263,8 @@ const ManageService = () => {
                       />
                     </div>
                   </div> */}
-
-                  <div className="w-full text-[#8B8D97] flex flex-col items-start gap-2">
-                    <span>Price Book List</span>
-                    <div className="w-full flex flex-col items-start gap-2">
-                      {serviceList.map((service, index) => {
-                        return (
-                          <div className="w-full flex items-center justify-between border border-gray-300 bg-[#F4F5FA] p-1 rounded-md">
-                            <div>{index + 1}</div>
-                            <div>{service.name}</div>
-                            <div>{service.price}</div>
-                            <div className="flex gap-1">
-                              <EditPricebookDialog />
-                              <DeletePriceListDialog />
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
+                  <span>Price Book List</span>
+                  <PriceBookList pricingType={pricingType} />
                 </div>
                 <div className="col-span-1 py-2   ">
                   <Textarea
@@ -368,3 +355,41 @@ const ManageService = () => {
 };
 
 export default ManageService;
+
+
+function PriceBookList({ pricingType }: any) {
+  const { data: pricebookData, isPending } = useGetAllPriceBook();
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [selectedPricebook, setSelectedPricebook] = useState({});
+  function handleEditClick(pricebook: any) {
+    setIsEditOpen(true);
+    setSelectedPricebook(pricebook);
+  }
+
+  if (isPending) {
+    return <Spin />
+  }
+  console.log(pricingType)
+  return (
+    <div className="w-full text-[#8B8D97] flex flex-col items-start gap-2">
+
+      <div className="w-full flex flex-col items-start gap-2">
+        {pricebookData?.data?.map((pricebook: any, idx: number) => {
+          return (
+            <div key={pricebook.id} className="w-full flex items-center justify-between border border-gray-300 bg-[#F4F5FA] p-1 rounded-md">
+              <div>{idx + 1}</div>
+              <div>{pricebook.name}</div>
+              <div>{pricebook.price}</div>
+              <div className="flex gap-1">
+                <Button onClick={() => handleEditClick(pricebook)} variant={"outline"}>
+                  <TiIconPencilPlus color="#D30000" />
+                </Button>
+              </div>
+            </div>
+          );
+        })}
+        <EditProdcutPricebookPriceDialog pricebook={selectedPricebook} isEditOpen={isEditOpen} setIsEditOpen={setIsEditOpen} />
+      </div>
+    </div>
+  );
+}

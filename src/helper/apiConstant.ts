@@ -23,7 +23,7 @@ export const apiConstant = {
     deleteVendorDocument: "/v1/vendor/document",
     deleteVendorEmployee: "/v1/vendor/employee",
     getAllServices: "/v1/vendor/products",
-    getAllPriceBook: "/v1/vendor/pricebooks",
+    getAllPriceBook: "/v1/vendor/pricebook",
     updatePriceBook: "/v1/vendor/pricebook/update",
     getServicesByPriceBookId: "/v1/vendor/pricebooks",
     getServiceById: "/v1/product/info?productId",
