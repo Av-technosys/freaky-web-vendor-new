@@ -141,7 +141,7 @@ const CompanyProfile = () => {
   const [companyLogo, setCompanyLogo] = useState<any>("");
 
   useEffect(() => {
-    const companyOwners = vendorOwnership?.data;
+    const companyOwners = vendorOwnership?.data ?? [];
     if (vendorData) {
       const companyInfo = vendorData?.data;
       setCompanyData((prev) => ({
@@ -179,9 +179,9 @@ const CompanyProfile = () => {
       }));
 
       setCompanyLogo(companyInfo?.logoUrl);
-      setDocumentInputs(allVendorDocuments?.data);
+      setDocumentInputs(allVendorDocuments?.data ?? []);
     }
-  }, [vendorData, allVendorDocuments]);
+  }, [vendorData, allVendorDocuments, vendorOwnership]);
 
   // --------------------- UPDATE FUNCTIONS ---------------------
 

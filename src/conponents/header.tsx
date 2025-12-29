@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import LinearGradientText from "../components/LinearGradientText";
 import { Button, Card, CardContent } from "../components/ui";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
@@ -10,6 +10,12 @@ import {
 import DropdownSelector from "./dropdownSelector";
 import { TiIconBell, TiIconSearch } from "./icons";
 import { SidebarDrawer } from "./SidebarDrawer";
+import {
+  useGetSearchItems,
+  useGetVendorNotifications,
+} from "@/services/useGetVendorCompanyDetails";
+import NotificationDrawer from "./notificationDrawer";
+import { data, useNavigate } from "react-router-dom";
 
 const dropdownValuesServices = {
   title: "Services",
@@ -25,58 +31,145 @@ const dropdownValuesServices = {
   ],
 };
 
+export function useDebounce<T>(value: T, delay = 600): T {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
 const Header: React.FC = () => {
+  const navigate = useNavigate();
   const [service, setService] = useState(
     dropdownValuesServices.options[0].value
   );
+  const [openNotificationDrawer, setOpenNotificationDrawer] = useState(false);
+  const [searchText, setSearchText] = useState("");
+
+  const debouncedSearch = useDebounce(searchText, 800);
+
+  const { data: searchData, isPending } = useGetSearchItems({
+    service,
+    debouncedSearch,
+  });
+
+  const {
+    data: notifications,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useGetVendorNotifications();
 
   function handleServiceChange(value: any) {
     setService(value.value);
   }
+
+  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setSearchText(e.target.value);
+  }
+
   return (
-    <Card className="w-full sticky top-2 py-3 z-10 ">
-      <CardContent>
-        <div className=" flex items-center justify-between ">
-          <div className="flex items-center gap-4">
-            <Avatar className=" size-12">
-              <AvatarImage src="" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <div>
-              <div className="text-lg font-semibold text-gray-800">
-                <LinearGradientText>Welcome Nova!</LinearGradientText>
+    <>
+      {
+        <NotificationDrawer
+          open={openNotificationDrawer}
+          setOpen={() => setOpenNotificationDrawer(false)}
+          data={notifications}
+          fetchNextPage={fetchNextPage}
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+        />
+      }
+      <Card className="w-full sticky top-2 py-3 z-10 ">
+        <CardContent>
+          <div className=" flex items-center justify-between ">
+            <div className="flex items-center gap-4">
+              <Avatar className=" size-12">
+                <AvatarImage src="" alt="@shadcn" />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+              <div>
+                <div className="text-lg font-semibold text-gray-800">
+                  <LinearGradientText>Welcome Nova!</LinearGradientText>
+                </div>
+                <div className="text-sm text-gray-500">
+                  System Administrator
+                </div>
               </div>
-              <div className="text-sm text-gray-500">System Administrator</div>
             </div>
-          </div>
-          <div className="w-1/2 flex items-center justify-end gap-4">
-            <DropdownSelector
-              labelName="hidden"
-              className="w-[200px] rounded-xl"
-              values={dropdownValuesServices}
-              selectedValue={service}
-              onChange={handleServiceChange}
-            />{" "}
-            {/* Right: Search + Bell */}
-            <div className="flex items-center gap-3">
-              <InputGroup className="hidden md:flex items-center bg-gray-100 rounded-full px-3 py-2 shadow-sm w-52">
-                <InputGroupAddon>
-                  <TiIconSearch className="text-gray-500" />
-                </InputGroupAddon>
-                <InputGroupInput type="text" placeholder="Search ..." />
-              </InputGroup>
-              <Button variant={"outline"} className=" rounded-full">
+            <div className="w-1/2 flex items-center justify-end gap-4">
+              <DropdownSelector
+                labelName="hidden"
+                className="w-[200px] rounded-xl"
+                values={dropdownValuesServices}
+                selectedValue={service}
+                onChange={handleServiceChange}
+              />{" "}
+              {/* Right: Search + Bell */}
+              <div className="relative w-52 group focus-within:block">
+                <InputGroup className="hidden md:flex items-center bg-gray-100 rounded-full px-4 py-2 shadow-sm">
+                  <InputGroupAddon>
+                    <TiIconSearch className="text-gray-500" />
+                  </InputGroupAddon>
+
+                  <InputGroupInput
+                    onChange={handleInputChange}
+                    value={searchText}
+                    type="text"
+                    placeholder="Search..."
+                    className="bg-transparent  focus:outline-none"
+                  />
+                </InputGroup>
+
+                {searchText?.trim() !== "" && (
+                  <ul className="absolute hidden group-focus-within:block top-full mt-2 w-full bg-white rounded-xl shadow-lg border z-50 overflow-hidden">
+                    {isPending ? (
+                      <li className="px-4 py-3 text-sm text-gray-500">
+                        Loading...
+                      </li>
+                    ) : searchData?.data?.length > 0 ? (
+                      searchData.data.map((item: any, index: number) => (
+                        <li
+                          key={index}
+                          onMouseDown={() => {
+                            setSearchText("");
+                            navigate(`/${service}`);
+                          }}
+                          className="px-4 py-3 text-sm border border-b-gray-100 cursor-pointer hover:bg-gray-100 transition"
+                        >
+                          {item.name || item.title}
+                        </li>
+                      ))
+                    ) : (
+                      <li className="px-4 py-3 text-sm text-gray-500">
+                        No item found
+                      </li>
+                    )}
+                  </ul>
+                )}
+              </div>
+              <Button
+                onClick={() => setOpenNotificationDrawer(true)}
+                variant={"outline"}
+                className=" rounded-full"
+              >
                 <TiIconBell />
               </Button>
-
               <div className="md:hidden">
                 <SidebarDrawer />
               </div>
             </div>
           </div>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </>
   );
 };
 

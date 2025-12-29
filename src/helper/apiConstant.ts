@@ -11,6 +11,7 @@ export const apiConstant = {
     getVendorDocuments: "/v1/vendor/documents",
     getVendorOwners: "/v1/vendor/ownership_details",
     getVendorEmployees: "/v1/vendor/employees",
+    getVendorNotifications: "/v1/vendor/notifications",
     sendEmployeeInvitation: "/v1/vendor/invite_employees",
     createCompanyInformation: "v1/vendor/company_details",
     createContactInformation: "v1/vendor/contact_details",
@@ -29,6 +30,7 @@ export const apiConstant = {
     getVendorInvites: "/v1/vendor/invites",
     createVendorEmployeeRequest: "/v1/vendor/employee_request",
     getAllVendorsForInvitation: "/v1/vendor/request_vendors",
+    getAllSearchItems: "/v1/vendor/searchitems",
   },
   review: {
     getAllReview: "/v1/vendor/review",
