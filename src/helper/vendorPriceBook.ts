@@ -2,30 +2,44 @@ import { axiosInstance } from "./api";
 import { apiConstant } from "./apiConstant";
 
 export const getAllPriceBook = async () => {
-    try {
-        const response = await axiosInstance.get(
-            `${apiConstant.vendor.getAllPriceBook}`
-        );
+  try {
+    const response = await axiosInstance.get(
+      `${apiConstant.vendor.getAllPriceBook}`
+    );
 
-        return response.data;
-    } catch (error) {
-        console.error("Error while sending request:", error);
-        throw error;
-    }
+    return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+    throw error;
+  }
 };
 
-
 export const getServicesByPriceBookId = async (pricebookId: number) => {
-    try {
-        const response = await axiosInstance.get(
-            `${apiConstant.vendor.getServicesByPriceBookId}/${pricebookId}`
-        );
+  try {
+    const response = await axiosInstance.get(
+      `${apiConstant.vendor.getServicesByPriceBookId}/${pricebookId}`
+    );
 
-        return response.data;
-    } catch (error) {
-        console.error("Error while sending request:", error);
-        throw error;
-    }
+    return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+    throw error;
+  }
+};
+
+export const updatePriceBook = async (isEditedData: any) => {
+  console.log("isedditeddd", isEditedData);
+  try {
+    const response = await axiosInstance.put(
+      `${apiConstant.vendor.updatePriceBook}`,
+      isEditedData
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+    throw error;
+  }
 };
 
 // export const getVendorServiceById = async (productId: any) => {
