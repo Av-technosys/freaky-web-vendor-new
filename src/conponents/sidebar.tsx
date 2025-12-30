@@ -37,7 +37,7 @@ const items = [
   },
   {
     title: "Booking",
-    url: "/booking",
+    url: "/bookings",
     icon: TiIconCalendar,
   },
   {
@@ -55,7 +55,7 @@ const items = [
     url: "/company-profile",
     icon: TiIconUser,
   },
-   {
+  {
     title: "Payments",
     url: "/payments",
     icon: TiIconUser,

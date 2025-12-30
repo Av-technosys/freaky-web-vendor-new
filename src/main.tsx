@@ -47,7 +47,7 @@ const routes = createBrowserRouter([
           { path: "/profile", element: <Profile /> },
           { path: "/reviews", element: <Reviews /> },
           { path: "/calendar", element: <Calendar /> },
-          { path: "/booking", element: <Booking /> },
+          { path: "/bookings", element: <Booking /> },
           { path: "/payments", element: <Payment /> },
 
           { path: "/users", element: <Users /> },

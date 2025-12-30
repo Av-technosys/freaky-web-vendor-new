@@ -26,13 +26,13 @@ import { toast } from "sonner";
 const navItems = [
   { to: "/", label: "Dashboard", Icon: TiconLayoutDashboard },
   { to: "/services", label: "Manage Services", Icon: TiIconTool },
-  { to: "/booking", label: "Booking", Icon: TiIconCalendar },
+  { to: "/bookings", label: "Booking", Icon: TiIconCalendar },
   { to: "/calendar", label: "Calendar", Icon: TiIconCalendar },
   { to: "/reviews", label: "User Reviews", Icon: TiIconStar },
   { to: "/company-profile", label: "Company Profile", Icon: TiIconBriefcase },
   { to: "/profile", label: "Profile", Icon: TiIconUser },
   { to: "/users", label: "Manage Users", Icon: TiIconUsers },
-   { to: "/payments", label: "Payments", Icon: TiIconUsers },
+  { to: "/payments", label: "Payments", Icon: TiIconUsers },
 ];
 
 export function SidebarDrawer() {

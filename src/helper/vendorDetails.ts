@@ -60,3 +60,51 @@ export const getAllVendors = async (search: string) => {
     throw error;
   }
 };
+
+// export const getVendorNotifications = async () => {
+//   try {
+//     const response = await axiosInstance.get(
+//       `${apiConstant.vendor.getVendorNotifications}`
+//     );
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error while sending request:", error);
+//     throw error;
+//   }
+// };
+
+type NotificationResponse = {
+  data: any[];
+  hasNextPage: boolean;
+  nextPage: number;
+};
+
+export const getVendorNotifications = async ({
+  pageParam = 1,
+}: {
+  pageParam: number;
+}): Promise<NotificationResponse> => {
+  const res = await axiosInstance.get(
+    apiConstant.vendor.getVendorNotifications,
+    {
+      params: {
+        page: pageParam,
+        limit: 20,
+      },
+    }
+  );
+
+  return res.data;
+};
+
+export const getSearchedItems = async ({ service, debouncedSearch }: any) => {
+  try {
+    const response = await axiosInstance.get(
+      `${apiConstant.vendor.getAllSearchItems}?search_type=${service}&search_text=${debouncedSearch}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+    throw error;
+  }
+};
