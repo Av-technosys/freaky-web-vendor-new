@@ -8,3 +8,9 @@ export const COLORS: TEventColor[] = [
 	"purple",
 	"orange",
 ];
+
+export const EVENT_BOOKING_STATUS = [
+	'booked',
+	'will_start',
+	'ongoing',
+];

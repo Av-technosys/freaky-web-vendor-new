@@ -16,7 +16,6 @@ const ManagePaymentBook = () => {
     id: "",
     name: ""
   });
-
   function handleEditClick(priceBook: any) {
     setSelectedPricebook(priceBook);
     setIsEditOpen(true);
@@ -33,8 +32,8 @@ const ManagePaymentBook = () => {
 
   const proceBooksData = data?.data;
   return (
-    <div className="mt-4">
-      <Label className=" pl-4 mt-4">Pricebooks</Label>
+    <div className="">
+      <Label className=" pl-4">Pricebooks</Label>
       {proceBooksData?.map((priceBook: any) => {
         return (
           <Card key={priceBook?.id} className="mt-2">

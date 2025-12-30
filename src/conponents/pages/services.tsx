@@ -1,5 +1,5 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Button, Card, CardContent, CardHeader } from "../../components/ui";
+import { Button, Card, CardContent, CardHeader, Label } from "../../components/ui";
 import { TiIconBriefcase } from "../icons";
 import { ServicesTable } from "../serviceTable";
 import { useGetVendorServices } from "../../services/useGetVendorServices";
@@ -25,22 +25,24 @@ const Services = () => {
   const totalPages = data?.pagination?.total_pages;
 
   const tableData = {
-    Headings: ["ID", "Services", "Categories", "Status", "Action"],
+    Headings: ["ID", "Services", "Action"],
     ListData: services,
   };
 
   return (
-    <div className="my-2 space-y-3">
-      <div className="w-full! flex gap-3 items-center justify-start">
+    <div className="my-1 space-y-2">
+      <div className="w-full! flex gap-4 items-center justify-start">
         <Button
           onClick={() => navigate("/services/manage-service")}
-          className=" px-6 cursor-pointer"
+          className=" cursor-pointer"
+          size={"sm"}
         >
-          Add New
+          Create Service
         </Button>
         <Button
           onClick={() => navigate("/services/manage-payment-book")}
-          className=" px-6 cursor-pointer"
+          className="cursor-pointer"
+          size={"sm"}
         >
           Manage Payment Book
         </Button>
@@ -82,15 +84,15 @@ const Services = () => {
         </Card>
       </div>
       <div className="max-w-[400px] bg-white overflow-x-scroll lg:overflow-hidden md:max-w-full p-3 shadow-lg rounded-lg">
+        <Label className=" mb-4"> Services  ( {tableData?.ListData?.length} ) </Label>
         <ServicesTable tableData={tableData} />
         <div className="mt-5">
           <Pagination>
             <PaginationContent>
               <PaginationItem className="border border-gray-200 rounded-md">
                 <PaginationPrevious
-                  className={`cursor-pointer ${
-                    page == 1 && "pointer-events-none opacity-50"
-                  }`}
+                  className={`cursor-pointer ${page == 1 && "pointer-events-none opacity-50"
+                    }`}
                   onClick={() =>
                     navigate(`?page=${page - 1}&page_size=${pageSize}`)
                   }
@@ -102,9 +104,8 @@ const Services = () => {
                     onClick={() =>
                       navigate(`?page=${index + 1}&page_size=${pageSize}`)
                     }
-                    className={`border border-gray-200 rounded-md ${
-                      page == index + 1 && "text-orange-500"
-                    }`}
+                    className={`border border-gray-200 rounded-md ${page == index + 1 && "text-orange-500"
+                      }`}
                   >
                     <PaginationLink href="#">{index + 1}</PaginationLink>
                   </PaginationItem>
@@ -112,9 +113,8 @@ const Services = () => {
               })}
               <PaginationItem className="border border-gray-200 rounded-md">
                 <PaginationNext
-                  className={`cursor-pointer  ${
-                    page == totalPages && "pointer-events-none opacity-50"
-                  }`}
+                  className={`cursor-pointer  ${page == totalPages && "pointer-events-none opacity-50"
+                    }`}
                   onClick={() =>
                     navigate(`?page=${page + 1}&page_size=${pageSize}`)
                   }

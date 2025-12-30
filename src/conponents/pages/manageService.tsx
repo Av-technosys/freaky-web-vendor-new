@@ -167,7 +167,7 @@ const ManageService = () => {
   return (
     <>
       <div className="grid grid-cols-4 gap-3">
-        <div className="col-span-3   rounded-lg">
+        <div className="col-span-3 rounded-lg">
           <Card>
             <CardContent>
               <div className="grid grid-cols-2 gap-5">

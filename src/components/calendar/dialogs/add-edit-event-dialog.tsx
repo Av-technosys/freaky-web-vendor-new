@@ -34,7 +34,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { COLORS } from "@/components/calendar/constants";
+import { COLORS, EVENT_BOOKING_STATUS } from "@/components/calendar/constants";
 import { useCalendar } from "@/components/calendar/contexts/calendar-context";
 import { useDisclosure } from "@/components/calendar/hooks";
 import type { IEvent } from "@/components/calendar/interfaces";
@@ -42,11 +42,9 @@ import {
 	eventSchema,
 	type TEventFormData,
 } from "@/components/calendar/schemas";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Label } from "@/components/ui";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { ChevronDownIcon } from "lucide-react";
-import { Calendar } from "@/components/ui/calender";
+
+import { useGetVendorServices } from "@/services/useGetVendorServices";
+import { se } from "date-fns/locale";
 
 interface IProps {
 	children: ReactNode;
@@ -65,6 +63,12 @@ export function AddEditEventDialog({
 	const { addEvent, updateEvent } = useCalendar();
 	const { formData, setFormData } = useCalendar();
 	const isEditing = !!event;
+
+	const { data } = useGetVendorServices(1, 200);
+	const services = data?.data;
+
+	const serviceName = services?.map((se: any) => se.productName);
+
 
 	const initialDates = useMemo(() => {
 		if (!isEditing && !event) {
@@ -111,6 +115,7 @@ export function AddEditEventDialog({
 	}, [event, initialDates, form]);
 
 	const onSubmit = (values: TEventFormData) => {
+		console.log(JSON.stringify(values))
 		try {
 			const formattedEvent: IEvent = {
 				...values,
@@ -163,317 +168,267 @@ export function AddEditEventDialog({
 	}
 
 	return (
-		// <Modal open={isOpen} onOpenChange={onToggle} modal={false}>
-		// 	<ModalTrigger asChild>{children}</ModalTrigger>
-		// 	<ModalContent>
-		// 		<ModalHeader>
-		// 			<ModalTitle>{isEditing ? "Edit Event" : "Add New Event"}</ModalTitle>
-		// 			<ModalDescription>
-		// 				{isEditing
-		// 					? "Modify your existing event."
-		// 					: "Create a new event for your calendar."}
-		// 			</ModalDescription>
-		// 		</ModalHeader>
+		<Modal open={isOpen} onOpenChange={onToggle} modal={false}>
+			<ModalTrigger asChild>{children}</ModalTrigger>
+			<ModalContent>
+				<ModalHeader>
+					<ModalTitle>{isEditing ? "Edit Event" : "Add New Event"}</ModalTitle>
+					<ModalDescription>
+						{isEditing
+							? "Modify your existing event."
+							: "Create a new event for your calendar."}
+					</ModalDescription>
+				</ModalHeader>
 
-		// 		<Form {...form}>
-		// 			<form
-		// 				id="event-form"
-		// 				onSubmit={form.handleSubmit(onSubmit)}
-		// 				className="grid gap-4 py-4"
-		// 			>
-		// 				<FormField
-		// 					control={form.control}
-		// 					name="title"
-		// 					render={({ field, fieldState }) => (
-		// 						<FormItem>
-		// 							<FormLabel htmlFor="title" className="required">
-		// 								Title
-		// 							</FormLabel>
-		// 							<FormControl>
-		// 								<Input
-		// 									id="title"
-		// 									placeholder="Enter a title"
-		// 									{...field}
-		// 									className={fieldState.invalid ? "border-red-500" : ""}
-		// 								/>
-		// 							</FormControl>
-		// 							<FormMessage />
-		// 						</FormItem>
-		// 					)}
-		// 				/>
-		// 				<FormField
-		// 					control={form.control}
-		// 					name="startDate"
-		// 					render={({ field }) => (
-		// 						<DateTimePicker form={form} field={field} />
-		// 					)}
-		// 				/>
-		// 				<FormField
-		// 					control={form.control}
-		// 					name="endDate"
-		// 					render={({ field }) => (
-		// 						<DateTimePicker form={form} field={field} />
-		// 					)}
-		// 				/>
-		// 				<FormField
-		// 					control={form.control}
-		// 					name="color"
-		// 					render={({ field, fieldState }) => (
-		// 						<FormItem>
-		// 							<FormLabel className="required">Variant</FormLabel>
-		// 							<FormControl>
-		// 								<Select value={field.value} onValueChange={field.onChange}>
-		// 									<SelectTrigger
-		// 										className={`w-full ${fieldState.invalid ? "border-red-500" : ""
-		// 											}`}
-		// 									>
-		// 										<SelectValue placeholder="Select a variant" />
-		// 									</SelectTrigger>
-		// 									<SelectContent>
-		// 										{COLORS.map((color) => (
-		// 											<SelectItem value={color} key={color}>
-		// 												<div className="flex items-center gap-2">
-		// 													<div
-		// 														className={`size-3.5 rounded-full bg-${color}-600 dark:bg-${color}-700`}
-		// 													/>
-		// 													{color}
-		// 												</div>
-		// 											</SelectItem>
-		// 										))}
-		// 									</SelectContent>
-		// 								</Select>
-		// 							</FormControl>
-		// 							<FormMessage />
-		// 						</FormItem>
-		// 					)}
-		// 				/>
-		// 				<FormField
-		// 					control={form.control}
-		// 					name="product"
-		// 					render={({ field, fieldState }) => (
-		// 						<FormItem>
-		// 							<FormLabel className="required">Variant</FormLabel>
-		// 							<FormControl>
-		// 								<Select value={field.value} onValueChange={field.onChange}>
-		// 									<SelectTrigger
-		// 										className={`w-full ${fieldState.invalid ? "border-red-500" : ""
-		// 											}`}
-		// 									>
-		// 										<SelectValue placeholder="Select a variant" />
-		// 									</SelectTrigger>
-		// 									<SelectContent>
-		// 										{COLORS.map((color) => (
-		// 											<SelectItem value={color} key={color}>
-		// 												<div className="flex items-center gap-2">
-		// 													<div
-		// 														className={`size-3.5 rounded-full bg-${color}-600 dark:bg-${color}-700`}
-		// 													/>
-		// 													{color}
-		// 												</div>
-		// 											</SelectItem>
-		// 										))}
-		// 									</SelectContent>
-		// 								</Select>
-		// 							</FormControl>
-		// 							<FormMessage />
-		// 						</FormItem>
-		// 					)}
-		// 				/>
-		// 				<FormField
-		// 					control={form.control}
-		// 					name="description"
-		// 					render={({ field, fieldState }) => (
-		// 						<FormItem>
-		// 							<FormLabel className="required">Description</FormLabel>
-		// 							<FormControl>
-		// 								<Textarea
-		// 									{...field}
-		// 									placeholder="Enter a description"
-		// 									className={fieldState.invalid ? "border-red-500" : ""}
-		// 								/>
-		// 							</FormControl>
-		// 							<FormMessage />
-		// 						</FormItem>
-		// 					)}
-		// 				/>
-		// 			</form>
-		// 		</Form>
-		// 		<ModalFooter className="flex justify-end gap-2">
-		// 			<ModalClose asChild>
-		// 				<Button type="button" variant="outline">
-		// 					Cancel
-		// 				</Button>
-		// 			</ModalClose>
-		// 			<Button form="event-form" type="submit">
-		// 				{isEditing ? "Save Changes" : "Create Event"}
-		// 			</Button>
-		// 		</ModalFooter>
-		// 	</ModalContent>
-		// </Modal>
-
-
-		<>
-			<Dialog>
-				<DialogTrigger asChild>
-					<Button>Add Event</Button>
-				</DialogTrigger>
-				<DialogContent>
-					<DialogHeader>
-						<DialogTitle>
-							Add New Event
-						</DialogTitle>
-						<DialogDescription>Create a new event for external booking.</DialogDescription>
-					</DialogHeader>
-					<div className=" space-y-3">
-						<div className=" space-y-2 ">
-							<Label className='px-1'>Title</Label>
-							<Input
-								type="text"
-								name="title"
-								id="title"
-								placeholder="Enter title"
-								value={formData?.title}
-								onChange={handleTitleChange}
-							/>
-						</div>
-						<div className='flex gap-4'>
-							<div className='flex flex-1 flex-col gap-2'>
-								<Label htmlFor='date-from' className='px-1'>
-									Start Time
-								</Label>
-								<Popover open={openFrom} onOpenChange={setOpenFrom}>
-									<PopoverTrigger asChild>
-										<Button variant='outline' id='date-from' className='w-full justify-between font-normal'>
-											{dateFrom
-												? dateFrom.toLocaleDateString('en-US', {
-													day: '2-digit',
-													month: 'short',
-													year: 'numeric'
-												})
-												: 'Pick a date'}
-											<ChevronDownIcon />
-										</Button>
-									</PopoverTrigger>
-									<PopoverContent className='w-auto overflow-hidden p-0' align='start'>
-										<Calendar
-											mode='single'
-											selected={dateFrom}
-											onSelect={date => {
-												setDateFrom(date)
-												setOpenFrom(false)
-											}}
+				<Form {...form}>
+					<form
+						id="event-form"
+						onSubmit={form.handleSubmit(onSubmit)}
+						className="grid gap-4 py-4"
+					>
+						<FormField
+							control={form.control}
+							name="title"
+							render={({ field, fieldState }) => (
+								<FormItem>
+									<FormLabel htmlFor="title" className="required">
+										Title
+									</FormLabel>
+									<FormControl>
+										<Input
+											id="title"
+											placeholder="Enter a title"
+											{...field}
+											className={fieldState.invalid ? "border-red-500" : ""}
 										/>
-									</PopoverContent>
-								</Popover>
-							</div>
-							<div className='flex flex-col gap-2'>
-								<Label htmlFor='time-from' className='invisible px-1'>
-									From
-								</Label>
-								<Input
-									type='time'
-									id='time-from'
-									step='1'
-									defaultValue='09:30:00'
-									className='bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none'
-								/>
-							</div>
-						</div>
-						<div className='flex gap-4'>
-							<div className='flex flex-1 flex-col gap-2'>
-								<Label htmlFor='date-to' className='px-1'>
-									End Time
-								</Label>
-								<Popover open={openTo} onOpenChange={setOpenTo}>
-									<PopoverTrigger asChild>
-										<Button variant='outline' id='date-to' className='w-full justify-between font-normal'>
-											{dateTo
-												? dateTo.toLocaleDateString('en-US', {
-													day: '2-digit',
-													month: 'short',
-													year: 'numeric'
-												})
-												: 'Pick a date'}
-											<ChevronDownIcon />
-										</Button>
-									</PopoverTrigger>
-									<PopoverContent className='w-auto overflow-hidden p-0' align='start'>
-										<Calendar
-											mode='single'
-											selected={dateTo}
-											captionLayout='dropdown'
-											onSelect={date => {
-												setDateTo(date)
-												setOpenTo(false)
-											}}
-											disabled={dateFrom && { before: dateFrom }}
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="lowerBound"
+							render={({ field, fieldState }) => (
+								<FormItem>
+									<FormLabel htmlFor="lowerBound" className="required">
+										Lower Bound
+									</FormLabel>
+									<FormControl>
+										<Input
+											id="lowerBound"
+											placeholder="Enter a lower bound"
+											{...field}
+											className={fieldState.invalid ? "border-red-500" : ""}
 										/>
-									</PopoverContent>
-								</Popover>
-							</div>
-							<div className='flex flex-col gap-3'>
-								<Label htmlFor='time-to' className='invisible px-1'>
-									To
-								</Label>
-								<Input
-									type='time'
-									id='time-to'
-									step='1'
-									defaultValue='18:30:00'
-									className='bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none'
-								/>
-							</div>
-						</div>
-						{/* <div>
-							<Label>Varient</Label>
-							<Select>
-								<SelectTrigger className=" w-full">
-									<SelectValue placeholder="Select a fruit" />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectGroup>
-										<SelectLabel>Fruits</SelectLabel>
-										<SelectItem value="apple">Apple</SelectItem>
-										<SelectItem value="banana">Banana</SelectItem>
-										<SelectItem value="blueberry">Blueberry</SelectItem>
-										<SelectItem value="grapes">Grapes</SelectItem>
-										<SelectItem value="pineapple">Pineapple</SelectItem>
-									</SelectGroup>
-								</SelectContent>
-							</Select>
-						</div> */}
-						<div>
-							<Label>Product</Label>
-							<Select>
-								<SelectTrigger className=" w-full">
-									<SelectValue placeholder="Select a fruit" />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectGroup>
-										<SelectLabel>Fruits</SelectLabel>
-										<SelectItem value="apple">Apple</SelectItem>
-										<SelectItem value="banana">Banana</SelectItem>
-										<SelectItem value="blueberry">Blueberry</SelectItem>
-										<SelectItem value="grapes">Grapes</SelectItem>
-										<SelectItem value="pineapple">Pineapple</SelectItem>
-									</SelectGroup>
-								</SelectContent>
-							</Select>
-						</div>
-						<div>
-							<Label>Description</Label>
-							<Textarea
-								name="title"
-								id="title"
-								value={formData?.description}
-								onChange={handleDescriptionChange}
-							/>
-						</div>
-					</div>
-				</DialogContent>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="upperBound"
+							render={({ field, fieldState }) => (
+								<FormItem>
+									<FormLabel htmlFor="upperBound" className="required">
+										Upper Bound
+									</FormLabel>
+									<FormControl>
+										<Input
+											id="upperBound"
+											placeholder="Enter a upper bound"
+											{...field}
+											className={fieldState.invalid ? "border-red-500" : ""}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						{/* <FormField
+							control={form.control}
+							name="productPrice"
+							render={({ field, fieldState }) => (
+								<FormItem>
+									<FormLabel htmlFor="productPrice" className="required">
+										Product Price
+									</FormLabel>
+									<FormControl>
+										<Input
+											id="productPrice"
+											placeholder="Enter a product price"
+											{...field}
+											className={fieldState.invalid ? "border-red-500" : ""}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/> */}
+						<FormField
+							control={form.control}
+							name="serviceBookingPrice"
+							render={({ field, fieldState }) => (
+								<FormItem>
+									<FormLabel htmlFor="serviceBookingPrice" className="required">
+										Service Booking Price
+									</FormLabel>
+									<FormControl>
+										<Input
+											id="serviceBookingPrice"
+											placeholder="Enter a service booking price"
+											{...field}
+											className={fieldState.invalid ? "border-red-500" : ""}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="startDate"
+							render={({ field }) => (
+								<DateTimePicker form={form} field={field} />
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="endDate"
+							render={({ field }) => (
+								<DateTimePicker form={form} field={field} />
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="status"
+							render={({ field, fieldState }) => (
+								<FormItem>
+									<FormLabel className="required">status</FormLabel>
+									<FormControl>
+										<Select value={field.value} onValueChange={field.onChange}>
+											<SelectTrigger
+												className={`w-full ${fieldState.invalid ? "border-red-500" : ""
+													}`}
+											>
+												<SelectValue placeholder="Select a status" />
+											</SelectTrigger>
+											<SelectContent>
+												{EVENT_BOOKING_STATUS.map((color) => (
+													<SelectItem value={color} key={color}>
+														<div className="flex items-center gap-2">
+															{/* <div
+																className={`size-3.5 rounded-full bg-${color}-600 dark:bg-${color}-700`}
+															/> */}
+															{color}
+														</div>
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="color"
+							render={({ field, fieldState }) => (
+								<FormItem>
+									<FormLabel className="required">Variant</FormLabel>
+									<FormControl>
+										<Select value={field.value} onValueChange={field.onChange}>
+											<SelectTrigger
+												className={`w-full ${fieldState.invalid ? "border-red-500" : ""
+													}`}
+											>
+												<SelectValue placeholder="Select a variant" />
+											</SelectTrigger>
+											<SelectContent>
+												{COLORS.map((color) => (
+													<SelectItem value={color} key={color}>
+														<div className="flex items-center gap-2">
+															<div
+																className={`size-3.5 rounded-full bg-${color}-600 dark:bg-${color}-700`}
+															/>
+															{color}
+														</div>
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="product"
+							render={({ field, fieldState }) => (
+								<FormItem>
+									<FormLabel className="required">Services Name</FormLabel>
+									<FormControl>
+										<Select value={field.value} onValueChange={field.onChange}>
+											<SelectTrigger
+												className={`w-full ${fieldState.invalid ? "border-red-500" : ""
+													}`}
+											>
+												<SelectValue placeholder="Select a service" />
+											</SelectTrigger>
+											<SelectContent>
+												{serviceName.map((color) => (
+													<SelectItem value={color} key={color}>
+														<div className="flex items-center gap-2">
+															<div
+																className={`size-3.5 rounded-full bg-${color}-600 dark:bg-${color}-700`}
+															/>
+															{color}
+														</div>
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="description"
+							render={({ field, fieldState }) => (
+								<FormItem>
+									<FormLabel className="required">Description</FormLabel>
+									<FormControl>
+										<Textarea
+											{...field}
+											placeholder="Enter a description"
+											className={fieldState.invalid ? "border-red-500" : ""}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+					</form>
+				</Form>
+				<ModalFooter className="flex justify-end gap-2">
+					<ModalClose asChild>
+						<Button type="button" variant="outline">
+							Cancel
+						</Button>
+					</ModalClose>
+					<Button form="event-form" type="submit">
+						{isEditing ? "Save Changes" : "Create Event"}
+					</Button>
+				</ModalFooter>
+			</ModalContent>
+		</Modal>
 
-			</Dialog>
-		</>
+
 
 
 	);

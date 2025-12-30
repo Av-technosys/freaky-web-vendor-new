@@ -15,7 +15,7 @@ import { useUpdatePriceBook } from "@/services/useUpdatePriceBook";
 const EditPaymentBookDialog = ({ isOpen, setOpen, priceBook }: any) => {
   return (
     <AlertDialog open={isOpen} onOpenChange={setOpen}>
-      <AlertDialogContent>
+      <AlertDialogContent className=" sm:max-w-[600px]">
         <AlertDialogHeader>
           <AlertDialogTitle>{`Edit ${priceBook?.name}`}</AlertDialogTitle>
         </AlertDialogHeader>
@@ -108,11 +108,11 @@ function AlertContent({ id, setOpen }: any) {
             <Label className="text-lg font-semibold">
               {service.productName}
             </Label>
-            <div className=" space-y-2">
+            <div className=" space-y-2 mt-1">
               {service.pricingType === "tier" && (
                 <div className=" w-full grid grid-cols-2 gap-4">
                   <div>
-                    <Label>Lower Slab</Label>
+                    <Label className=" mb-1">Lower Slab</Label>
                     <Input
                       value={service.lowerSlab}
                       onChange={(e) =>
