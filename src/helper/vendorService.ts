@@ -50,3 +50,15 @@ export const deleteImageHandler = async (id: any) => {
     throw error;
   }
 };
+
+export const deleteVendorServiceById = async (serviceId: any) => {
+  try {
+    const response = await axiosInstance.delete(
+      `${apiConstant.vendor.deleteServiceById}/${serviceId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+    throw error;
+  }
+};

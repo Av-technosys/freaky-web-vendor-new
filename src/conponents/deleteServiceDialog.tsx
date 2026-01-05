@@ -13,8 +13,13 @@ import {
   AlertDialogTrigger,
 } from "../components/ui/alert-dialog";
 import { TiIconTrash } from "./icons";
+import { useDeleteVendorServiceById } from "@/services/useCreateOrUpdateVendorService";
+import { useQueryClient } from "@tanstack/react-query";
 
-const DeleteServiceDialog = () => {
+const DeleteServiceDialog = ({ serviceId }: any) => {
+  const deleteServiceMutation = useDeleteVendorServiceById();
+  const queryClient = useQueryClient();
+
   return (
     <>
       <AlertDialog>
@@ -38,7 +43,20 @@ const DeleteServiceDialog = () => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={() => {}}>Delete</AlertDialogAction>
+            <AlertDialogAction
+              onClick={() => {
+                deleteServiceMutation.mutate(serviceId, {
+                  onSuccess: () => {
+                    queryClient.invalidateQueries({
+                      queryKey: ["vendor-services"],
+                    });
+                  },
+                });
+              }}
+            >
+              {" "}
+              {deleteServiceMutation.isPending ? "Deleting..." : "Delete"}
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
