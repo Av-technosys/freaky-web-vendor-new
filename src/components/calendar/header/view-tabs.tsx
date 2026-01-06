@@ -1,14 +1,7 @@
 import { motion, AnimatePresence } from "motion/react";
- 
- 
+
 import { useCalendar } from "../contexts/calendar-context";
-import {
-  CalendarRange,
-  List,
-  Columns,
-  Grid3X3,
-  Grid2X2,
-} from "lucide-react"; 
+import { CalendarRange, Grid3X3 } from "lucide-react";
 import { memo } from "react";
 import { cn } from "../../../lib/utils";
 import { Tabs, TabsList, TabsTrigger } from "../../ui/tabs";

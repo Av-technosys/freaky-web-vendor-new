@@ -1,6 +1,6 @@
 import { Calendar } from "@/components/calendar/calendar";
 import { CalendarSkeleton } from "@/components/calendar/skeletons/calendar-skeleton";
-import React, { Suspense } from "react"; 
+import { Suspense } from "react";
 
 export default function CalendarPage() {
   return (
