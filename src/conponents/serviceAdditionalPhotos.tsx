@@ -7,6 +7,13 @@ import VideoPlayerDialog from "./videoPlayerDialog";
 import { useGetImageUrl, useUploadImage } from "../services/useUploadImage";
 import { useParams } from "react-router-dom";
 import uploadImage from "../assets/uploadImage.png";
+import {
+  MAX_HEIGHT,
+  MAX_SIZE,
+  MAX_VIDEO_SIZE,
+  MAX_WIDTH,
+} from "@/components/calendar/constants";
+import { toast } from "sonner";
 
 const ServiceAdditionalPhotos = ({
   mediaImages,
@@ -30,44 +37,98 @@ const ServiceAdditionalPhotos = ({
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const imageData = {
-      fileName: file.name,
-      fileType: file.type,
-      path: "productMedia",
-    };
+    if (file.size > MAX_SIZE) {
+      toast.error("Image size is too large to upload", {
+        style: {
+          color: "#dc2626",
+          border: "1px solid #dc2626",
+        },
+      });
+      e.target.value = "";
+      return;
+    }
 
-    const uploadRes = await getImageUrlMutation.mutateAsync({
-      data: imageData,
-    });
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
 
-    if (uploadRes?.data?.uploadUrl) {
-      await uploadImageMutation.mutateAsync({
-        url: uploadRes.data.uploadUrl,
-        file,
+    img.onload = async () => {
+      if (img.width > MAX_WIDTH || img.height > MAX_HEIGHT) {
+        toast.error(
+          `Image dimensions too large. Max allowed ${MAX_WIDTH}x${MAX_HEIGHT}px`,
+          {
+            style: {
+              color: "#dc2626",
+              border: "1px solid #dc2626",
+            },
+          }
+        );
+        e.target.value = "";
+        URL.revokeObjectURL(objectUrl);
+        return;
+      }
+
+      URL.revokeObjectURL(objectUrl);
+
+      const imageData = {
+        fileName: file.name,
+        fileType: file.type,
+        path: "productMedia",
+      };
+
+      const uploadRes = await getImageUrlMutation.mutateAsync({
+        data: imageData,
       });
 
-      setMediaImages((prev: any) => [
-        ...prev,
-        {
-          mediaType: "image",
-          mediaUrl: uploadRes.data.filePath,
-        },
-      ]);
+      if (uploadRes?.data?.uploadUrl) {
+        await uploadImageMutation.mutateAsync({
+          url: uploadRes.data.uploadUrl,
+          file,
+        });
 
-      setAdditionalImagesUrl((prev: any) => [
-        ...prev,
-        uploadRes?.data?.filePath,
-      ]);
-    }
+        setMediaImages((prev: any) => [
+          ...prev,
+          {
+            mediaType: "image",
+            mediaUrl: uploadRes.data.filePath,
+          },
+        ]);
+
+        setAdditionalImagesUrl((prev: any) => [
+          ...prev,
+          uploadRes.data.filePath,
+        ]);
+      }
+    };
+
+    img.onerror = () => {
+      alert("Invalid image file");
+      e.target.value = "";
+      URL.revokeObjectURL(objectUrl);
+    };
+
+    img.src = objectUrl;
   };
 
   const handleVideo = async (e: any) => {
     const file = e.target.files?.[0];
+
+    if (file.size > MAX_VIDEO_SIZE) {
+      toast.error("Video size is too large to upload", {
+        style: {
+          color: "#dc2626",
+          border: "1px solid #dc2626",
+        },
+      });
+      e.target.value = "";
+      return;
+    }
+
     const videoData = {
       fileName: file.name,
       fileType: file.type,
       path: "productMedia",
     };
+
     if (file.name) {
       const UploadUrl = await getImageUrlMutation.mutateAsync({
         data: videoData,

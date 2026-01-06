@@ -8,14 +8,14 @@ import {
   Textarea,
 } from "../../components/ui";
 import DropdownSelector from "../dropdownSelector";
-import { Switch } from "../../components/ui/switch";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "../../components/ui/popover";
-import { CalendarIcon } from "lucide-react";
-import { Calendar } from "../../components/ui/calender";
+// import { Switch } from "../../components/ui/switch";
+// import {
+//   Popover,
+//   PopoverContent,
+//   PopoverTrigger,
+// } from "../../components/ui/popover";
+// import { CalendarIcon } from "lucide-react";
+// import { Calendar } from "../../components/ui/calender";
 import uploadImage from "../../assets/uploadImage.png";
 import { useNavigate, useParams } from "react-router-dom";
 import EditPricebookDialog from "../editPricebookDialog";
@@ -26,6 +26,12 @@ import { useUpdateVendorService } from "../../services/useCreateOrUpdateVendorSe
 import { useQueryClient } from "@tanstack/react-query";
 import ServiceAdditionalPhotos from "../serviceAdditionalPhotos";
 import ImageViewerDialog from "../imageViewerDialog";
+import { toast } from "sonner";
+import {
+  MAX_HEIGHT,
+  MAX_SIZE,
+  MAX_WIDTH,
+} from "@/components/calendar/constants";
 
 const dropdownValuesProductCategories = {
   options: [
@@ -55,29 +61,29 @@ const serviceList = [
   },
 ];
 
-function formatDate(date: Date | undefined) {
-  if (!date) {
-    return "";
-  }
-  return date.toLocaleDateString("en-US", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  });
-}
-function isValidDate(date: Date | undefined) {
-  if (!date) {
-    return false;
-  }
-  return !isNaN(date.getTime());
-}
+// function formatDate(date: Date | undefined) {
+//   if (!date) {
+//     return "";
+//   }
+//   return date.toLocaleDateString("en-US", {
+//     day: "2-digit",
+//     month: "long",
+//     year: "numeric",
+//   });
+// }
+// function isValidDate(date: Date | undefined) {
+//   if (!date) {
+//     return false;
+//   }
+//   return !isNaN(date.getTime());
+// }
 
 const ManageService = () => {
-  const [open, setOpen] = useState(false);
-  const [date, setDate] = useState<Date | undefined>(undefined);
-  const [month, setMonth] = useState<Date | undefined>(date);
-  const [value, setValue] = useState(formatDate(date));
-  const [time, setTime] = useState("12:00");
+  // const [open, setOpen] = useState(false);
+  // const [date, setDate] = useState<Date | undefined>(undefined);
+  // const [month, setMonth] = useState<Date | undefined>(date);
+  // const [value, setValue] = useState(formatDate(date));
+  // const [time, setTime] = useState("12:00");
 
   const [serviceName, setServiceName] = useState("");
   const [categoryName, setCategoryName] = useState("product");
@@ -118,23 +124,70 @@ const ManageService = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const imageData = {
-      fileName: file.name,
-      fileType: file.type,
-      path: "productBanner",
+    if (file.size > MAX_SIZE) {
+      toast.error("Image size is too large to upload.", {
+        style: {
+          color: "#dc2626",
+          border: "1px solid #dc2626",
+        },
+      });
+      e.target.value = "";
+      return;
+    }
+
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+
+    img.onload = async () => {
+      if (img.width > MAX_WIDTH || img.height > MAX_HEIGHT) {
+        toast.error(
+          `Image dimensions too large. Max allowed Width ${MAX_WIDTH}px and Height ${MAX_HEIGHT}px`,
+          {
+            style: {
+              color: "#dc2626",
+              border: "1px solid #dc2626",
+            },
+          }
+        );
+        e.target.value = "";
+        URL.revokeObjectURL(objectUrl);
+        return;
+      }
+
+      URL.revokeObjectURL(objectUrl);
+
+      const imageData = {
+        fileName: file.name,
+        fileType: file.type,
+        path: "productBanner",
+      };
+
+      const uploadRes = await getImageUrlMutation.mutateAsync({
+        data: imageData,
+      });
+
+      if (uploadRes?.data?.uploadUrl) {
+        await uploadImageMutation.mutateAsync({
+          url: uploadRes.data.uploadUrl,
+          file,
+        });
+
+        setMediaBanner(uploadRes.data.filePath);
+      }
     };
 
-    const uploadRes = await getImageUrlMutation.mutateAsync({
-      data: imageData,
-    });
-
-    if (uploadRes?.data?.uploadUrl) {
-      await uploadImageMutation.mutateAsync({
-        url: uploadRes.data.uploadUrl,
-        file,
+    img.onerror = () => {
+      toast.error("Invalid image file", {
+        style: {
+          color: "#dc2626",
+          border: "1px solid #dc2626",
+        },
       });
-      setMediaBanner(uploadRes.data.filePath);
-    }
+      e.target.value = "";
+      URL.revokeObjectURL(objectUrl);
+    };
+
+    img.src = objectUrl;
   };
 
   const mutation = useUpdateVendorService();
@@ -192,7 +245,11 @@ const ManageService = () => {
                       <Switch id="airplane-mode" />
                     </div> */}
                   </div>
-                  <Input placeholder="Upload document" type="file" className=" -mt-2" />
+                  <Input
+                    placeholder="Upload document"
+                    type="file"
+                    className=" -mt-2"
+                  />
                   {/* <div className="w-full flex gap-3">
                     <div className="relative flex gap-2">
                       <Input
@@ -323,16 +380,16 @@ const ManageService = () => {
             <div className="w-full group relative gap-1 flex flex-col items-center">
               {productId ? (
                 <>
-                <ImageViewerDialog mediaUrl={mediaBanner} />
-                <div className="w-24 h-24 rounded-full overflow-hidden">
-                  <img
-                    className="object-cover"
-                    src={`${
-                      import.meta.env.VITE_IMAGE_BASE_URL
-                    }/${mediaBanner}`}
-                    alt="uploaded-image"
-                  />
-                </div>
+                  <ImageViewerDialog mediaUrl={mediaBanner} />
+                  <div className="w-24 h-24 rounded-full overflow-hidden">
+                    <img
+                      className="object-cover"
+                      src={`${
+                        import.meta.env.VITE_IMAGE_BASE_URL
+                      }/${mediaBanner}`}
+                      alt="uploaded-image"
+                    />
+                  </div>
                 </>
               ) : (
                 <div className="w-10 h-10 flex items-center justify-center p-1 rounded-lg overflow-hidden">

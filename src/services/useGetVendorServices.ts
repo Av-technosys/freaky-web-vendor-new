@@ -15,5 +15,6 @@ export const useGetVendorServiceByServiceId = (productId: any) => {
   return useQuery({
     queryKey: ["vendor-services-by-id"],
     queryFn: () => getVendorServiceById(productId),
+    enabled: !!productId,
   });
 };

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import LinearGradientText from "../components/LinearGradientText";
 import { Button, Card, CardContent } from "../components/ui";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
@@ -10,12 +10,9 @@ import {
 import DropdownSelector from "./dropdownSelector";
 import { TiIconBell, TiIconSearch } from "./icons";
 import { SidebarDrawer } from "./SidebarDrawer";
-import {
-  useGetSearchItems,
-  useGetVendorNotifications,
-} from "@/services/useGetVendorCompanyDetails";
+import { useGetSearchItems } from "@/services/useGetVendorCompanyDetails";
 import NotificationDrawer from "./notificationDrawer";
-import { data, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const dropdownValuesServices = {
   title: "Services",
@@ -60,13 +57,6 @@ const Header: React.FC = () => {
     debouncedSearch,
   });
 
-  const {
-    data: notifications,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useGetVendorNotifications();
-
   function handleServiceChange(value: any) {
     setService(value.value);
   }
@@ -81,10 +71,6 @@ const Header: React.FC = () => {
         <NotificationDrawer
           open={openNotificationDrawer}
           setOpen={() => setOpenNotificationDrawer(false)}
-          data={notifications}
-          fetchNextPage={fetchNextPage}
-          hasNextPage={hasNextPage}
-          isFetchingNextPage={isFetchingNextPage}
         />
       }
       <Card className="w-full sticky top-2 py-3 z-10 ">

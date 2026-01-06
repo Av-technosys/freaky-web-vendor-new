@@ -1,6 +1,5 @@
 "use client";
 
-import UpcommingEvents from "../common/UpcommingEvents";
 import { ChartLineLinear } from "../common/ChartLineLinear";
 import RevenueStats from "../common/RevenueStats";
 import MetricsCards from "../common/MetricsCards";

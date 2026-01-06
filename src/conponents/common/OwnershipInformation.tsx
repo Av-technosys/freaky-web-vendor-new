@@ -23,7 +23,7 @@ interface OwnershipInformationProps {
   onUpdateAuthorizedSignatory: (index: number) => void;
   onAddOwner: () => void;
   onRemoveOwner: (index: number) => void; // Add this prop
-  className?: string
+  className?: string;
 }
 
 const OwnershipInformation = ({
@@ -32,7 +32,7 @@ const OwnershipInformation = ({
   onUpdateAuthorizedSignatory,
   onAddOwner,
   onRemoveOwner, // Add this to destructuring
-  className
+  className,
 }: OwnershipInformationProps) => {
   return (
     <Card className={cn(className)}>
@@ -232,7 +232,7 @@ const OwnershipInformation = ({
                 </Label>
                 <Switch
                   checked={data.authorizedSignatory === index}
-                  onCheckedChange={(value) => {
+                  onCheckedChange={(value: any) => {
                     if (value) {
                       onUpdateAuthorizedSignatory(index);
                     } else {

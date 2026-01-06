@@ -56,7 +56,7 @@ export function ServicesTable({ tableData }: any) {
                   >
                     <TiIconPencilPlus color="#D30000" />
                   </Button>
-                  <DeleteServiceDialog />
+                  <DeleteServiceDialog serviceId={service.productId} />
                 </div>
               </TableCell>
             </TableRow>

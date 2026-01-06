@@ -8,7 +8,6 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-  Input,
   Label,
 } from "@/components/ui";
 import { cn } from "@/lib/utils";
@@ -16,11 +15,10 @@ import {
   ArrowLeft,
   ArrowRight,
   Check,
-  CircleAlert,
   LoaderCircle,
   Search,
 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import CompanyInformation from "../common/CompanyInformationProps";
 import ContactDetails from "../common/ContactDetails";
 import BusinessAddress from "../common/BusinessAddress";
