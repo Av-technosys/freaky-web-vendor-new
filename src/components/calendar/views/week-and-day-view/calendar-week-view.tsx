@@ -33,13 +33,13 @@ export function CalendarWeekView({ singleDayEvents, multiDayEvents }: IProps) {
       animate="animate"
       exit="exit"
       variants={fadeIn}
-      transition={transition}
+      transition={transition as any}
     >
       <motion.div
         className="flex flex-col items-center justify-center border-b p-4 text-sm sm:hidden"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={transition}
+        transition={transition as any}
       >
         <p>Weekly view is not recommended on smaller devices.</p>
         <p>Please switch to a desktop device or use the daily view instead.</p>
@@ -57,7 +57,7 @@ export function CalendarWeekView({ singleDayEvents, multiDayEvents }: IProps) {
             className="relative z-20 flex border-b"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={transition}
+            transition={transition as any}
           >
             {/* Time column header - responsive width */}
             <div className="w-18"></div>
@@ -68,7 +68,7 @@ export function CalendarWeekView({ singleDayEvents, multiDayEvents }: IProps) {
                   className="py-1 sm:py-2 text-center text-xs font-medium text-t-quaternary"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05, ...transition }}
+                  transition={{ delay: index * 0.05, ...transition } as any}
                 >
                   {/* Mobile: Show only day abbreviation and number */}
                   <span className="block sm:hidden">
@@ -101,7 +101,7 @@ export function CalendarWeekView({ singleDayEvents, multiDayEvents }: IProps) {
                   style={{ height: "96px" }}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.02, ...transition }}
+                  transition={{ delay: index * 0.02, ...transition } as any}
                 >
                   <div className="absolute -top-3 right-2 flex h-6 items-center">
                     {index !== 0 && (
@@ -137,7 +137,7 @@ export function CalendarWeekView({ singleDayEvents, multiDayEvents }: IProps) {
                       className="relative"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      transition={{ delay: dayIndex * 0.1, ...transition }}
+                      transition={{ delay: dayIndex * 0.1, ...transition } as any}
                     >
                       {hours.map((hour, index) => (
                         <motion.div
@@ -146,7 +146,7 @@ export function CalendarWeekView({ singleDayEvents, multiDayEvents }: IProps) {
                           style={{ height: "96px" }}
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
-                          transition={{ delay: index * 0.01, ...transition }}
+                          transition={{ delay: index * 0.01, ...transition } as any}
                         >
                           {index !== 0 && (
                             <div className="pointer-events-none absolute inset-x-0 top-0 border-b"></div>

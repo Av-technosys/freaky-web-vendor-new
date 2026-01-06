@@ -34,7 +34,7 @@ export function EventBullet({
 			initial={{ scale: 0, opacity: 0 }}
 			animate={{ scale: 1, opacity: 1 }}
 			whileHover={{ scale: 1.2 }}
-			transition={transition}
+			transition={transition as any}
 		/>
 	);
 }

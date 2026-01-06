@@ -23,13 +23,13 @@ export function TodayButton() {
 			variants={buttonHover}
 			whileHover="hover"
 			whileTap="tap"
-			transition={transition}
+			transition={transition as any}
 		>
 			<motion.span
 				className="w-full bg-primary py-1 text-xs font-semibold text-primary-foreground"
 				initial={{ y: -10, opacity: 0 }}
 				animate={{ y: 0, opacity: 1 }}
-				transition={{ delay: 0.1, ...transition }}
+				transition={{ delay: 0.1, ...transition } as any}
 			>
 				{formatDate(today, "MMM").toUpperCase()}
 			</motion.span>
@@ -37,7 +37,7 @@ export function TodayButton() {
 				className="text-lg font-bold"
 				initial={{ y: 10, opacity: 0 }}
 				animate={{ y: 0, opacity: 1 }}
-				transition={{ delay: 0.2, ...transition }}
+				transition={{ delay: 0.2, ...transition } as any}
 			>
 				{today.getDate()}
 			</motion.span>

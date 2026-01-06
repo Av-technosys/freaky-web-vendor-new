@@ -85,7 +85,7 @@ export function DayCell({ cell, events, eventPositions }: IProps) {
           className="lg:flex-1"
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: position * 0.1, ...transition }}
+          transition={{ delay: position * 0.1, ...transition } as any}
         >
           <>
             {showBullet && (
@@ -117,7 +117,7 @@ export function DayCell({ cell, events, eventPositions }: IProps) {
         )}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={transition}
+        transition={transition as any}
       >
         <DroppableArea date={date} className="w-full h-full py-2">
           <motion.span
@@ -125,7 +125,7 @@ export function DayCell({ cell, events, eventPositions }: IProps) {
               "h-6 px-1 text-xs font-semibold lg:px-2",
               !currentMonth && "opacity-20",
               isToday(date) &&
-                "flex w-6 translate-x-1 items-center justify-center rounded-full bg-primary px-0 font-bold text-primary-foreground"
+              "flex w-6 translate-x-1 items-center justify-center rounded-full bg-primary px-0 font-bold text-primary-foreground"
             )}
           >
             {day}
@@ -170,7 +170,7 @@ export function DayCell({ cell, events, eventPositions }: IProps) {
               )}
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, ...transition }}
+              transition={{ delay: 0.3, ...transition } as any}
             >
               <EventListDialog date={date} events={cellEvents} />
             </motion.div>

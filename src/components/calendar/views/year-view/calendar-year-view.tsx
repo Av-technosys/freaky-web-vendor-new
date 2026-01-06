@@ -57,7 +57,7 @@ export function CalendarYearView({ singleDayEvents, multiDayEvents }: IProps) {
 							className="flex flex-col border border-border rounded-lg shadow-sm overflow-hidden"
 							initial={{ opacity: 0, scale: 0.95 }}
 							animate={{ opacity: 1, scale: 1 }}
-							transition={{ delay: monthIndex * 0.05, ...transition }}
+							transition={{ delay: monthIndex * 0.05, ...transition } as any}
 							role="region"
 							aria-label={`${month} ${currentYear} calendar`}
 						>
@@ -114,7 +114,7 @@ export function CalendarYearView({ singleDayEvents, multiDayEvents }: IProps) {
 															className={cn(
 																"size-5 flex items-center justify-center font-medium",
 																isToday &&
-																	"rounded-full bg-primary text-primary-foreground",
+																"rounded-full bg-primary text-primary-foreground",
 															)}
 														>
 															{cell.day}
