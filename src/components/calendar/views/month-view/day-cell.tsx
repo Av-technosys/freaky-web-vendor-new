@@ -6,18 +6,12 @@ import { motion } from "framer-motion";
 import { useMemo, useCallback } from "react";
 
 import { cn } from "@/lib/utils";
-import {
-  staggerContainer,
-  transition,
-} from "@/components/calendar/animations";
+import { transition } from "@/components/calendar/animations";
 import { EventListDialog } from "@/components/calendar/dialogs/events-list-dialog";
 import { DroppableArea } from "@/components/calendar/dnd/droppable-area";
 import { getMonthCellEvents } from "@/components/calendar/helpers";
 import { useMediaQuery } from "@/components/calendar/hooks";
-import type {
-  ICalendarCell,
-  IEvent,
-} from "@/components/calendar/interfaces";
+import type { ICalendarCell, IEvent } from "@/components/calendar/interfaces";
 import { EventBullet } from "@/components/calendar/views/month-view/event-bullet";
 import { MonthEventBadge } from "@/components/calendar/views/month-view/month-event-badge";
 import { AddEditEventDialog } from "../../dialogs/add-edit-event-dialog";
@@ -143,7 +137,7 @@ export function DayCell({ cell, events, eventPositions }: IProps) {
               !currentMonth && "opacity-50"
             )}
           >
-            {(cellEvents.length === 0 && !isMobile) ? (
+            {cellEvents.length === 0 && !isMobile ? (
               <div className="w-full h-full flex justify-center items-center group">
                 <AddEditEventDialog startDate={date}>
                   <Button

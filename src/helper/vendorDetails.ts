@@ -77,6 +77,7 @@ type NotificationResponse = {
   data: any[];
   hasNextPage: boolean;
   nextPage: number;
+  totalCount:any
 };
 
 export const getVendorNotifications = async ({

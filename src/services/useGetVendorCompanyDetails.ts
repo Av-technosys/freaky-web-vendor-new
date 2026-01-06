@@ -37,13 +37,15 @@ export const useGetVendorEmployees = () => {
   });
 };
 
-export const useGetVendorNotifications = () => {
+export const useGetVendorNotifications = (enabled:any) => {
   return useInfiniteQuery({
     queryKey: ["vendor-notifications"],
     queryFn: ({ pageParam }) => getVendorNotifications({ pageParam }),
     initialPageParam: 1,
-    getNextPageParam: (lastPage) =>
-      lastPage.hasNextPage ? lastPage.nextPage : undefined,
+    getNextPageParam: (lastPage) => {
+      return lastPage.hasNextPage ? lastPage.nextPage : undefined;
+    },
+    enabled,
   });
 };
 

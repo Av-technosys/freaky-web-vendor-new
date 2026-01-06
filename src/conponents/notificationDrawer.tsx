@@ -9,15 +9,16 @@ import {
 import { TiIconX } from "./icons";
 import EventProfile from "../assets/testingProfilePicture.jpg";
 import { useRef } from "react";
+import { useGetVendorNotifications } from "@/services/useGetVendorCompanyDetails";
 
-const NotificationDrawer = ({
-  open,
-  setOpen,
-  data,
-  isFetchingNextPage,
-  hasNextPage,
-  fetchNextPage,
-}: any) => {
+const NotificationDrawer = ({ open, setOpen }: any) => {
+  const {
+    data: notifications,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useGetVendorNotifications(open);
+
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   const handleScroll = () => {
@@ -55,7 +56,7 @@ const NotificationDrawer = ({
             </DrawerHeader>
             <div className=" w-full flex flex-col  items-start ">
               <ul className="w-full grid gap-3 px-3">
-                {data?.pages?.map((page: any, index: number) => {
+                {notifications?.pages?.map((page: any) => {
                   return page?.data?.map((notification: any, index: number) => {
                     return (
                       <Card
@@ -91,7 +92,9 @@ const NotificationDrawer = ({
                   });
                 })}
               </ul>
-              {data?.pages[0]?.totalCount == 0 && <p>No notification found.</p>}
+              {notifications?.pages[0]?.totalCount == 0 && (
+                <p>No notification found.</p>
+              )}
             </div>
           </div>
         </DrawerContent>
