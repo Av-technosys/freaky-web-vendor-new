@@ -8,7 +8,7 @@
 import axios from "axios";
 
 export const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_APP_BASE_URL,
+  baseURL: import.meta.env.VITE_BACKEND_URL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -20,7 +20,7 @@ axiosInstance.interceptors.request.use(
     let token = localStorage.getItem("access_token");
 
     if (token) {
-      token = token.replace(/"/g, ""); 
+      token = token.replace(/"/g, "");
       config.headers.Authorization = `Bearer ${token}`;
     }
 
