@@ -18,7 +18,7 @@ const Services = () => {
   const [searchParams] = useSearchParams();
   const page = Number(searchParams.get("page")) || 1;
 
-  const { data } = useGetVendorServices(page, pageSize);
+  const { data, isPending } = useGetVendorServices(page, pageSize);
 
   const services = data?.data;
 
@@ -82,7 +82,7 @@ const Services = () => {
         </Card>
       </div>
       <div className="max-w-[400px] bg-white overflow-x-scroll lg:overflow-hidden md:max-w-full p-3 shadow-lg rounded-lg">
-        <ServicesTable tableData={tableData} />
+        <ServicesTable tableData={tableData} isPending={isPending} />
         <div className="mt-5">
           <Pagination>
             <PaginationContent>

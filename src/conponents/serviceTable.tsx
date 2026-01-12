@@ -13,7 +13,7 @@ import {
 import { TiIconPencilPlus } from "./icons";
 import DeleteServiceDialog from "./deleteServiceDialog";
 
-export function ServicesTable({ tableData }: any) {
+export function ServicesTable({ tableData, isPending }: any) {
   const [searchParams] = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
   const limit = Number(searchParams.get("page_size")) || 2;
@@ -31,6 +31,7 @@ export function ServicesTable({ tableData }: any) {
           })}
         </TableRow>
       </TableHeader>
+      {isPending && <div>Loading..</div>}
       <TableBody>
         {tableData?.ListData?.map((service: any, index: number) => {
           const rowNumber = (currentPage - 1) * limit + (index + 1);

@@ -26,6 +26,19 @@ export const getVendorServiceById = async (productId: any) => {
   }
 };
 
+export const createVendorService = async ({ serviceData }: any) => {
+  try {
+    const response = await axiosInstance.post(
+      `${apiConstant.vendor.createService}`,
+      serviceData
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+    throw error;
+  }
+};
+
 export const updateVendorService = async ({ productId, serviceData }: any) => {
   try {
     const response = await axiosInstance.put(
