@@ -132,8 +132,8 @@ const mockGenerator = (numberOfEvents: number): IEvent[] => {
 	// Create an event happening now
 	const currentEvent = {
 		id: currentId++,
-		startDate: new Date(now.getTime() - 30 * 60000).toISOString(),
-		endDate: new Date(now.getTime() + 30 * 60000).toISOString(),
+		startDate: new Date(now.getTime() - 30 * 60000).toString(),
+		endDate: new Date(now.getTime() + 30 * 60000).toString(),
 		title: events[Math.floor(Math.random() * events.length)],
 		color: COLORS[Math.floor(Math.random() * COLORS.length)],
 		description:
@@ -150,7 +150,7 @@ const mockGenerator = (numberOfEvents: number): IEvent[] => {
 
 		const startDate = new Date(
 			startRange.getTime() +
-				Math.random() * (endRange.getTime() - startRange.getTime()),
+			Math.random() * (endRange.getTime() - startRange.getTime()),
 		);
 
 		// Set time between 8 AM and 8 PM
@@ -180,8 +180,8 @@ const mockGenerator = (numberOfEvents: number): IEvent[] => {
 
 		result.push({
 			id: currentId++,
-			startDate: startDate.toISOString(),
-			endDate: endDate.toISOString(),
+			startDate: startDate.toString(),
+			endDate: endDate.toString(),
 			title: events[Math.floor(Math.random() * events.length)],
 			color: COLORS[Math.floor(Math.random() * COLORS.length)],
 			description:

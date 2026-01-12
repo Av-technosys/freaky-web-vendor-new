@@ -19,8 +19,9 @@ export const useUserLoginMutation = () => {
       localStorage.setItem("access_token", Token);
       navigate("/");
     },
-    onError: () => {
-      toast.error("Something went wrong");
+    onError: (error: any) => {
+      console.log("error", error);
+      toast.error(error.response?.data?.error || "Something went wrong");
     },
   });
 };

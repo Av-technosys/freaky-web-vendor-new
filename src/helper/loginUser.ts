@@ -4,31 +4,32 @@ import { apiConstant } from "./apiConstant";
 export const loginUser = async (userData: any) => {
   try {
     const response = await axiosInstance.post(
-    apiConstant.authentication.login,
-    userData
-  );
-  return response.data;
+      apiConstant.authentication.login,
+      userData
+    );
+    return response.data;
   } catch (error) {
-   console.error("Error while sending request:", error);
+    console.error("Error while sending request:", error);
+    throw error;
   }
 };
 
 export const signUpUser = async (userData: any) => {
- try {
-   await axiosInstance.post(apiConstant.authentication.signUp, userData);
-  return userData.username;
- } catch (error) {
-  console.error("Error while sending request:", error);
- }
+  try {
+    await axiosInstance.post(apiConstant.authentication.signUp, userData);
+    return userData.username;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+  }
 };
 
 export const otpSignUpUser = async (userData: any) => {
   try {
     const response = await axiosInstance.post(
-    apiConstant.authentication.otpSignUp,
-    userData
-  );
-  return response.data;
+      apiConstant.authentication.otpSignUp,
+      userData
+    );
+    return response.data;
   } catch (error) {
     console.error("Error while sending request:", error);
   }
@@ -37,10 +38,10 @@ export const otpSignUpUser = async (userData: any) => {
 export const forgetPasswordUsingEmail = async (userData: any) => {
   try {
     await axiosInstance.post(
-    apiConstant.authentication.forgetPasswordUsingEmail,
-    userData
-  );
-  return userData.username;
+      apiConstant.authentication.forgetPasswordUsingEmail,
+      userData
+    );
+    return userData.username;
   } catch (error) {
     console.error("Error while sending request:", error);
   }
@@ -49,10 +50,10 @@ export const forgetPasswordUsingEmail = async (userData: any) => {
 export const forgetPasswordUsingOTP = async (userData: any) => {
   try {
     await axiosInstance.post(
-    apiConstant.authentication.forgetPasswordUsingOTP,
-    userData
-  );
-  return userData.username;
+      apiConstant.authentication.forgetPasswordUsingOTP,
+      userData
+    );
+    return userData.username;
   } catch (error) {
     console.error("Error while sending request:", error);
   }

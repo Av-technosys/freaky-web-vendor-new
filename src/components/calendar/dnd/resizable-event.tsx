@@ -93,8 +93,8 @@ export function ResizableEvent({
 
 			updateEvent({
 				...event,
-				startDate: newStart.toISOString(),
-				endDate: newEnd.toISOString(),
+				startDate: newStart.toString(),
+				endDate: newEnd.toString(),
 			});
 		},
 		[

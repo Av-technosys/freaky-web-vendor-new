@@ -98,7 +98,7 @@ export function CalendarYearView({ singleDayEvents, multiDayEvents }: IProps) {
 
 									return (
 										<div
-											key={cell.date.toISOString()}
+											key={cell.date.toString()}
 											className={cn(
 												"flex flex-col items-center justify-start p-1 min-h-[2rem] relative",
 												!isCurrentMonth && "text-muted-foreground/40",

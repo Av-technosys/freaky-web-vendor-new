@@ -181,8 +181,8 @@ export function CalendarProvider({
   const updateEvent = (event: IEvent) => {
     const updated = {
       ...event,
-      startDate: new Date(event.startDate).toISOString(),
-      endDate: new Date(event.endDate).toISOString(),
+      startDate: new Date(event.startDate).toString(),
+      endDate: new Date(event.endDate).toString(),
     };
 
     setAllEvents((prev) => prev.map((e) => (e.id === event.id ? updated : e)));

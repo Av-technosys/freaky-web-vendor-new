@@ -1,4 +1,4 @@
-import { format, isWithinInterval, parseISO } from "date-fns";
+import { format, isWithinInterval } from "date-fns";
 import { Calendar, Clock, User } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { DayPicker } from "@/components/ui/day-picker";
@@ -7,7 +7,7 @@ import { useCalendar } from "@/components/calendar/contexts/calendar-context";
 
 import { AddEditEventDialog } from "@/components/calendar/dialogs/add-edit-event-dialog";
 import { DroppableArea } from "@/components/calendar/dnd/droppable-area";
-import { groupEvents } from "@/components/calendar/helpers";
+import { groupEvents, parseToLocal } from "@/components/calendar/helpers";
 import type { IEvent } from "@/components/calendar/interfaces";
 import { CalendarTimeline } from "@/components/calendar/views/week-and-day-view/calendar-time-line";
 import { DayViewMultiDayEventsRow } from "@/components/calendar/views/week-and-day-view/day-view-multi-day-events-row";
@@ -58,8 +58,8 @@ export function CalendarDayView({ singleDayEvents, multiDayEvents }: IProps) {
     return (
       events.filter((event) =>
         isWithinInterval(now, {
-          start: parseISO(event.startDate),
-          end: parseISO(event.endDate),
+          start: parseToLocal(event.startDate),
+          end: parseToLocal(event.endDate),
         })
       ) || []
     );
@@ -68,7 +68,7 @@ export function CalendarDayView({ singleDayEvents, multiDayEvents }: IProps) {
   const currentEvents = getCurrentEvents(singleDayEvents);
 
   const dayEvents = singleDayEvents.filter((event) => {
-    const eventDate = parseISO(event.startDate);
+    const eventDate = parseToLocal(event.startDate);
     return (
       eventDate.getDate() === selectedDate.getDate() &&
       eventDate.getMonth() === selectedDate.getMonth() &&
@@ -237,12 +237,12 @@ export function CalendarDayView({ singleDayEvents, multiDayEvents }: IProps) {
                         <Clock className="size-4 text-t-quinary" />
                         <span className="text-sm text-t-tertiary">
                           {format(
-                            parseISO(event.startDate),
+                            parseToLocal(event.startDate),
                             use24HourFormat ? "HH:mm" : "hh:mm a"
                           )}{" "}
                           -
                           {format(
-                            parseISO(event.endDate),
+                            parseToLocal(event.endDate),
                             use24HourFormat ? "HH:mm" : "hh:mm a"
                           )}
                         </span>

@@ -1,6 +1,6 @@
 "use client";
 
-import { isSameDay, parseISO } from "date-fns";
+import { isSameDay } from "date-fns";
 import { motion } from "framer-motion";
 
 import { fadeIn, transition } from "./animations";
@@ -10,19 +10,20 @@ import { CalendarDayView } from "./views/week-and-day-view/calendar-day-view";
 import { CalendarYearView } from "./views/year-view/calendar-year-view";
 import { AgendaEvents } from "./views/agenda-view/agenda-events";
 import { useCalendar } from "./contexts/calendar-context";
+import { parseToLocal } from "./helpers";
 
 export function CalendarBody() {
   const { view, events } = useCalendar();
 
   const singleDayEvents = events.filter((event: any) => {
-    const startDate = parseISO(event.startDate);
-    const endDate = parseISO(event.endDate);
+    const startDate = parseToLocal(event.startDate);
+    const endDate = parseToLocal(event.endDate);
     return isSameDay(startDate, endDate);
   });
 
   const multiDayEvents = events.filter((event: any) => {
-    const startDate = parseISO(event?.startDate);
-    const endDate = parseISO(event?.endDate);
+    const startDate = parseToLocal(event?.startDate);
+    const endDate = parseToLocal(event?.endDate);
     return !isSameDay(startDate, endDate);
   });
 

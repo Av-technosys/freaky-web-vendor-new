@@ -19,7 +19,7 @@ const EmailPasswordLogin = () => {
   const submitHandler = (event: any) => {
     event.preventDefault();
     const userData = {
-      username: event.target.email.value,
+      email: event.target.email.value,
       password: event.target.password.value,
     };
     mutation.mutate(userData);
