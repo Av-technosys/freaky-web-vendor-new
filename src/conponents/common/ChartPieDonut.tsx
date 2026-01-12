@@ -57,7 +57,7 @@ export function ChartPieDonut() {
   const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
 
   return (
-    <Card className="flex flex-col md:min-w-[35%]" >
+    <Card className="flex flex-col md:min-w-[33.33%]" >
       <CardHeader className="items-center pb-0">
         <CardTitle className="text-[22px] font-semibold leading-none text-center text-[#FFC107] ">
           Customer Booking</CardTitle>

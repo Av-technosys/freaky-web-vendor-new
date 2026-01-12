@@ -166,8 +166,10 @@ export function DndProvider({
 			try {
 				const updatedEvent = {
 					...event,
-					startDate: newStartDate.toISOString(),
-					endDate: newEndDate.toISOString(),
+					// startDate: newStartDate.toISOString(),
+					// endDate: newEndDate.toISOString(),
+					startDate: newStartDate.toString(),
+					endDate: newEndDate.toString(),
 				};
 				updateEvent(updatedEvent);
 				toast.success("Event updated successfully");

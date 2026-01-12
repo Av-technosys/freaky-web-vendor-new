@@ -29,6 +29,15 @@ import { useCalendar } from "@/components/calendar/contexts/calendar-context";
 import type { ICalendarCell, IEvent } from "@/components/calendar/interfaces";
 import type { TCalendarView, TEventColor } from "@/components/calendar/types";
 
+export const parseToLocal = (dateStr: string | Date | any): Date => {
+  if (dateStr instanceof Date) return dateStr;
+  if (!dateStr) return new Date();
+  if (typeof dateStr === "string" && dateStr.endsWith("Z")) {
+    return parseISO(dateStr.slice(0, -1));
+  }
+  return parseISO(dateStr);
+};
+
 const FORMAT_STRING = "MMM d, yyyy";
 
 export function rangeText(view: TCalendarView, date: Date): string {
@@ -91,23 +100,23 @@ export function getEventsCount(
   };
 
   const compareFn = compareFns[view];
-  return events.filter((event) => compareFn(parseISO(event.startDate), date))
+  return events.filter((event) => compareFn(parseToLocal(event.startDate), date))
     .length;
 }
 
 export function groupEvents(dayEvents: IEvent[]): IEvent[][] {
   const sortedEvents = dayEvents.sort(
-    (a, b) => parseISO(a.startDate).getTime() - parseISO(b.startDate).getTime()
+    (a, b) => parseToLocal(a.startDate).getTime() - parseToLocal(b.startDate).getTime()
   );
   const groups: IEvent[][] = [];
 
   for (const event of sortedEvents) {
-    const eventStart = parseISO(event.startDate);
+    const eventStart = parseToLocal(event.startDate);
     let placed = false;
 
     for (const group of groups) {
       const lastEventInGroup = group[group.length - 1];
-      const lastEventEnd = parseISO(lastEventInGroup.endDate);
+      const lastEventEnd = parseToLocal(lastEventInGroup.endDate);
 
       if (eventStart >= lastEventEnd) {
         group.push(event);
@@ -128,7 +137,7 @@ export function getEventBlockStyle(
   groupIndex: number,
   groupSize: number
 ) {
-  const startDate = parseISO(event.startDate);
+  const startDate = parseToLocal(event.startDate);
   const dayStart = startOfDay(day); // Use startOfDay instead of manual reset
   const eventStart = startDate < dayStart ? dayStart : startDate;
   const startMinutes = differenceInMinutes(eventStart, dayStart);
@@ -185,33 +194,33 @@ export function calculateMonthEventPositions(
   const occupiedPositions: Record<string, boolean[]> = {};
 
   eachDayOfInterval({ start: monthStart, end: monthEnd }).forEach((day) => {
-    occupiedPositions[day.toISOString()] = [false, false, false];
+    occupiedPositions[day.toString()] = [false, false, false];
   });
 
   const sortedEvents = [
     ...multiDayEvents.sort((a, b) => {
       const aDuration = differenceInDays(
-        parseISO(a.endDate),
-        parseISO(a.startDate)
+        parseToLocal(a.endDate),
+        parseToLocal(a.startDate)
       );
       const bDuration = differenceInDays(
-        parseISO(b.endDate),
-        parseISO(b.startDate)
+        parseToLocal(b.endDate),
+        parseToLocal(b.startDate)
       );
       return (
         bDuration - aDuration ||
-        parseISO(a.startDate).getTime() - parseISO(b.startDate).getTime()
+        parseToLocal(a.startDate).getTime() - parseToLocal(b.startDate).getTime()
       );
     }),
     ...singleDayEvents.sort(
       (a, b) =>
-        parseISO(a.startDate).getTime() - parseISO(b.startDate).getTime()
+        parseToLocal(a.startDate).getTime() - parseToLocal(b.startDate).getTime()
     ),
   ];
 
   sortedEvents.forEach((event) => {
-    const eventStart = parseISO(event.startDate);
-    const eventEnd = parseISO(event.endDate);
+    const eventStart = parseToLocal(event.startDate);
+    const eventEnd = parseToLocal(event.endDate);
     const eventDays = eachDayOfInterval({
       start: eventStart < monthStart ? monthStart : eventStart,
       end: eventEnd > monthEnd ? monthEnd : eventEnd,
@@ -222,7 +231,7 @@ export function calculateMonthEventPositions(
     for (let i = 0; i < 3; i++) {
       if (
         eventDays.every((day) => {
-          const dayPositions = occupiedPositions[startOfDay(day).toISOString()];
+          const dayPositions = occupiedPositions[startOfDay(day).toString()];
           return dayPositions && !dayPositions[i];
         })
       ) {
@@ -233,7 +242,7 @@ export function calculateMonthEventPositions(
 
     if (position !== -1) {
       eventDays.forEach((day) => {
-        const dayKey = startOfDay(day).toISOString();
+        const dayKey = startOfDay(day).toString();
         occupiedPositions[dayKey][position] = true;
       });
       eventPositions[event.id] = position;
@@ -250,8 +259,8 @@ export function getMonthCellEvents(
 ) {
   const dayStart = startOfDay(date);
   const eventsForDate = events.filter((event) => {
-    const eventStart = parseISO(event.startDate);
-    const eventEnd = parseISO(event.endDate);
+    const eventStart = parseToLocal(event.startDate);
+    const eventEnd = parseToLocal(event.endDate);
     return (
       (dayStart >= eventStart && dayStart <= eventEnd) ||
       isSameDay(dayStart, eventStart) ||
@@ -276,7 +285,7 @@ export function formatTime(
   date: Date | string,
   use24HourFormat: boolean
 ): string {
-  const parsedDate = typeof date === "string" ? parseISO(date) : date;
+  const parsedDate = typeof date === "string" ? parseToLocal(date) : date;
   if (!isValid(parsedDate)) return "";
   return format(parsedDate, use24HourFormat ? "HH:mm" : "h:mm a");
 }
@@ -298,8 +307,8 @@ export const getEventsForDay = (
   const targetDate = startOfDay(date);
   return events
     .filter((event) => {
-      const startOfDayForEventStart = startOfDay(parseISO(event.startDate));
-      const startOfDayForEventEnd = startOfDay(parseISO(event.endDate));
+      const startOfDayForEventStart = startOfDay(parseToLocal(event.startDate));
+      const startOfDayForEventEnd = startOfDay(parseToLocal(event.endDate));
       if (isWeek) {
         return (
           event.startDate !== event.endDate &&
@@ -313,8 +322,8 @@ export const getEventsForDay = (
       );
     })
     .map((event) => {
-      const eventStart = startOfDay(parseISO(event.startDate));
-      const eventEnd = startOfDay(parseISO(event.endDate));
+      const eventStart = startOfDay(parseToLocal(event.startDate));
+      const eventEnd = startOfDay(parseToLocal(event.endDate));
       let point: "start" | "end" | "none" | undefined;
 
       if (isSameDay(eventStart, eventEnd)) {
@@ -340,8 +349,8 @@ export const getEventsForWeek = (events: IEvent[], date: Date): IEvent[] => {
   const endOfWeekDate = weekDates[6];
 
   return events.filter((event) => {
-    const eventStart = parseISO(event.startDate);
-    const eventEnd = parseISO(event.endDate);
+    const eventStart = parseToLocal(event.startDate);
+    const eventEnd = parseToLocal(event.endDate);
     return (
       isValid(eventStart) &&
       isValid(eventEnd) &&
@@ -359,8 +368,8 @@ export const getEventsForMonth = (
   const endOfMonthDate = endOfMonth(date);
 
   return events.filter((event: any) => {
-    const eventStart = parseISO(event.startDate);
-    const eventEnd = parseISO(event.endDate);
+    const eventStart = parseToLocal(event.startDate);
+    const eventEnd = parseToLocal(event.endDate);
     return (
       isValid(eventStart) &&
       isValid(eventEnd) &&
@@ -377,8 +386,8 @@ export const getEventsForYear = (events: IEvent[], date: Date): IEvent[] => {
   const endOfYearDate = endOfYear(date);
 
   return events.filter((event) => {
-    const eventStart = parseISO(event.startDate);
-    const eventEnd = parseISO(event.endDate);
+    const eventStart = parseToLocal(event.startDate);
+    const eventEnd = parseToLocal(event.endDate);
     return (
       isValid(eventStart) &&
       isValid(eventEnd) &&

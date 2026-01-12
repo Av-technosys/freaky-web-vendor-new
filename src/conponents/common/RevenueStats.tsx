@@ -1,4 +1,4 @@
-import { Card, CardContent } from "../../components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 import { cn } from "../../lib/utils"
 
 export default function RevenueStats() {
@@ -18,35 +18,23 @@ export default function RevenueStats() {
     <div className="bg-white md:w-full rounded-3xl p-6 md:p-4 shadow-sm border mx-auto max-sm:mt-4">
 
       {/* Previous Month */}
-      <h2 className="text-[18px] font-semibold text-gray-700 mb-2">
+      <h2 className=" pl-0 text-xl font-semibold text-gray-700 mb-2">
         Previous Month
       </h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
         {previousMonth.map((item, index) => (
-          <Card
+          <StatsCard
             key={index}
-            className="
-              md:min-w-[200px] md:h-[94px]
-              rounded-lg border border-[#EFF0F6]
-              bg-white shadow-none flex items-start
-            "
-          >
-            <CardContent className="p-3 flex flex-col leading-none">
-              <p className="text-gray-600 text-[14px] font-medium">
-                {item.title}
-              </p>
-
-              <p className={cn("mt-2 text-[22px] font-bold", item.color)}>
-                {item.amount}
-              </p>
-            </CardContent>
-          </Card>
+            title={item.title}
+            amount={item.amount}
+            color={item.color}
+          />
         ))}
       </div>
 
       {/* Current Month */}
-      <h2 className="text-[18px] font-semibold text-gray-700 mb-2">
+      <h2 className="text-xl font-semibold text-gray-700 mb-2">
         Current Month
       </h2>
 
@@ -58,26 +46,38 @@ export default function RevenueStats() {
         "
       >
         {currentMonth.map((item, index) => (
-          <Card
+          <StatsCard
             key={index}
-            className="
-              md:min-w-[200px] md:h-[94px]
-              rounded-lg border border-[#EFF0F6]
-              bg-white shadow-none flex items-start
-            "
-          >
-            <CardContent className="p-3 flex flex-col leading-none">
-              <p className="text-gray-600 text-[14px] font-medium">
-                {item.title}
-              </p>
-
-              <p className={`mt-2 text-[22px] font-bold ${item.color}`}>
-                {item.amount}
-              </p>
-            </CardContent>
-          </Card>
+            title={item.title}
+            amount={item.amount}
+            color={item.color}
+          />
         ))}
       </div>
     </div>
+  );
+}
+
+
+function StatsCard({ title, amount, color }: any) {
+  return (
+    <Card
+      key={title}
+    >
+      <CardHeader>
+        <CardTitle className="text-gray-600 font-medium">
+          {title}
+        </CardTitle>
+      </CardHeader>
+
+      <CardContent className="px-3 flex flex-col leading-none">
+
+        <div className=" px-3">
+          <p className={cn(" text-2xl font-bold", color)}>
+            {amount}
+          </p>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

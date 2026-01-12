@@ -72,7 +72,7 @@ export function ChartLineLinear() {
   const [timeframe, setTimeframe] = useState<"weekly" | "monthly" | "yearly">("weekly");
 
   const data = timeframe === "weekly" ? weeklyData : timeframe === "monthly" ? monthlyData : yearlyData;
-  
+
   const getDescription = () => {
     switch (timeframe) {
       case "weekly": return "Showing net sales for the current week";
@@ -87,7 +87,7 @@ export function ChartLineLinear() {
   };
 
   return (
-    <Card className="rounded-2xl md:w-[90%]  ">
+    <Card className="rounded-2xl col-span-2  ">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
         <div className="space-y-1">
           <CardTitle className="text-xl font-semibold text-gray-800">
@@ -95,7 +95,7 @@ export function ChartLineLinear() {
           </CardTitle>
           <CardDescription>{getDescription()}</CardDescription>
         </div>
-        
+
         <Select value={timeframe} onValueChange={(value: "weekly" | "monthly" | "yearly") => setTimeframe(value)}>
           <SelectTrigger className="w-28 bg-[#FFEFD2] border-none font-medium">
             <SelectValue placeholder="Weekly" />
@@ -127,69 +127,69 @@ export function ChartLineLinear() {
       {/* Chart */}
       <CardContent className="pb-0">
         <ChartContainer config={chartConfig}>
-      <LineChart
-  accessibilityLayer
-  data={data}
-  margin={{
-    left: 12,
-    right: 12,
-    top: 20,
-  }}
->
-<CartesianGrid
-  stroke="#E6E6E6"
-  strokeWidth={1}
-  vertical={false}
-  horizontal={true}
-/>
+          <LineChart
+            accessibilityLayer
+            data={data}
+            margin={{
+              left: 12,
+              right: 12,
+              top: 20,
+            }}
+          >
+            <CartesianGrid
+              stroke="#E6E6E6"
+              strokeWidth={1}
+              vertical={false}
+              horizontal={true}
+            />
 
 
-  <XAxis
-    dataKey="day"
-    tickLine={false}
-    axisLine={false}
-    tickMargin={8}
-  />
+            <XAxis
+              dataKey="day"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+            />
 
-<YAxis
-  width={40}               // ← FIX excess left spacing
+            <YAxis
+              width={40}               // ← FIX excess left spacing
 
-  tickLine={false}
-  axisLine={false}
-  tickFormatter={(value) => value.toLocaleString()}
-  ticks={[10000, 20000, 30000, 40000, 50000]}   // <- SAME AS IMAGE
-  stroke="#9CA3AF"   // grey tick text like design (#9CA3AF = Tailwind gray-400)
-  tick={{ fontSize: 12, fontWeight: 500 }}
-/>
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(value) => value.toLocaleString()}
+              ticks={[10000, 20000, 30000, 40000, 50000]}   // <- SAME AS IMAGE
+              stroke="#9CA3AF"   // grey tick text like design (#9CA3AF = Tailwind gray-400)
+              tick={{ fontSize: 12, fontWeight: 500 }}
+            />
 
-  <ChartTooltip
-    cursor={false}
-    content={
-      <ChartTooltipContent 
-        labelKey="day"
-        formatter={(value) => [
-          `${Number(value).toLocaleString()} USD`,
-          chartConfig.sales.label,
-        ]}
-      />
-    }
-  />
+            <ChartTooltip
+              cursor={false}
+              content={
+                <ChartTooltipContent
+                  labelKey="day"
+                  formatter={(value) => [
+                    `${Number(value).toLocaleString()} USD`,
+                    chartConfig.sales.label,
+                  ]}
+                />
+              }
+            />
 
-  <Line
-    dataKey="sales"
-    type="linear"
-    stroke="#FBBF24"   // BRIGHT YELLOW
-    strokeWidth={3}
-    dot={{
-      r: 6,
-      fill: "#FBBF24",
-      strokeWidth: 2,
-      stroke: "white",
-    }}
-  >
+            <Line
+              dataKey="sales"
+              type="linear"
+              stroke="#FBBF24"   // BRIGHT YELLOW
+              strokeWidth={3}
+              dot={{
+                r: 6,
+                fill: "#FBBF24",
+                strokeWidth: 2,
+                stroke: "white",
+              }}
+            >
 
-    {/* 1️⃣ Price Above Every Point */}
-    {/* <LabelList
+              {/* 1️⃣ Price Above Every Point */}
+              {/* <LabelList
       dataKey="sales"
       position="top"
       formatter={(value :any) => value.toLocaleString()}
@@ -200,11 +200,11 @@ export function ChartLineLinear() {
       }}
     /> */}
 
-    {/* 2️⃣ Percentage under it */}
+              {/* 2️⃣ Percentage under it */}
 
 
-  </Line>
-</LineChart>
+            </Line>
+          </LineChart>
 
         </ChartContainer>
       </CardContent>

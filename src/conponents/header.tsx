@@ -13,6 +13,7 @@ import { SidebarDrawer } from "./SidebarDrawer";
 import { useGetSearchItems } from "@/services/useGetVendorCompanyDetails";
 import NotificationDrawer from "./notificationDrawer";
 import { useNavigate } from "react-router-dom";
+import { useGetUserDetails } from "@/services/useGetUserDetails";
 
 const dropdownValuesServices = {
   title: "Services",
@@ -52,6 +53,8 @@ const Header: React.FC = () => {
 
   const debouncedSearch = useDebounce(searchText, 800);
 
+  const { data: sessionData } = useGetUserDetails();
+
   const { data: searchData, isPending } = useGetSearchItems({
     service,
     debouncedSearch,
@@ -83,7 +86,9 @@ const Header: React.FC = () => {
               </Avatar>
               <div>
                 <div className="text-lg font-semibold text-gray-800">
-                  <LinearGradientText>Welcome Nova!</LinearGradientText>
+                  <LinearGradientText>
+                    Welcome {sessionData?.data?.firstName || "Nova"}!
+                  </LinearGradientText>
                 </div>
                 <div className="text-sm text-gray-500">
                   System Administrator

@@ -1,13 +1,13 @@
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import { endOfDay, isSameDay, parseISO, startOfDay } from "date-fns";
+import { endOfDay, isSameDay, startOfDay } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useCalendar } from "@/components/calendar/contexts/calendar-context";
 import { EventDetailsDialog } from "@/components/calendar/dialogs/event-details-dialog";
 import { DraggableEvent } from "@/components/calendar/dnd/draggable-event";
-import { formatTime } from "@/components/calendar/helpers";
+import { formatTime, parseToLocal } from "@/components/calendar/helpers";
 import type { IEvent } from "@/components/calendar/interfaces";
-import {EventBullet} from "@/components/calendar/views/month-view/event-bullet";
+import { EventBullet } from "@/components/calendar/views/month-view/event-bullet";
 
 const eventBadgeVariants = cva(
 	"mx-1 flex size-auto h-6.5 select-none items-center justify-between gap-1.5 truncate whitespace-nowrap rounded-md border px-2 text-xs",
@@ -72,8 +72,8 @@ export function MonthEventBadge({
 }: IProps) {
 	const { badgeVariant, use24HourFormat } = useCalendar();
 
-	const itemStart = startOfDay(parseISO(event.startDate));
-	const itemEnd = endOfDay(parseISO(event.endDate));
+	const itemStart = startOfDay(parseToLocal(event.startDate));
+	const itemEnd = endOfDay(parseToLocal(event.endDate));
 
 	if (cellDate < itemStart || cellDate > itemEnd) return null;
 
@@ -93,8 +93,8 @@ export function MonthEventBadge({
 		position = "middle";
 	}
 
-	const renderBadgeText = ["first", "none"].includes(position) ;
-	const renderBadgeTime =  ["last", "none"].includes(position);
+	const renderBadgeText = ["first", "none"].includes(position);
+	const renderBadgeTime = ["last", "none"].includes(position);
 
 	const color = (
 		badgeVariant === "dot" ? `${event.color}-dot` : event.color
@@ -129,8 +129,8 @@ export function MonthEventBadge({
 					<div className="hidden sm:block">
 						{renderBadgeTime && (
 							<span>
-							{formatTime(new Date(event.startDate), use24HourFormat)}
-						</span>
+								{formatTime(parseToLocal(event.startDate), use24HourFormat)}
+							</span>
 						)}
 					</div>
 				</div>

@@ -97,7 +97,7 @@ export function WeekViewMultiDayEventsRow({
 			<div className="grid flex-1 grid-cols-7 divide-x border-b border-l">
 				{weekDays.map((day, dayIndex) => (
 					<div
-						key={day.toISOString()}
+						key={day.toString()}
 						className="flex h-full flex-col gap-1 py-1"
 					>
 						{eventRows.map((row, rowIndex) => {
