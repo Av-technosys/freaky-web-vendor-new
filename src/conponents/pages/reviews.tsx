@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import ReviewCard from "../reviewCard";
 import { getVendorReviews } from "../../services/userGetVendorReview";
 import { useQueryClient } from "@tanstack/react-query";
+import { InputGroupAddon } from "@/components/ui/input-group";
+import { LoaderCircle } from "lucide-react";
 
 const dropdownValuesTime = {
   title: "Time",
@@ -107,7 +109,11 @@ const Reviews = () => {
   };
 
   if (isPending) {
-    return <p>Loading</p>;
+    return (
+      <InputGroupAddon align="inline-end">
+        <LoaderCircle className="animate-spin" />
+      </InputGroupAddon>
+    );
   }
 
   return (

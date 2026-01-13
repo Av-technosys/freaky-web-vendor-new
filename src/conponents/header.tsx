@@ -14,6 +14,7 @@ import { useGetSearchItems } from "@/services/useGetVendorCompanyDetails";
 import NotificationDrawer from "./notificationDrawer";
 import { useNavigate } from "react-router-dom";
 import { useGetUserDetails } from "@/services/useGetUserDetails";
+import { LoaderCircle } from "lucide-react";
 
 const dropdownValuesServices = {
   title: "Services",
@@ -122,9 +123,9 @@ const Header: React.FC = () => {
                 {searchText?.trim() !== "" && (
                   <ul className="absolute hidden group-focus-within:block top-full mt-2 w-full bg-white rounded-xl shadow-lg border z-50 overflow-hidden">
                     {isPending ? (
-                      <li className="px-4 py-3 text-sm text-gray-500">
-                        Loading...
-                      </li>
+                      <InputGroupAddon align="inline-end">
+                        <LoaderCircle className="animate-spin" />
+                      </InputGroupAddon>
                     ) : searchData?.data?.length > 0 ? (
                       searchData.data.map((item: any, index: number) => (
                         <li
