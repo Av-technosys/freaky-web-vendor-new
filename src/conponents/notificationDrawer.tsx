@@ -93,7 +93,7 @@ const NotificationDrawer = ({ open, setOpen }: any) => {
                 })}
               </ul>
               {notifications?.pages[0]?.totalCount == 0 && (
-                <p>No notification found.</p>
+                <p className="px-4">No notification found.</p>
               )}
             </div>
           </div>

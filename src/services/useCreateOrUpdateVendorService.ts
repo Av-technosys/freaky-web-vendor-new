@@ -1,10 +1,23 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
+  createVendorService,
   deleteImageHandler,
   deleteVendorServiceById,
   updateVendorService,
 } from "../helper/vendorService";
+
+export const useCreateVendorService = () => {
+  return useMutation({
+    mutationFn: createVendorService,
+    onSuccess: () => {
+      toast.success("Service created Successfully.");
+    },
+    onError: () => {
+      toast.error("Unable to create service.");
+    },
+  });
+};
 
 export const useUpdateVendorService = () => {
   return useMutation({
@@ -31,10 +44,14 @@ export const useDeleteAdditionalImage = () => {
 };
 
 export const useDeleteVendorServiceById = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteVendorServiceById,
     onSuccess: () => {
       toast.success("Service Deleted Successfully.");
+      queryClient.invalidateQueries({
+        queryKey: ["vendor-services"],
+      });
     },
     onError: () => {
       toast.error("Unable to delete service.");

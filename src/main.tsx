@@ -1,8 +1,11 @@
 import React from "react";
+window.React = React;
 import ReactDOM from "react-dom/client";
 
 import App from "./App";
 import "./index.css";
+import "react-markdown-editor-lite/lib/index.css";
+
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./conponents/pages/dashboard";
 import Login from "./conponents/pages/login";

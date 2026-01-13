@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import ReviewCard from "../reviewCard";
 import { getVendorReviews } from "../../services/userGetVendorReview";
 import { useQueryClient } from "@tanstack/react-query";
+import { InputGroupAddon } from "@/components/ui/input-group";
+import { LoaderCircle } from "lucide-react";
 
 const dropdownValuesTime = {
   title: "Time",
@@ -61,23 +63,21 @@ const dropdownValuesServices = {
   ],
 };
 
- 
 const Reviews = () => {
-
-  const queryClient =useQueryClient()
+  const queryClient = useQueryClient();
 
   // const {data, isPending} = getVendorReviews({
   //   page: 1,
   //   page_size: 10,
   //   vendorId: 27,
   //   time: "all_time"
-  // }); 
+  // });
   const [time, setTime] = useState(dropdownValuesTime.options[0].value);
-  const {data, isPending} = getVendorReviews(1, 10 , 27 , time); 
+  const { data, isPending } = getVendorReviews(1, 10, time);
   const [reviews, setReviews] = useState([]);
   useEffect(() => {
     setReviews(data?.data);
-  },[data])
+  }, [data]);
 
   const [location, setLocation] = useState(
     dropdownValuesLocation.options[0].value
@@ -91,7 +91,7 @@ const Reviews = () => {
   function handleTimeChange(value: any) {
     queryClient.invalidateQueries({
       queryKey: ["vendor-reviews"],
-    })
+    });
     setTime(value.value);
   }
 
@@ -108,9 +108,12 @@ const Reviews = () => {
     setOpenDrawer(true);
   };
 
-
-  if(isPending){
-    return <p>Loading</p>
+  if (isPending) {
+    return (
+      <InputGroupAddon align="inline-end">
+        <LoaderCircle className="animate-spin" />
+      </InputGroupAddon>
+    );
   }
 
   return (

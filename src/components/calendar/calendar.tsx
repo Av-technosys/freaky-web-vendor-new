@@ -3,7 +3,6 @@ import { CalendarProvider } from "./contexts/calendar-context";
 import { DndProvider } from "./contexts/dnd-context";
 import { CalendarHeader } from "./header/calendar-header";
 import { CalendarBody } from "./calendar-body";
-import { getEvents, getUsers } from "./requests";
 import { getVendorCalendar } from "../../services/userGetVendorReview";
 import { CalendarSkeleton } from "./skeletons/calendar-skeleton";
 

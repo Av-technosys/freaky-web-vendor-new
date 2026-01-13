@@ -12,8 +12,10 @@ import {
 } from "../components/ui";
 import { TiIconPencilPlus } from "./icons";
 import DeleteServiceDialog from "./deleteServiceDialog";
+import { InputGroupAddon } from "@/components/ui/input-group";
+import { LoaderCircle } from "lucide-react";
 
-export function ServicesTable({ tableData }: any) {
+export function ServicesTable({ tableData, isPending }: any) {
   const [searchParams] = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
   const limit = Number(searchParams.get("page_size")) || 2;
@@ -31,6 +33,11 @@ export function ServicesTable({ tableData }: any) {
           })}
         </TableRow>
       </TableHeader>
+      {isPending && (
+        <InputGroupAddon align="inline-end">
+          <LoaderCircle className="animate-spin" />
+        </InputGroupAddon>
+      )}
       <TableBody>
         {tableData?.ListData?.map((service: any, index: number) => {
           const rowNumber = (currentPage - 1) * limit + (index + 1);
