@@ -137,7 +137,7 @@ export function DayCell({ cell, events, eventPositions }: IProps) {
               !currentMonth && "opacity-50"
             )}
           >
-            {cellEvents.length === 0 && !isMobile ? (
+            {/* {cellEvents.length === 0 && !isMobile && date >= new Date(Date.now() - 24 * 60 * 60 * 1000) ? (
               <div className="w-full h-full flex justify-center items-center group">
                 <AddEditEventDialog startDate={date}>
                   <Button
@@ -149,9 +149,9 @@ export function DayCell({ cell, events, eventPositions }: IProps) {
                   </Button>
                 </AddEditEventDialog>
               </div>
-            ) : (
-              [0, 1, 2].map(renderEventAtPosition)
-            )}
+            ) : ( */}
+            {[0, 1, 2].map(renderEventAtPosition)}
+            {/* // )} */}
           </motion.div>
 
           {showMobileMore && (

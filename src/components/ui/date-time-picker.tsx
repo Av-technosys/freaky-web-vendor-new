@@ -25,7 +25,7 @@ import { useCalendar } from "@/components/calendar/contexts/calendar-context";
 // }
 
 // export function DateTimePicker({ form, field }: DatePickerProps) {
-export function DateTimePicker({ form, field }: any) {
+export function DateTimePicker({ form, field, label }: any) {
   const { use24HourFormat } = useCalendar();
 
   function handleDateSelect(date: Date | undefined) {
@@ -57,7 +57,7 @@ export function DateTimePicker({ form, field }: any) {
   return (
     <FormItem className="flex flex-col">
       <FormLabel>
-        {field.name === "startDate" ? "Start Date" : "End Date"}
+        {label || (field.name === "startDate" ? "Start Date" : "End Date")}
       </FormLabel>
       <Popover modal={true}>
         <PopoverTrigger asChild>
@@ -101,7 +101,7 @@ export function DateTimePicker({ form, field }: any) {
                       size="icon"
                       variant={
                         field.value &&
-                        field.value.getHours() % (use24HourFormat ? 24 : 12) ===
+                          field.value.getHours() % (use24HourFormat ? 24 : 12) ===
                           hour % (use24HourFormat ? 24 : 12)
                           ? "default"
                           : "ghost"

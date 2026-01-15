@@ -31,7 +31,7 @@ const OtpSignUp = ({ userEmail }: otpProps) => {
       toast.warning("Please enter OTP");
     } else {
       const userData = {
-        username: event.target.email.value,
+        email: event.target.email.value,
         code: code,
       };
       mutation.mutate(userData);

@@ -76,7 +76,7 @@ export function Settings() {
 							/>
 						</DropdownMenuShortcut>
 					</DropdownMenuItem> */}
-          <DropdownMenuItem>
+          {/* <DropdownMenuItem>
             Use dot badge
             <DropdownMenuShortcut>
               <Switch
@@ -93,7 +93,7 @@ export function Settings() {
                 }
               />
             </DropdownMenuShortcut>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           <DropdownMenuItem>
             Use 24 hour format
             <DropdownMenuShortcut>
@@ -156,7 +156,7 @@ export function Settings() {
             }
           >
             <DropdownMenuRadioItem value="date">Date</DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="color">Color</DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="color">Services</DropdownMenuRadioItem>
           </DropdownMenuRadioGroup>
         </DropdownMenuGroup>
       </DropdownMenuContent>

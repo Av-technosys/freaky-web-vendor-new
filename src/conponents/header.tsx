@@ -77,7 +77,7 @@ const Header: React.FC = () => {
           setOpen={() => setOpenNotificationDrawer(false)}
         />
       }
-      <Card className="w-full sticky top-2 py-3 z-10 ">
+      <Card className="w-full sticky top-2 mb-4 py-3 z-10 ">
         <CardContent>
           <div className=" flex items-center justify-between ">
             <div className="flex items-center gap-4">
@@ -99,14 +99,14 @@ const Header: React.FC = () => {
             <div className="w-1/2 flex items-center justify-end gap-4">
               <DropdownSelector
                 labelName="hidden"
-                className="w-[200px] rounded-xl"
+                className="w-[136px] rounded-xl"
                 values={dropdownValuesServices}
                 selectedValue={service}
                 onChange={handleServiceChange}
               />{" "}
               {/* Right: Search + Bell */}
-              <div className="relative w-52 group focus-within:block">
-                <InputGroup className="hidden md:flex items-center bg-gray-100 rounded-full px-4 py-2 shadow-sm">
+              <div className="relative group focus-within:block">
+                <InputGroup className="hidden md:flex items-center bg-gray-100 rounded-full   py-2 shadow-sm">
                   <InputGroupAddon>
                     <TiIconSearch className="text-gray-500" />
                   </InputGroupAddon>
@@ -116,7 +116,7 @@ const Header: React.FC = () => {
                     value={searchText}
                     type="text"
                     placeholder="Search..."
-                    className="bg-transparent  focus:outline-none"
+                    className="bg-transparent  focus:outline-none w-32 focus:w-56 transition-all duration-200"
                   />
                 </InputGroup>
 

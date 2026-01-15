@@ -14,7 +14,7 @@ import {
 
 const Services = () => {
   const navigate = useNavigate();
-  const pageSize = 2;
+  const pageSize = 10;
   const [searchParams] = useSearchParams();
   const page = Number(searchParams.get("page")) || 1;
 
@@ -30,7 +30,7 @@ const Services = () => {
   };
 
   return (
-    <div className="my-2 space-y-3">
+    <div className="mb-2 space-y-3">
       <div className="w-full! flex gap-3 items-center justify-start">
         <Button
           onClick={() => navigate("/services/manage-service")}
@@ -88,9 +88,8 @@ const Services = () => {
             <PaginationContent>
               <PaginationItem className="border border-gray-200 rounded-md">
                 <PaginationPrevious
-                  className={`cursor-pointer ${
-                    page == 1 && "pointer-events-none opacity-50"
-                  }`}
+                  className={`cursor-pointer ${page == 1 && "pointer-events-none opacity-50"
+                    }`}
                   onClick={() =>
                     navigate(`?page=${page - 1}&page_size=${pageSize}`)
                   }
@@ -102,9 +101,8 @@ const Services = () => {
                     onClick={() =>
                       navigate(`?page=${index + 1}&page_size=${pageSize}`)
                     }
-                    className={`border border-gray-200 rounded-md ${
-                      page == index + 1 && "text-orange-500"
-                    }`}
+                    className={`border border-gray-200 rounded-md ${page == index + 1 && "text-orange-500"
+                      }`}
                   >
                     <PaginationLink href="#">{index + 1}</PaginationLink>
                   </PaginationItem>
@@ -112,9 +110,8 @@ const Services = () => {
               })}
               <PaginationItem className="border border-gray-200 rounded-md">
                 <PaginationNext
-                  className={`cursor-pointer  ${
-                    page == totalPages && "pointer-events-none opacity-50"
-                  }`}
+                  className={`cursor-pointer  ${page == totalPages && "pointer-events-none opacity-50"
+                    }`}
                   onClick={() =>
                     navigate(`?page=${page + 1}&page_size=${pageSize}`)
                   }

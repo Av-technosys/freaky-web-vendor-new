@@ -16,6 +16,7 @@ import type { TCalendarView, TEventColor } from "@/components/calendar/types";
 interface ICalendarContext {
   selectedDate: Date | any;
   view: TCalendarView | any;
+  services: string[] | any;
   setView: (view: TCalendarView) => void | any;
   agendaModeGroupBy: "date" | "color" | any;
   setAgendaModeGroupBy: (groupBy: "date" | "color") => void | any;
@@ -27,7 +28,7 @@ interface ICalendarContext {
   badgeVariant: "dot" | "colored" | any;
   setBadgeVariant: (variant: "dot" | "colored") => void | any;
   selectedColors: TEventColor[] | any;
-  filterEventsBySelectedColors: (colors: TEventColor) => void | any;
+  filterEventsBySelectedColors: (colors: string[] | any) => void | any;
   filterEventsBySelectedUser: (userId: IUser["id"] | "all") => void | any;
   users: IUser[] | any;
   events: IEvent[] | any;
@@ -137,7 +138,7 @@ export function CalendarProvider({
     updateSettings({ agendaModeGroupBy: groupBy });
   };
 
-  const filterEventsBySelectedColors = (color: TEventColor) => {
+  const filterEventsBySelectedColors = (color: string[] | any) => {
     const isColorSelected = selectedColors.includes(color);
     const newColors = isColorSelected
       ? selectedColors.filter((c) => c !== color)
@@ -145,7 +146,7 @@ export function CalendarProvider({
 
     if (newColors.length > 0) {
       const filtered = allEvents.filter((event) => {
-        const eventColor = event.color || "blue";
+        const eventColor = event.title || "blue";
         return newColors.includes(eventColor);
       });
       setFilteredEvents(filtered);
@@ -214,6 +215,7 @@ export function CalendarProvider({
     filterEventsBySelectedColors,
     filterEventsBySelectedUser,
     events: filteredEvents,
+    services: allEvents.map(event => event.title),
     view: currentView,
     use24HourFormat,
     toggleTimeFormat,

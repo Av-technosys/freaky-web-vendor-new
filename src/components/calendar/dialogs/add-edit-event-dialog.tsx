@@ -1,7 +1,7 @@
 // import { zodResolver } from "@hookform/resolvers/zod";
-import { addMinutes, format, set } from "date-fns";
-import { type ReactNode, useEffect, useMemo } from "react";
-import { useForm } from "react-hook-form";
+import { format } from "date-fns";
+import { type ReactNode, useEffect, useState } from "react";
+import { useForm, useFieldArray } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { DateTimePicker } from "@/components/ui/date-time-picker";
@@ -31,236 +31,350 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { COLORS } from "@/components/calendar/constants";
 import { useCalendar } from "@/components/calendar/contexts/calendar-context";
 import { useDisclosure } from "@/components/calendar/hooks";
 import type { IEvent } from "@/components/calendar/interfaces";
-// import {
-// 	eventSchema,
-// 	type TEventFormData,
-// } from "@/components/calendar/schemas";
+import { Plus, Trash2 } from "lucide-react";
+import { useGetVendorServices } from "@/services/useGetVendorServices";
 
 interface IProps {
   children: ReactNode;
-  startDate?: Date;
-  startTime?: { hour: number; minute: number };
-  event?: IEvent;
 }
 
 export function AddEditEventDialog({
   children,
-  startDate,
-  startTime,
-  event,
 }: IProps) {
+  const { data } = useGetVendorServices(1, 100);
+  const listOfServices = data?.data;
+  console.log(listOfServices)
   const { isOpen, onClose, onToggle } = useDisclosure();
   const { addEvent, updateEvent } = useCalendar();
-  const isEditing = !!event;
+  const [step, setStep] = useState(1);
 
-  const initialDates = useMemo(() => {
-    if (!isEditing && !event) {
-      if (!startDate) {
-        const now = new Date();
-        return { startDate: now, endDate: addMinutes(now, 30) };
-      }
-      const start = startTime
-        ? set(new Date(startDate), {
-            hours: startTime.hour,
-            minutes: startTime.minute,
-            seconds: 0,
-          })
-        : new Date(startDate);
-      const end = addMinutes(start, 30);
-      return { startDate: start, endDate: end };
-    }
-
-    return {
-      startDate: new Date(event.startDate),
-      endDate: new Date(event.endDate),
-    };
-  }, [startDate, startTime, event, isEditing]);
-
-  // const form = useForm<TEventFormData >({
-  // 	resolver: zodResolver(eventSchema),
-  // 	defaultValues: {
-  // 		title: event?.title ?? "",
-  // 		description: event?.description ?? "",
-  // 		startDate: initialDates.startDate,
-  // 		endDate: initialDates.endDate,
-  // 		color: event?.color ?? "blue",
-  // 	},
-  // });
 
   const form = useForm<any>({
-    // resolver: zodResolver(),
     defaultValues: {
-      title: event?.title ?? "",
-      description: event?.description ?? "",
-      startDate: initialDates.startDate,
-      endDate: initialDates.endDate,
-      color: event?.color ?? "blue",
+      contactName: "",
+      contactNumber: "",
+      services: [
+        {
+          serviceId: "",
+          startTime: "",
+          endTime: "",
+          minPerson: 0,
+          maxPerson: 0,
+          location: "",
+        },
+      ],
     },
   });
 
-  useEffect(() => {
-    form.reset({
-      title: event?.title ?? "",
-      description: event?.description ?? "",
-      startDate: initialDates.startDate,
-      endDate: initialDates.endDate,
-      color: event?.color ?? "blue",
-    });
-  }, [event, initialDates, form]);
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "services",
+  });
 
-  // const onSubmit = (values: TEventFormData) => {
+  useEffect(() => {
+    if (isOpen) {
+      setStep(1);
+      form.reset({
+        contactName: "",
+        contactNumber: "",
+        services: [
+          {
+            serviceId: "",
+            startTime: "",
+            endTime: "",
+            minPerson: 0,
+            maxPerson: 0,
+            location: "",
+          },
+        ],
+      });
+    }
+  }, [isOpen, form]);
+
   const onSubmit = (values: any) => {
+    if (step == 1) return;
     try {
-      const formattedEvent: IEvent = {
-        ...values,
-        startDate: format(values.startDate, "yyyy-MM-dd'T'HH:mm:ss"),
-        endDate: format(values.endDate, "yyyy-MM-dd'T'HH:mm:ss"),
-        id: isEditing ? event.id : Math.floor(Math.random() * 1000000),
-        user: isEditing
-          ? event.user
-          : {
-              id: Math.floor(Math.random() * 1000000).toString(),
-              name: "Jeraidi Yassir",
-              picturePath: null,
-            },
-        color: values.color,
+      const services = values.services || [];
+
+      // Validation: Check if there is at least one service
+      if (services.length === 0) {
+        throw new Error("At least one service is required.");
+      }
+
+      // Validation: Check if the first service is fully populated (or all services)
+      const isServiceValid = (service: any) => {
+        return (
+          service.serviceId &&
+          service.startTime &&
+          service.endTime &&
+          Number(service.minPerson) >= 0 &&
+          Number(service.maxPerson) > 0 &&
+          service.location?.trim()
+        );
       };
 
-      if (isEditing) {
-        updateEvent(formattedEvent);
-        toast.success("Event updated successfully");
-      } else {
-        addEvent(formattedEvent);
-        toast.success("Event created successfully");
+      const invalidServices = services.filter((s: any) => !isServiceValid(s));
+
+      if (invalidServices.length > 0) {
+        throw new Error("Please fill in all details for all services.");
       }
+
+      const formattedEvent: IEvent = { ...values, };
+
+      console.log("Adding event:", formattedEvent);
+      addEvent(formattedEvent);
+      toast.success("Event created successfully");
 
       onClose();
       form.reset();
-    } catch (error) {
-      console.error(`Error ${isEditing ? "editing" : "adding"} event:`, error);
-      toast.error(`Failed to ${isEditing ? "edit" : "add"} event`);
+      setStep(1);
+    } catch (error: any) {
+      console.error("Error event:", error);
+      toast.error(error.message);
     }
+  };
+  const nextStep = async () => {
+    const isValid = await form.trigger(["contactName", "contactNumber"]);
+    if (isValid) {
+      setStep(2);
+    }
+  };
+
+  const prevStep = () => {
+    setStep(1);
   };
 
   return (
     <Modal open={isOpen} onOpenChange={onToggle} modal={false}>
       <ModalTrigger asChild>{children}</ModalTrigger>
-      <ModalContent>
+      <ModalContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <ModalHeader>
-          <ModalTitle>{isEditing ? "Edit Event" : "Add New Event"}</ModalTitle>
+          <ModalTitle>
+            {"Add New Event"} - Step {step} of 2
+          </ModalTitle>
           <ModalDescription>
-            {isEditing
-              ? "Modify your existing event."
-              : "Create a new event for your calendar."}
+            {step === 1
+              ? "Enter client contact details."
+              : "Enter event details and services."}
           </ModalDescription>
         </ModalHeader>
 
         <Form {...form}>
           <form
             id="event-form"
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={(e) => {
+              e.preventDefault();
+              onSubmit(form.getValues());
+            }}
             className="grid gap-4 py-4"
           >
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormLabel htmlFor="title" className="required">
-                    Title
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      id="title"
-                      placeholder="Enter a title"
-                      {...field}
-                      className={fieldState.invalid ? "border-red-500" : ""}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="startDate"
-              render={({ field }) => (
-                <DateTimePicker form={form} field={field} />
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="endDate"
-              render={({ field }) => (
-                <DateTimePicker form={form} field={field} />
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="color"
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormLabel className="required">Variant</FormLabel>
-                  <FormControl>
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger
-                        className={`w-full ${
-                          fieldState.invalid ? "border-red-500" : ""
-                        }`}
-                      >
-                        <SelectValue placeholder="Select a variant" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {COLORS.map((color) => (
-                          <SelectItem value={color} key={color}>
-                            <div className="flex items-center gap-2">
-                              <div
-                                className={`size-3.5 rounded-full bg-${color}-600 dark:bg-${color}-700`}
-                              />
-                              {color}
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormLabel className="required">Description</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      {...field}
-                      placeholder="Enter a description"
-                      className={fieldState.invalid ? "border-red-500" : ""}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {step === 1 && (
+              <div className="grid gap-4">
+                <div className="bg-yellow-50 p-3 rounded-md border border-yellow-200 text-sm text-yellow-800 mb-2">
+                  Note: The contact person's name will be displayed on the invoice.
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="contactName"
+                    rules={{ required: "Contact name is required" }}
+                    render={({ field, fieldState }) => (
+                      <FormItem>
+                        <FormLabel className="required">Contact Person Name</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="John Doe"
+                            {...field}
+                            className={fieldState.invalid ? "border-red-500" : ""}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="contactNumber"
+                    rules={{ required: "Contact number is required" }}
+                    render={({ field, fieldState }) => (
+                      <FormItem>
+                        <FormLabel className="required">Contact Number</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="+1 234 567 890"
+                            {...field}
+                            className={fieldState.invalid ? "border-red-500" : ""}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+            )}
+
+            {step === 2 && (
+              <div className="space-y-6">
+
+                <div>
+                  <h3 className="font-semibold text-lg mb-4">Services</h3>
+                  {fields.map((field, index) => (
+                    <div key={field.id} className="border rounded-lg p-4 bg-gray-50 dark:bg-zinc-900 relative mb-4">
+                      <div className="absolute right-2 top-2">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                          onClick={() => remove(index)}
+                          disabled={fields.length === 1}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+
+                      {/* <h4 className="font-medium mb-4">Service #{index + 1}</h4> */}
+                      <h4 className="font-medium mb-4">{index + 1}</h4>
+
+                      <div className="grid gap-4">
+                        <FormField
+                          control={form.control}
+                          name={`services.${index}.serviceId`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Service</FormLabel>
+                              <FormControl>
+                                <Select value={field.value} onValueChange={field.onChange}>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select Service" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {listOfServices?.map((service: any) => (
+                                      <SelectItem
+                                        key={service.productId}
+                                        value={service.productId.toString()}
+                                      >
+                                        {service.title}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <div className="grid grid-cols-2 gap-4">
+                          <FormField
+                            control={form.control}
+                            name={`services.${index}.startTime`}
+                            render={({ field }) => <DateTimePicker form={form} field={field} label="Start Time" />}
+                          />
+                          <FormField
+                            control={form.control}
+                            name={`services.${index}.endTime`}
+                            render={({ field }) => <DateTimePicker form={form} field={field} label="End Time" />}
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                          <FormField
+                            control={form.control}
+                            name={`services.${index}.minPerson`}
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Min People</FormLabel>
+                                <FormControl>
+                                  <Input type="number" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name={`services.${index}.maxPerson`}
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Max People</FormLabel>
+                                <FormControl>
+                                  <Input type="number" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+
+                        <FormField
+                          control={form.control}
+                          name={`services.${index}.location`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Location</FormLabel>
+                              <FormControl>
+                                <Input placeholder="Event Hall A" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    </div>
+                  ))}
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full border-dashed"
+                    onClick={() =>
+                      append({
+                        serviceId: "",
+                        startTime: new Date(),
+                        endTime: new Date(),
+                        minPerson: 0,
+                        maxPerson: 0,
+                        location: "",
+                      })
+                    }
+                  >
+                    <Plus className="h-4 w-4 mr-2" /> Add Another Service
+                  </Button>
+                </div>
+              </div>
+            )}
           </form>
         </Form>
-        <ModalFooter className="flex justify-end gap-2">
-          <ModalClose asChild>
-            <Button type="button" variant="outline">
-              Cancel
+        <ModalFooter className="flex justify-between w-full">
+          {step === 1 ? (
+            <ModalClose asChild>
+              <Button type="button" variant="outline">
+                Cancel
+              </Button>
+            </ModalClose>
+          ) : (
+            <Button type="button" variant="outline" onClick={prevStep}>
+              Back
             </Button>
-          </ModalClose>
-          <Button form="event-form" type="submit">
-            {isEditing ? "Save Changes" : "Create Event"}
-          </Button>
+          )}
+
+          <div className="flex gap-2">
+            {step === 1 ? (
+              <Button type="button" onClick={nextStep}>
+                Next Step
+              </Button>
+            ) : (
+              <Button form="event-form" type="submit">
+                Complete Booking
+              </Button>
+            )}
+          </div>
         </ModalFooter>
       </ModalContent>
     </Modal>

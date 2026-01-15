@@ -4,7 +4,7 @@ import {
   getVendorServices,
 } from "../helper/vendorService";
 
-export const useGetVendorServices = (page: number, page_size: number) => {
+export const useGetVendorServices = (page: number = 1, page_size: number = 10) => {
   return useQuery({
     queryKey: ["vendor-services", page],
     queryFn: () => getVendorServices(page, page_size),

@@ -11,17 +11,10 @@ import { useCalendar } from "@/components/calendar/contexts/calendar-context";
 import type { TEventColor } from "@/components/calendar/types";
 
 export default function FilterEvents() {
-	const { selectedColors, filterEventsBySelectedColors, clearFilter } =
+	const { selectedColors, filterEventsBySelectedColors, clearFilter, services } =
 		useCalendar();
 
-	const colors: TEventColor[] = [
-		"blue",
-		"green",
-		"red",
-		"yellow",
-		"purple",
-		"orange",
-	];
+	const colors: any = [...new Set(services)];
 
 	return (
 		<DropdownMenu>
@@ -31,7 +24,7 @@ export default function FilterEvents() {
 				</Toggle>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end" className="w-[150px]">
-				{colors.map((color, index) => (
+				{colors.map((color: any, index: any) => (
 					<DropdownMenuItem
 						key={index}
 						className="flex items-center gap-2 cursor-pointer"

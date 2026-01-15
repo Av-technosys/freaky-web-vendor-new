@@ -38,7 +38,6 @@ export function CalendarMonthView({ singleDayEvents, multiDayEvents }: IProps) {
 	const allEvents = removeDuplicateId(allEventsData);
 	const cells = useMemo(() => getCalendarCells(selectedDate), [selectedDate]);
 
-	console.log("allEvents; ", allEvents)
 
 	const eventPositions = useMemo(
 		() =>

@@ -13,7 +13,19 @@ export interface IEvent {
 	title: string;
 	color: TEventColor;
 	description: string;
-	user?: IUser;
+	contactName: string;
+	contactNumber?: string;
+	services?: IService[];
+	user?: any;
+}
+
+export interface IService {
+	serviceId: string;
+	startTime: Date | string;
+	endTime: Date | string;
+	minPerson: number;
+	maxPerson: number;
+	location: string;
 }
 
 export interface ICalendarCell {

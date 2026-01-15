@@ -1,7 +1,7 @@
 "use client";
 
 import { format } from "date-fns";
-import { Calendar, Clock, Text, User } from "lucide-react";
+import { Calendar, Clock, Phone, Text, User } from "lucide-react";
 import type { ReactNode } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import {
 	Dialog,
 	DialogClose,
 	DialogContent,
+	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
@@ -53,7 +54,16 @@ export function EventDetailsDialog({ event, children }: IProps) {
 							<div>
 								<p className="text-sm font-medium">Responsible</p>
 								<p className="text-sm text-muted-foreground">
-									{event.user?.name}
+									{event?.contactName}
+								</p>
+							</div>
+						</div>
+						<div className="flex items-start gap-2">
+							<Phone className="mt-1 size-4 shrink-0 text-muted-foreground" />
+							<div>
+								<p className="text-sm font-medium">Contact Number</p>
+								<p className="text-sm text-muted-foreground">
+									{event?.contactNumber}
 								</p>
 							</div>
 						</div>
@@ -93,19 +103,21 @@ export function EventDetailsDialog({ event, children }: IProps) {
 						</div>
 					</div>
 				</ScrollArea>
-				<div className="flex justify-end gap-2">
-					<AddEditEventDialog event={event}>
-						<Button variant="outline">Edit</Button>
-					</AddEditEventDialog>
-					<Button
-						variant="destructive"
-						onClick={() => {
-							deleteEvent(event.id);
-						}}
-					>
-						Delete
-					</Button>
-				</div>
+				{/* <DialogFooter>
+					<div className="flex justify-end gap-2">
+						<AddEditEventDialog event={event}>
+							<Button variant="outline">Edit</Button>
+						</AddEditEventDialog>
+						<Button
+							variant="destructive"
+							onClick={() => {
+								deleteEvent(event.id);
+							}}
+						>
+							Delete
+						</Button>
+					</div>
+				</DialogFooter> */}
 				<DialogClose />
 			</DialogContent>
 		</Dialog>

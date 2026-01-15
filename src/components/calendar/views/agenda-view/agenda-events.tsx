@@ -42,7 +42,7 @@ export const AgendaEvents: FC = () => {
   const agendaEvents = (Object as any).groupBy(monthEvents, (event: any) =>
     agendaModeGroupBy === "date"
       ? format(parseISO(event.startDate), "yyyy-MM-dd")
-      : event.color
+      : event.title
   );
 
   const groupedAndSortedEvents = Object.entries(agendaEvents).sort(
@@ -61,7 +61,7 @@ export const AgendaEvents: FC = () => {
             heading={
               agendaModeGroupBy === "date"
                 ? format(parseISO(date), "EEEE, MMMM d, yyyy")
-                : toCapitalize(groupedEvents![0].color)
+                : toCapitalize(groupedEvents![0].title)
             }
           >
             {groupedEvents!.map((event: any) => (
