@@ -35,11 +35,11 @@ const items = [
     url: "/services",
     icon: TiIconTool,
   },
-  {
-    title: "Booking",
-    url: "/bookings",
-    icon: TiIconCalendar,
-  },
+  // {
+  //   title: "Booking",
+  //   url: "/bookings",
+  //   icon: TiIconCalendar,
+  // },
   {
     title: "Calendar",
     url: "/calendar",
@@ -99,11 +99,10 @@ function AppSidebar() {
                 {items.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
-                      className={`  ${
-                        location.pathname === item.url
+                      className={`  ${location.pathname === item.url
                           ? "bg-gradient-to-r from-[#FFE492] to-[#FFBAA4]"
                           : ""
-                      }`}
+                        }`}
                       asChild
                     >
                       <Link to={item.url}>
@@ -121,11 +120,10 @@ function AppSidebar() {
                 {item.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
-                      className={`  ${
-                        location.pathname === item.url
+                      className={`  ${location.pathname === item.url
                           ? "bg-gradient-to-r from-[#FFE492] to-[#FFBAA4]"
                           : ""
-                      }`}
+                        }`}
                       asChild
                     >
                       <Link to={item.url}>

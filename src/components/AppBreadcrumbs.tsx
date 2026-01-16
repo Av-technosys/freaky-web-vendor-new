@@ -31,11 +31,11 @@ export default function AppBreadcrumbs() {
 
     return (
         <Breadcrumb>
-            <BreadcrumbList>
+            <BreadcrumbList className=" pl-4 mt-2">
                 {/* Home */}
                 <BreadcrumbItem>
                     <BreadcrumbLink asChild>
-                        <Link to="/"><Home /></Link>
+                        <Link to="/"><Home size={18} /></Link>
                     </BreadcrumbLink>
                 </BreadcrumbItem>
 

@@ -175,11 +175,15 @@ const Profile = () => {
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <DropdownSelector
-                values={dropdownValues}
-                selectedValue={gender}
-                onChange={handleGenderChange}
-              />
+              <div>
+                <Label className=" mb-2">Gender</Label>
+
+                <DropdownSelector
+                  values={dropdownValues}
+                  selectedValue={gender}
+                  onChange={handleGenderChange}
+                />
+              </div>
               <div className="col-span-1  flex flex-col items-start justify-center gap-3">
                 <Label htmlFor="address">Address</Label>
                 <Input name="address" id="address" type="text" required />

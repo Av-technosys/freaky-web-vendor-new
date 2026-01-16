@@ -47,7 +47,7 @@ export function useDebounce<T>(value: T, delay = 600): T {
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const [service, setService] = useState(
-    dropdownValuesServices.options[0].value
+    dropdownValuesServices.options[1].value
   );
   const [openNotificationDrawer, setOpenNotificationDrawer] = useState(false);
   const [searchText, setSearchText] = useState("");
