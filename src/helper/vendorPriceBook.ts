@@ -43,6 +43,31 @@ export const updatePriceBook = async (isEditedData: any) => {
     }
 };
 
+export const createPriceBook = async (priceBookData: any) => {
+    try {
+        const response = await axiosInstance.post(
+            `${apiConstant.vendor.createPriceBook}`,
+            priceBookData
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error while creating pricebook:", error);
+        throw error;
+    }
+};
+
+export const deletePriceBook = async (id: any) => {
+    try {
+        const response = await axiosInstance.delete(
+            `${apiConstant.vendor.deletePriceBook}/${id}`
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error while deleting pricebook:", error);
+        throw error;
+    }
+};
+
 // export const getVendorServiceById = async (productId: any) => {
 //     try {
 //         const response = await axiosInstance.get(

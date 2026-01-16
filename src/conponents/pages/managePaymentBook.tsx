@@ -4,7 +4,7 @@ import EditPaymentBookDialog from "../editPaymentBookDialog";
 import { useState } from "react";
 import { TiIconPencilPlus, TiIconTrash } from "../icons";
 import { Badge } from "@/components/ui/badge";
-import DeleteWarningDialog from "../deleteServiceDialog";
+import DeletePricebookDialog from "@/components/DeletePricebookDialog";
 import { useGetAllPriceBook } from "@/services/useGetAllPricebooks";
 import CreateNewPricebook from "@/components/CreateNewPricebook";
 
@@ -64,7 +64,7 @@ const ManagePaymentBook = () => {
         );
       })}
 
-      <DeleteWarningDialog priceBook={selectedPricebook} isOpen={isDeleteOpen} setOpen={setIsDeleteOpen} />
+      <DeletePricebookDialog priceBookId={selectedPricebook.id} isOpen={isDeleteOpen} onOpenChange={setIsDeleteOpen} />
       <EditPaymentBookDialog priceBook={selectedPricebook} isOpen={isEditOpen} setOpen={setIsEditOpen} />
     </div>
   );

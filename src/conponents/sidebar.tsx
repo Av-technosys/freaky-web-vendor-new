@@ -11,6 +11,7 @@ import logo from "../assets/Images/freaky_logo.png";
 
 import {
   TiconLayoutDashboard,
+  TiIconCalendar,
   TiIconLogout,
   TiIconSearch,
   TiIconSettings,
@@ -34,11 +35,11 @@ const items = [
     url: "/services",
     icon: TiIconTool,
   },
-  // {
-  //   title: "Booking",
-  //   url: "/bookings",
-  //   icon: TiIconCalendar,
-  // },
+  {
+    title: "Booking",
+    url: "/bookings",
+    icon: TiIconCalendar,
+  },
   {
     title: "Calendar",
     url: "/calendar",
