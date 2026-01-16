@@ -13,3 +13,15 @@ export const createExternalBooking = async (bookingData: any) => {
         throw error;
     }
 };
+
+export const getAllBookings = async ({ text = '', page = 1, page_size = 12 }: any) => {
+    try {
+        const response = await axiosInstance.get(
+            `${apiConstant.booking.getAllBookings}?text=${text}&page=${page}&page_size=${page_size}`
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error while fetching bookings:", error);
+        throw error;
+    }
+};
