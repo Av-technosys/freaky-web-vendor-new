@@ -12,7 +12,7 @@ import {
 } from "../components/ui";
 import { TiIconPencilPlus } from "./icons";
 import DeleteServiceDialog from "./deleteServiceDialog";
-import { InputGroupAddon } from "@/components/ui/input-group";
+
 import { LoaderCircle } from "lucide-react";
 
 export function ServicesTable({ tableData, isPending }: any) {
@@ -33,12 +33,19 @@ export function ServicesTable({ tableData, isPending }: any) {
           })}
         </TableRow>
       </TableHeader>
-      {isPending && (
-        <InputGroupAddon align="inline-end">
-          <LoaderCircle className="animate-spin" />
-        </InputGroupAddon>
-      )}
+
       <TableBody>
+        <TableCell
+          colSpan={tableData?.Headings?.length || 4}
+          className={`text-center  ${isPending && "py-10"}`}
+        >
+          {isPending && (
+            <div className="flex justify-center items-center w-full">
+              <LoaderCircle className="animate-spin w-6 h-6" />
+            </div>
+          )}
+        </TableCell>
+
         {tableData?.ListData?.map((service: any, index: number) => {
           const rowNumber = (currentPage - 1) * limit + (index + 1);
 
@@ -46,13 +53,7 @@ export function ServicesTable({ tableData, isPending }: any) {
             <TableRow className="text-center md:text-start" key={index}>
               <TableCell>{rowNumber}</TableCell>
               <TableCell>{service?.title}</TableCell>
-              <TableCell>{service?.type}</TableCell>
-              <TableCell
-                className={service.status ? "text-green-500" : "text-red-500"}
-              >
-                {service.status ? "True" : "False"}
-              </TableCell>
-
+              <TableCell>{service?.productType}</TableCell>
               <TableCell>
                 <div className="w-full flex gap-1">
                   <Button

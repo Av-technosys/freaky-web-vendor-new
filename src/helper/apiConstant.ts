@@ -35,6 +35,7 @@ export const apiConstant = {
     updateServiceById: "/v1/product/update",
     createService: "/v1/product/create",
     deleteImageById: "/v1/product/image",
+    deleteBannerImage: "/v1/product/banner",
     getVendorInvites: "/v1/vendor/invites",
     createVendorEmployeeRequest: "/v1/vendor/employee_request",
     getAllVendorsForInvitation: "/v1/vendor/request_vendors",

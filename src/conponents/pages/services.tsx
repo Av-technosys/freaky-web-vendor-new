@@ -1,6 +1,6 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Button, Card, CardContent, CardHeader } from "../../components/ui";
-import { TiIconBriefcase } from "../icons";
+import { Button } from "../../components/ui";
+
 import { ServicesTable } from "../serviceTable";
 import { useGetVendorServices } from "../../services/useGetVendorServices";
 import {
@@ -25,7 +25,7 @@ const Services = () => {
   const totalPages = data?.pagination?.total_pages;
 
   const tableData = {
-    Headings: ["ID", "Services", "Categories", "Status", "Action"],
+    Headings: ["ID", "Services", "Product Type", "Action"],
     ListData: services,
   };
 
@@ -45,7 +45,7 @@ const Services = () => {
           Manage Payment Book
         </Button>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <Card className="col-span-1 flex flex-col  gap-5">
           <CardHeader>
             <div className="w-full flex items-center justify-between">
@@ -80,7 +80,7 @@ const Services = () => {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </div> */}
       <div className="max-w-[400px] bg-white overflow-x-scroll lg:overflow-hidden md:max-w-full p-3 shadow-lg rounded-lg">
         <ServicesTable tableData={tableData} isPending={isPending} />
         <div className="mt-5">
@@ -88,8 +88,9 @@ const Services = () => {
             <PaginationContent>
               <PaginationItem className="border border-gray-200 rounded-md">
                 <PaginationPrevious
-                  className={`cursor-pointer ${page == 1 && "pointer-events-none opacity-50"
-                    }`}
+                  className={`cursor-pointer ${
+                    page == 1 && "pointer-events-none opacity-50"
+                  }`}
                   onClick={() =>
                     navigate(`?page=${page - 1}&page_size=${pageSize}`)
                   }
@@ -101,8 +102,9 @@ const Services = () => {
                     onClick={() =>
                       navigate(`?page=${index + 1}&page_size=${pageSize}`)
                     }
-                    className={`border border-gray-200 rounded-md ${page == index + 1 && "text-orange-500"
-                      }`}
+                    className={`border border-gray-200 rounded-md ${
+                      page == index + 1 && "text-orange-500"
+                    }`}
                   >
                     <PaginationLink href="#">{index + 1}</PaginationLink>
                   </PaginationItem>
@@ -110,8 +112,9 @@ const Services = () => {
               })}
               <PaginationItem className="border border-gray-200 rounded-md">
                 <PaginationNext
-                  className={`cursor-pointer  ${page == totalPages && "pointer-events-none opacity-50"
-                    }`}
+                  className={`cursor-pointer  ${
+                    page == totalPages && "pointer-events-none opacity-50"
+                  }`}
                   onClick={() =>
                     navigate(`?page=${page + 1}&page_size=${pageSize}`)
                   }
@@ -127,11 +130,11 @@ const Services = () => {
 
 export default Services;
 
-function StatusCardItem({ title, value }: { title: string; value: number }) {
-  return (
-    <div>
-      <p className="text-[#8B8D97] text-[13px]">{title}</p>
-      <p>{value}</p>
-    </div>
-  );
-}
+// function StatusCardItem({ title, value }: { title: string; value: number }) {
+//   return (
+//     <div>
+//       <p className="text-[#8B8D97] text-[13px]">{title}</p>
+//       <p>{value}</p>
+//     </div>
+//   );
+// }

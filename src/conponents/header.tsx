@@ -21,11 +21,11 @@ const dropdownValuesServices = {
   options: [
     {
       label: "Bookings",
-      value: "bookings",
+      value: "booking",
     },
     {
       label: "Services",
-      value: "services",
+      value: "product",
     },
   ],
 };

@@ -64,6 +64,18 @@ export const deleteImageHandler = async (id: any) => {
   }
 };
 
+export const deleteBannerImageHandler = async (id: any) => {
+  try {
+    const response = await axiosInstance.delete(
+      `${apiConstant.vendor.deleteBannerImage}/${id}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+    throw error;
+  }
+};
+
 export const deleteVendorServiceById = async (serviceId: any) => {
   try {
     const response = await axiosInstance.delete(
