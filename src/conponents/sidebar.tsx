@@ -11,7 +11,6 @@ import logo from "../assets/Images/freaky_logo.png";
 
 import {
   TiconLayoutDashboard,
-  TiIconCalendar,
   TiIconLogout,
   TiIconSearch,
   TiIconSettings,
@@ -100,8 +99,8 @@ function AppSidebar() {
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       className={`  ${location.pathname === item.url
-                          ? "bg-gradient-to-r from-[#FFE492] to-[#FFBAA4]"
-                          : ""
+                        ? "bg-gradient-to-r from-[#FFE492] to-[#FFBAA4]"
+                        : ""
                         }`}
                       asChild
                     >
@@ -121,8 +120,8 @@ function AppSidebar() {
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       className={`  ${location.pathname === item.url
-                          ? "bg-gradient-to-r from-[#FFE492] to-[#FFBAA4]"
-                          : ""
+                        ? "bg-gradient-to-r from-[#FFE492] to-[#FFBAA4]"
+                        : ""
                         }`}
                       asChild
                     >

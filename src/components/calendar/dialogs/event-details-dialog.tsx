@@ -3,20 +3,16 @@
 import { format } from "date-fns";
 import { Calendar, Clock, Phone, Text, User } from "lucide-react";
 import type { ReactNode } from "react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import {
 	Dialog,
 	DialogClose,
 	DialogContent,
-	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useCalendar } from "@/components/calendar/contexts/calendar-context";
-import { AddEditEventDialog } from "@/components/calendar/dialogs/add-edit-event-dialog";
 import { formatTime, parseToLocal } from "@/components/calendar/helpers";
 import type { IEvent } from "@/components/calendar/interfaces";
 
@@ -28,16 +24,9 @@ interface IProps {
 export function EventDetailsDialog({ event, children }: IProps) {
 	const startDate = parseToLocal(event.startDate);
 	const endDate = parseToLocal(event.endDate);
-	const { use24HourFormat, removeEvent } = useCalendar();
+	const { use24HourFormat } = useCalendar();
 
-	const deleteEvent = (eventId: number) => {
-		try {
-			removeEvent(eventId);
-			toast.success("Event deleted successfully.");
-		} catch {
-			toast.error("Error deleting event.");
-		}
-	};
+
 
 	return (
 		<Dialog>

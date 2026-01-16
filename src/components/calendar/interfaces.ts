@@ -13,7 +13,7 @@ export interface IEvent {
 	title: string;
 	color: TEventColor;
 	description: string;
-	contactName: string;
+	contactName?: string;
 	contactNumber?: string;
 	services?: IService[];
 	user?: any;

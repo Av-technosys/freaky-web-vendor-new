@@ -8,7 +8,6 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Toggle } from "@/components/ui/toggle";
 import { useCalendar } from "@/components/calendar/contexts/calendar-context";
-import type { TEventColor } from "@/components/calendar/types";
 
 export default function FilterEvents() {
 	const { selectedColors, filterEventsBySelectedColors, clearFilter, services } =

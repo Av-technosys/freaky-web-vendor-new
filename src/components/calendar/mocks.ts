@@ -1,4 +1,4 @@
-import { COLORS } from "./constants";
+// import { COLORS } from "./constants";
 import type { IEvent, IUser } from "./interfaces";
 
 
@@ -27,100 +27,100 @@ export const USERS_MOCK: IUser[] = [
 
 // ================================== //
 
-const events = [
-	"Doctor's appointment",
-	"Dental cleaning",
-	"Eye exam",
-	"Therapy session",
-	"Business meeting",
-	"Team stand-up",
-	"Project deadline",
-	"Weekly report submission",
-	"Client presentation",
-	"Marketing strategy review",
-	"Networking event",
-	"Sales call",
-	"Investor pitch",
-	"Board meeting",
-	"Employee training",
-	"Performance review",
-	"One-on-one meeting",
-	"Lunch with a colleague",
-	"HR interview",
-	"Conference call",
-	"Web development sprint planning",
-	"Software deployment",
-	"Code review",
-	"QA testing session",
-	"Cybersecurity audit",
-	"Server maintenance",
-	"API integration update",
-	"Data backup",
-	"Cloud migration",
-	"System upgrade",
-	"Content planning session",
-	"Product launch",
-	"Customer support review",
-	"Team building activity",
-	"Legal consultation",
-	"Budget review",
-	"Financial planning session",
-	"Tax filing deadline",
-	"Investor relations update",
-	"Partnership negotiation",
-	"Medical check-up",
-	"Vaccination appointment",
-	"Blood donation",
-	"Gym workout",
-	"Yoga class",
-	"Physical therapy session",
-	"Nutrition consultation",
-	"Personal trainer session",
-	"Parent-teacher meeting",
-	"School open house",
-	"College application deadline",
-	"Final exam",
-	"Graduation ceremony",
-	"Job interview",
-	"Internship orientation",
-	"Office relocation",
-	"Business trip",
-	"Flight departure",
-	"Hotel check-in",
-	"Vacation planning",
-	"Birthday party",
-	"Wedding anniversary",
-	"Family reunion",
-	"Housewarming party",
-	"Community volunteer work",
-	"Charity fundraiser",
-	"Religious service",
-	"Concert attendance",
-	"Theater play",
-	"Movie night",
-	"Sporting event",
-	"Football match",
-	"Basketball game",
-	"Tennis practice",
-	"Marathon training",
-	"Cycling event",
-	"Fishing trip",
-	"Camping weekend",
-	"Hiking expedition",
-	"Photography session",
-	"Art workshop",
-	"Cooking class",
-	"Book club meeting",
-	"Grocery shopping",
-	"Car maintenance",
-	"Home renovation meeting",
-];
+// const events = [
+// 	"Doctor's appointment",
+// 	"Dental cleaning",
+// 	"Eye exam",
+// 	"Therapy session",
+// 	"Business meeting",
+// 	"Team stand-up",
+// 	"Project deadline",
+// 	"Weekly report submission",
+// 	"Client presentation",
+// 	"Marketing strategy review",
+// 	"Networking event",
+// 	"Sales call",
+// 	"Investor pitch",
+// 	"Board meeting",
+// 	"Employee training",
+// 	"Performance review",
+// 	"One-on-one meeting",
+// 	"Lunch with a colleague",
+// 	"HR interview",
+// 	"Conference call",
+// 	"Web development sprint planning",
+// 	"Software deployment",
+// 	"Code review",
+// 	"QA testing session",
+// 	"Cybersecurity audit",
+// 	"Server maintenance",
+// 	"API integration update",
+// 	"Data backup",
+// 	"Cloud migration",
+// 	"System upgrade",
+// 	"Content planning session",
+// 	"Product launch",
+// 	"Customer support review",
+// 	"Team building activity",
+// 	"Legal consultation",
+// 	"Budget review",
+// 	"Financial planning session",
+// 	"Tax filing deadline",
+// 	"Investor relations update",
+// 	"Partnership negotiation",
+// 	"Medical check-up",
+// 	"Vaccination appointment",
+// 	"Blood donation",
+// 	"Gym workout",
+// 	"Yoga class",
+// 	"Physical therapy session",
+// 	"Nutrition consultation",
+// 	"Personal trainer session",
+// 	"Parent-teacher meeting",
+// 	"School open house",
+// 	"College application deadline",
+// 	"Final exam",
+// 	"Graduation ceremony",
+// 	"Job interview",
+// 	"Internship orientation",
+// 	"Office relocation",
+// 	"Business trip",
+// 	"Flight departure",
+// 	"Hotel check-in",
+// 	"Vacation planning",
+// 	"Birthday party",
+// 	"Wedding anniversary",
+// 	"Family reunion",
+// 	"Housewarming party",
+// 	"Community volunteer work",
+// 	"Charity fundraiser",
+// 	"Religious service",
+// 	"Concert attendance",
+// 	"Theater play",
+// 	"Movie night",
+// 	"Sporting event",
+// 	"Football match",
+// 	"Basketball game",
+// 	"Tennis practice",
+// 	"Marathon training",
+// 	"Cycling event",
+// 	"Fishing trip",
+// 	"Camping weekend",
+// 	"Hiking expedition",
+// 	"Photography session",
+// 	"Art workshop",
+// 	"Cooking class",
+// 	"Book club meeting",
+// 	"Grocery shopping",
+// 	"Car maintenance",
+// 	"Home renovation meeting",
+// ];
 
 const mockGenerator = (numberOfEvents: number): IEvent[] => {
 	const result: IEvent[] = [];
-	let currentId = 1;
+	// let currentId = 1;
 
-	const randomUser = USERS_MOCK[Math.floor(Math.random() * USERS_MOCK.length)];
+	// const randomUser = USERS_MOCK[Math.floor(Math.random() * USERS_MOCK.length)];
 
 	// Date range: 30 days before and after now
 	const now = new Date();
@@ -130,18 +130,18 @@ const mockGenerator = (numberOfEvents: number): IEvent[] => {
 	endRange.setDate(now.getDate() + 30);
 
 	// Create an event happening now
-	const currentEvent = {
-		id: currentId++,
-		startDate: new Date(now.getTime() - 30 * 60000).toString(),
-		endDate: new Date(now.getTime() + 30 * 60000).toString(),
-		title: events[Math.floor(Math.random() * events.length)],
-		color: COLORS[Math.floor(Math.random() * COLORS.length)],
-		description:
-			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-		user: randomUser,
-	};
+	// const currentEvent = {
+	// 	id: currentId++,
+	// 	startDate: new Date(now.getTime() - 30 * 60000).toString(),
+	// 	endDate: new Date(now.getTime() + 30 * 60000).toString(),
+	// 	title: events[Math.floor(Math.random() * events.length)],
+	// 	color: COLORS[Math.floor(Math.random() * COLORS.length)],
+	// 	description:
+	// 		"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+	// 	user: randomUser,
+	// };
 
-	result.push(currentEvent);
+	// result.push(currentEvent);
 
 	// Generate the remaining events
 	for (let i = 0; i < numberOfEvents - 1; i++) {
@@ -178,16 +178,16 @@ const mockGenerator = (numberOfEvents: number): IEvent[] => {
 			endDate.setHours(endDate.getHours() + Math.floor(Math.random() * 3) + 1);
 		}
 
-		result.push({
-			id: currentId++,
-			startDate: startDate.toString(),
-			endDate: endDate.toString(),
-			title: events[Math.floor(Math.random() * events.length)],
-			color: COLORS[Math.floor(Math.random() * COLORS.length)],
-			description:
-				"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-			// user: USERS_MOCK[Math.floor(Math.random() * USERS_MOCK.length)],
-		});
+		// result.push({
+		// 	id: currentId++,
+		// 	startDate: startDate.toString(),
+		// 	endDate: endDate.toString(),
+		// 	title: events[Math.floor(Math.random() * events.length)],
+		// 	color: COLORS[Math.floor(Math.random() * COLORS.length)],
+		// 	description:
+		// 		"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+		// 	// user: USERS_MOCK[Math.floor(Math.random() * USERS_MOCK.length)],
+		// });
 	}
 
 	return result;

@@ -1,5 +1,4 @@
 import { TriangleAlertIcon } from "lucide-react";
-import { Button } from "../components/ui";
 import { Alert, AlertDescription, AlertTitle } from "../components/ui/alert";
 import {
   AlertDialog,
@@ -12,7 +11,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../components/ui/alert-dialog";
-import { TiIconTrash } from "./icons";
 import { useDeleteVendorServiceById } from "@/services/useCreateOrUpdateVendorService";
 import { useQueryClient } from "@tanstack/react-query";
 

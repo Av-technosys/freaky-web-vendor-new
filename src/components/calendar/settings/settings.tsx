@@ -1,4 +1,4 @@
-import { DotIcon, PaletteIcon, SettingsIcon } from "lucide-react";
+import { SettingsIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -17,8 +17,6 @@ import { useCalendar } from "@/components/calendar/contexts/calendar-context";
 
 export function Settings() {
   const {
-    badgeVariant,
-    setBadgeVariant,
     use24HourFormat,
     toggleTimeFormat,
 
@@ -29,7 +27,7 @@ export function Settings() {
   // const { theme, setTheme } = useTheme();
 
   // const isDarkMode = theme === "dark";
-  const isDotVariant = badgeVariant === "dot";
+  // const isDotVariant = badgeVariant === "dot";
 
   return (
     <DropdownMenu>

@@ -1,5 +1,4 @@
 // import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
 import { type ReactNode, useEffect, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { toast } from "sonner";
@@ -48,7 +47,7 @@ export function AddEditEventDialog({
   const listOfServices = data?.data;
   console.log(listOfServices)
   const { isOpen, onClose, onToggle } = useDisclosure();
-  const { addEvent, updateEvent } = useCalendar();
+  const { addEvent } = useCalendar();
   const [step, setStep] = useState(1);
 
 

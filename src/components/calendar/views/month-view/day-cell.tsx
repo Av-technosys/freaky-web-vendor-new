@@ -14,9 +14,7 @@ import { useMediaQuery } from "@/components/calendar/hooks";
 import type { ICalendarCell, IEvent } from "@/components/calendar/interfaces";
 import { EventBullet } from "@/components/calendar/views/month-view/event-bullet";
 import { MonthEventBadge } from "@/components/calendar/views/month-view/month-event-badge";
-import { AddEditEventDialog } from "../../dialogs/add-edit-event-dialog";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+
 
 interface IProps {
   cell: ICalendarCell;
