@@ -52,4 +52,7 @@ export const apiConstant = {
     getUserDetails: "/v1/user/personal_details",
     updateUserDetails: "/v1/user/update_details",
   },
+  booking: {
+    createExternalBooking: "v1/booking/create_external_booking",
+  },
 };

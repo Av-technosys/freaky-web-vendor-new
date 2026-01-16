@@ -35,6 +35,7 @@ import { useDisclosure } from "@/components/calendar/hooks";
 import type { IEvent } from "@/components/calendar/interfaces";
 import { Plus, Trash2 } from "lucide-react";
 import { useGetVendorServices } from "@/services/useGetVendorServices";
+import { useCreateExternalBooking } from "@/services/useCreateExternalBooking";
 
 interface IProps {
   children: ReactNode;
@@ -93,6 +94,8 @@ export function AddEditEventDialog({
     }
   }, [isOpen, form]);
 
+  const { mutate: createBooking, isPending } = useCreateExternalBooking();
+
   const onSubmit = (values: any) => {
     if (step == 1) return;
     try {
@@ -124,12 +127,23 @@ export function AddEditEventDialog({
       const formattedEvent: IEvent = { ...values, };
 
       console.log("Adding event:", formattedEvent);
-      addEvent(formattedEvent);
-      toast.success("Event created successfully");
+      // addEvent(formattedEvent); // Removed local addEvent, relying on API? User said "call an API ... which i am already useing in console.log"
+      // The prompt implies saving data via API.
 
-      onClose();
-      form.reset();
-      setStep(1);
+      createBooking(formattedEvent, {
+        onSuccess: () => {
+          toast.success("Event created successfully");
+          addEvent(formattedEvent); // Optionally update local state if needed immediately, or refetch
+          onClose();
+          form.reset();
+          setStep(1);
+        },
+        onError: (error: any) => {
+          console.error("Error creating event:", error);
+          toast.error(error.message || "Failed to create event");
+        }
+      });
+
     } catch (error: any) {
       console.error("Error event:", error);
       toast.error(error.message);
@@ -369,8 +383,8 @@ export function AddEditEventDialog({
                 Next Step
               </Button>
             ) : (
-              <Button form="event-form" type="submit">
-                Complete Booking
+              <Button form="event-form" type="submit" disabled={isPending}>
+                {isPending ? "Creating..." : "Complete Booking"}
               </Button>
             )}
           </div>
