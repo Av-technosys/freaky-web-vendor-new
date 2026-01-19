@@ -25,6 +25,7 @@ import {
   IconTrash,
   IconAlertTriangleFilled,
   IconPlayerPlay,
+  IconEye,
 } from "@tabler/icons-react";
 
 export function TiconLayoutDashboard(props: any) {
@@ -104,4 +105,7 @@ export function TiIconAlertTriangleFilled(props: any) {
 }
 export function TiIconPlayerPlay(props: any) {
   return <IconPlayerPlay {...props} />;
+}
+export function TiIconEye(props: any) {
+  return <IconEye {...props} />;
 }

@@ -47,7 +47,7 @@ export function useDebounce<T>(value: T, delay = 600): T {
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const [service, setService] = useState(
-    dropdownValuesServices.options[1].value
+    dropdownValuesServices.options[1].value,
   );
   const [openNotificationDrawer, setOpenNotificationDrawer] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -99,7 +99,7 @@ const Header: React.FC = () => {
             <div className="w-1/2 flex items-center justify-end gap-4">
               <DropdownSelector
                 labelName="hidden"
-                className="w-[136px] rounded-xl"
+                className="w-[136px] rounded-xl hidden md:flex"
                 values={dropdownValuesServices}
                 selectedValue={service}
                 onChange={handleServiceChange}
