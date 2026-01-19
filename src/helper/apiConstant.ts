@@ -56,5 +56,6 @@ export const apiConstant = {
   booking: {
     createExternalBooking: "v1/booking/create_external_booking",
     getAllBookings: "v1/booking/",
+    getBookingItemDetailsById: "v1/booking",
   },
 };
