@@ -13,6 +13,8 @@ import {
 } from "../components/ui/alert-dialog";
 import { useDeleteVendorServiceById } from "@/services/useCreateOrUpdateVendorService";
 import { useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/ui";
+import { TiIconTrash } from "./icons";
 
 const DeleteServiceDialog = ({ serviceId }: any) => {
   const deleteServiceMutation = useDeleteVendorServiceById();
@@ -22,9 +24,9 @@ const DeleteServiceDialog = ({ serviceId }: any) => {
     <>
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          {/* <Button variant={"outline"}>
+          <Button variant={"outline"}>
             <TiIconTrash color="#D30000" />
-          </Button> */}
+          </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>

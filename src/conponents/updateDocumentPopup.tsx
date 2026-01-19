@@ -87,7 +87,6 @@ const UpdateDocumentPopup = ({
                     <div className="col-span-1">
                       <DropdownSelector
                         values={dropdownValues}
-                       
                         selectedValue={documentType ?? details?.documentType}
                         onChange={(value: any) => handleDocumentChange(value)}
                       />

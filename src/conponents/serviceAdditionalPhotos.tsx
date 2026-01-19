@@ -30,6 +30,8 @@ const ServiceAdditionalPhotos = ({
   const productMediaImages =
     mediaImages.filter((item: any) => item.mediaType === "image") ?? [];
 
+  console.log("productMediaImages", productMediaImages);
+
   const productVideos =
     mediaImages.filter((item: any) => item.mediaType === "video") ?? [];
 
@@ -141,7 +143,19 @@ const ServiceAdditionalPhotos = ({
     }
   };
 
-  const imageDeleteHandler = (id: number) => {
+  const imageDeleteHandler = (id?: number, mediaUrl?: string) => {
+    if (!id) {
+      setMediaImages((prev: any) =>
+        prev.filter((item: any) => item.mediaUrl !== mediaUrl)
+      );
+
+      setAdditionalImagesUrl((prev: any) =>
+        prev.filter((url: string) => url !== mediaUrl)
+      );
+
+      return;
+    }
+
     deleteImageMutation.mutate(id, {
       onSuccess: () => {
         setMediaImages((prev: any) =>
@@ -169,28 +183,36 @@ const ServiceAdditionalPhotos = ({
                   return (
                     <Card
                       key={`media-${index}`}
-                      className="group relative flex items-center justify-center 
-                     h-[140px] rounded-lg bg-[#F4F5FA]"
+                      className="group flex items-center justify-center 
+                       h-[140px] rounded-lg bg-[#F4F5FA]"
                     >
-                      <Button
-                        onClick={() => imageDeleteHandler(mediaUrl.id)}
-                        variant="outline"
-                        className="absolute top-14 right-5 cursor-pointer hidden group-hover:flex 
-                       h-7 w-7 p-0 items-center justify-center"
-                      >
-                        <TiIconTrash color="#D30000" />
-                      </Button>
+                      <div className="relative group">
+                        <div
+                          className="absolute inset-0 flex items-center justify-between px-1
+                           opacity-0 group-hover:opacity-100 transition"
+                        >
+                          <ImageViewerDialog mediaUrl={mediaUrl?.mediaUrl} />
 
-                      <ImageViewerDialog mediaUrl={mediaUrl?.mediaUrl} />
+                          <Button
+                            onClick={() =>
+                              imageDeleteHandler(mediaUrl.id, mediaUrl.mediaUrl)
+                            }
+                            variant="outline"
+                            className="h-7 w-7 p-0 flex items-center justify-center"
+                          >
+                            <TiIconTrash color="#D30000" />
+                          </Button>
+                        </div>
 
-                      <div className="w-20 h-20 rounded-full overflow-hidden">
-                        <img
-                          className="w-full h-full object-cover"
-                          src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${
-                            mediaUrl.mediaUrl
-                          }`}
-                          alt="uploaded"
-                        />
+                        <div className="w-20 h-20 rounded-full overflow-hidden">
+                          <img
+                            className="w-full h-full object-cover"
+                            src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${
+                              mediaUrl.mediaUrl
+                            }`}
+                            alt="uploaded"
+                          />
+                        </div>
                       </div>
                     </Card>
                   );
@@ -227,10 +249,14 @@ const ServiceAdditionalPhotos = ({
                 if (mediaUrl) {
                   return (
                     <Card
-                      className="flex flex-col items-center justify-center 
+                      className="w-full flex  flex-col items-center justify-center 
                      h-[140px] gap-4 rounded-lg bg-[#F4F5FA]"
                     >
-                      <VideoPlayerDialog mediaUrl={mediaUrl?.mediaUrl} />
+                      <VideoPlayerDialog
+                        mediaUrl={mediaUrl?.mediaUrl}
+                        setMediaImages={setMediaImages}
+                        videoId={mediaUrl.productId}
+                      />
 
                       <input
                         type="file"

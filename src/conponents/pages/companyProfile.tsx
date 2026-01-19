@@ -84,6 +84,7 @@ const CompanyProfile = () => {
     { documentType: "business_license", documentUrl: "choose file" },
   ]);
 
+  console.log("documentsssssss", documentInputs);
 
   const getImageUrlMutation = useGetImageUrl();
   const uploadImageMutation = useUploadImage();
@@ -384,8 +385,14 @@ const CompanyProfile = () => {
     }
   };
 
-  const documentDeleteHandler = (id: any) => {
-    documentDeleteMutation.mutate(id);
+  const documentDeleteHandler = (id: any, indexId: any) => {
+    if (id) {
+      documentDeleteMutation.mutate(id);
+    } else {
+      setDocumentInputs((prev: any[]) =>
+        prev.filter((_, index) => index !== indexId)
+      );
+    }
   };
 
   const documentUpdateHandler = (doc: any) => {
@@ -506,27 +513,43 @@ const CompanyProfile = () => {
                           onChange={(e) => handleDocumentUpload(e, index)}
                         />
                         <label
-                          htmlFor={`file-upload-${index}`}
+                          htmlFor={
+                            doc.documentUrl === "choose file"
+                              ? `file-upload-${index}`
+                              : undefined
+                          }
                           className="w-full bg-[#E1E2E9] rounded-md p-2 text-[11px] cursor-pointer text-gray-600 block"
                         >
-                          {doc.documentUrl !== "choose file"
-                            ? doc.documentUrl.split("/").pop()
-                            : "Choose file"}
-                        </label>
+                          {doc.documentUrl !== "choose file" ? (
+                            <a
+                              href={`${import.meta.env.VITE_IMAGE_BASE_URL}/${
+                                doc.documentUrl
+                              }`}
+                              target="_blank"
+                              className="w-full"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {doc.documentUrl.split("/").pop()}
+                            </a>
+                          ) : (
+                            "Choose file"
+                          )}
+                        </label>{" "}
                       </div>
 
-                      {doc.documentUrl !== "choose file" && (
-                        <div className="w-1/2 flex gap-2">
+                      <div className="w-1/2 flex gap-2">
+                        {doc.documentUrl !== "choose file" && doc.id && (
                           <Button onClick={() => documentUpdateHandler(doc)}>
                             Edit
                           </Button>
-                          <Button
-                            onClick={() => documentDeleteHandler(doc?.id)}
-                          >
-                            Delete
-                          </Button>
-                        </div>
-                      )}
+                        )}
+                        <Button
+                          onClick={() => documentDeleteHandler(doc?.id, index)}
+                        >
+                          Delete
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}

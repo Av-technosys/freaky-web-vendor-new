@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   createVendorService,
+  deleteBannerImageHandler,
   deleteImageHandler,
   deleteVendorServiceById,
   updateVendorService,
@@ -34,6 +35,18 @@ export const useUpdateVendorService = () => {
 export const useDeleteAdditionalImage = () => {
   return useMutation({
     mutationFn: deleteImageHandler,
+    onSuccess: () => {
+      toast.success("Image Deleted Successfully.");
+    },
+    onError: () => {
+      toast.error("Unable to delete image.");
+    },
+  });
+};
+
+export const useDeleteBannerImage = () => {
+  return useMutation({
+    mutationFn: deleteBannerImageHandler,
     onSuccess: () => {
       toast.success("Image Deleted Successfully.");
     },
