@@ -286,7 +286,7 @@ const ManageService = () => {
 
   return (
     <>
-      {isPending ? (
+      {isPending  && productId ? (
         <div className="flex justify-center items-center w-full">
           <LoaderCircle className="animate-spin w-6 h-6" />
         </div>
