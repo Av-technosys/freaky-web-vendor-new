@@ -14,6 +14,7 @@ import {
   updateVendorDocument,
 } from "../helper/createCompanyDetails";
 import { toast } from "sonner";
+import { useLocation } from "react-router-dom";
 
 export const useUpdateCompanyInformation = () => {
   return useMutation({
@@ -52,10 +53,17 @@ export const useUpdateBusinessAddressInformation = () => {
 };
 
 export const useUpdateBankAccountInformation = () => {
+  const location = useLocation();
   return useMutation({
     mutationFn: updateBankAccountInformation,
     onSuccess: () => {
-      toast.success("Bank Account Information updated successfully");
+      if (location.pathname.includes("company-profile")) {
+        toast.success("Bank account information updated successfully.");
+      } else {
+        toast.success(
+          "Bank account information updated successfully. Your request has been sent for admin approval. Your vendor account will be activated soon.",
+        );
+      }
     },
     onError: () => {
       toast.error("Unable to updated Bank account information");
@@ -74,7 +82,6 @@ export const useUpdateOwnershipInformation = () => {
     },
   });
 };
-
 
 export const useCreateCompanyInformation = () => {
   return useMutation({

@@ -41,16 +41,12 @@ interface IProps {
   children: ReactNode;
 }
 
-export function AddEditEventDialog({
-  children,
-}: IProps) {
+export function AddEditEventDialog({ children }: IProps) {
   const { data } = useGetVendorServices(1, 100);
   const listOfServices = data?.data;
-  console.log(listOfServices)
   const { isOpen, onClose, onToggle } = useDisclosure();
   const { addEvent } = useCalendar();
   const [step, setStep] = useState(1);
-
 
   const form = useForm<any>({
     defaultValues: {
@@ -124,9 +120,23 @@ export function AddEditEventDialog({
         throw new Error("Please fill in all details for all services.");
       }
 
-      const formattedEvent: IEvent = { ...values, };
+      const toLocalISOString = (date: Date) => {
+        const offset = date.getTimezoneOffset() * 60000;
+        return new Date(date.getTime() - offset).toISOString().slice(0, 19); // "YYYY-MM-DDTHH:mm:ss"
+      };
 
-      console.log("Adding event:", formattedEvent);
+      const formattedEvent: IEvent = {
+        ...values,
+        services: values.services.map((service: any) => ({
+          ...service,
+          startTime: toLocalISOString(service.startTime),
+          endTime: toLocalISOString(service.endTime),
+        })),
+      };
+
+      // const formattedEvent: IEvent = { ...values };
+
+      // console.log("Adding event:", formattedEvent);
       // addEvent(formattedEvent); // Removed local addEvent, relying on API? User said "call an API ... which i am already useing in console.log"
       // The prompt implies saving data via API.
 
@@ -141,9 +151,8 @@ export function AddEditEventDialog({
         onError: (error: any) => {
           console.error("Error creating event:", error);
           toast.error(error.message || "Failed to create event");
-        }
+        },
       });
-
     } catch (error: any) {
       console.error("Error event:", error);
       toast.error(error.message);
@@ -187,7 +196,8 @@ export function AddEditEventDialog({
             {step === 1 && (
               <div className="grid gap-4">
                 <div className="bg-yellow-50 p-3 rounded-md border border-yellow-200 text-sm text-yellow-800 mb-2">
-                  Note: The contact person's name will be displayed on the invoice.
+                  Note: The contact person's name will be displayed on the
+                  invoice.
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -197,12 +207,16 @@ export function AddEditEventDialog({
                     rules={{ required: "Contact name is required" }}
                     render={({ field, fieldState }) => (
                       <FormItem>
-                        <FormLabel className="required">Contact Person Name</FormLabel>
+                        <FormLabel className="required">
+                          Contact Person Name
+                        </FormLabel>
                         <FormControl>
                           <Input
                             placeholder="John Doe"
                             {...field}
-                            className={fieldState.invalid ? "border-red-500" : ""}
+                            className={
+                              fieldState.invalid ? "border-red-500" : ""
+                            }
                           />
                         </FormControl>
                         <FormMessage />
@@ -215,12 +229,16 @@ export function AddEditEventDialog({
                     rules={{ required: "Contact number is required" }}
                     render={({ field, fieldState }) => (
                       <FormItem>
-                        <FormLabel className="required">Contact Number</FormLabel>
+                        <FormLabel className="required">
+                          Contact Number
+                        </FormLabel>
                         <FormControl>
                           <Input
                             placeholder="+1 234 567 890"
                             {...field}
-                            className={fieldState.invalid ? "border-red-500" : ""}
+                            className={
+                              fieldState.invalid ? "border-red-500" : ""
+                            }
                           />
                         </FormControl>
                         <FormMessage />
@@ -233,11 +251,13 @@ export function AddEditEventDialog({
 
             {step === 2 && (
               <div className="space-y-6">
-
                 <div>
                   <h3 className="font-semibold text-lg mb-4">Services</h3>
                   {fields.map((field, index) => (
-                    <div key={field.id} className="border rounded-lg p-4 bg-gray-50 dark:bg-zinc-900 relative mb-4">
+                    <div
+                      key={field.id}
+                      className="border rounded-lg p-4 bg-gray-50 dark:bg-zinc-900 relative mb-4"
+                    >
                       <div className="absolute right-2 top-2">
                         <Button
                           type="button"
@@ -262,7 +282,10 @@ export function AddEditEventDialog({
                             <FormItem>
                               <FormLabel>Service</FormLabel>
                               <FormControl>
-                                <Select value={field.value} onValueChange={field.onChange}>
+                                <Select
+                                  value={field.value}
+                                  onValueChange={field.onChange}
+                                >
                                   <SelectTrigger>
                                     <SelectValue placeholder="Select Service" />
                                   </SelectTrigger>
@@ -287,12 +310,24 @@ export function AddEditEventDialog({
                           <FormField
                             control={form.control}
                             name={`services.${index}.startTime`}
-                            render={({ field }) => <DateTimePicker form={form} field={field} label="Start Time" />}
+                            render={({ field }) => (
+                              <DateTimePicker
+                                form={form}
+                                field={field}
+                                label="Start Time"
+                              />
+                            )}
                           />
                           <FormField
                             control={form.control}
                             name={`services.${index}.endTime`}
-                            render={({ field }) => <DateTimePicker form={form} field={field} label="End Time" />}
+                            render={({ field }) => (
+                              <DateTimePicker
+                                form={form}
+                                field={field}
+                                label="End Time"
+                              />
+                            )}
                           />
                         </div>
 

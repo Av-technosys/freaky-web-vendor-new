@@ -1,11 +1,11 @@
 import { axiosInstance } from "./api";
 import { apiConstant } from "./apiConstant";
 
-export const createExternalBooking = async (bookingData: any) => {
+export const createExternalBooking = async (formattedEvent: any) => {
   try {
     const response = await axiosInstance.post(
       `${apiConstant.booking.createExternalBooking}`,
-      bookingData,
+      formattedEvent,
     );
     return response.data;
   } catch (error) {
