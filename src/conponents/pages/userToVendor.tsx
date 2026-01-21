@@ -45,6 +45,7 @@ import {
   useUpdateContactInformation,
   useUpdateOwnershipInformation,
 } from "@/services/useCreateOrUpdateCompanyDetails";
+import { useNavigate } from "react-router-dom";
 
 const UserToVendor = () => {
   const [userStepNumber, setUserStepNumber] = React.useState(0);
@@ -238,6 +239,8 @@ const CreateNewVendor = ({ setUserStepNumber }: any) => {
     { id: "4", type: "bank_statement", files: [], maxFiles: 5 },
   ];
 
+  const [vendorId, setVendorId] = useState();
+
   const [companyData, setCompanyData] = useState<CompanyData>({
     businessName: "",
     website: "",
@@ -326,7 +329,7 @@ const CreateNewVendor = ({ setUserStepNumber }: any) => {
     <motion.div {...varients}>
       <CCard className=" min-h-96 overflow-hidden w-full max-w-4xl ">
         <CardHeader className="">
-          <CardTitle>Crate new vendor</CardTitle>
+          <CardTitle>Create new vendor</CardTitle>
         </CardHeader>
         {/* <CardContent> 
           {Array(5).fill(0).map((_, index) => {
@@ -341,6 +344,7 @@ const CreateNewVendor = ({ setUserStepNumber }: any) => {
               companyData={companyData}
               setCompanyData={setCompanyData}
               updateCompanyData={updateCompanyData}
+              setVendorId={setVendorId}
             />
           )}
           {vendorRegisterFormNumber == 1 && (
@@ -349,6 +353,7 @@ const CreateNewVendor = ({ setUserStepNumber }: any) => {
               companyData={companyData}
               setCompanyData={setCompanyData}
               updateCompanyData={updateCompanyData}
+              vendorId={vendorId}
             />
           )}
           {vendorRegisterFormNumber == 2 && (
@@ -357,6 +362,7 @@ const CreateNewVendor = ({ setUserStepNumber }: any) => {
               companyData={companyData}
               setCompanyData={setCompanyData}
               updateCompanyData={updateCompanyData}
+              vendorId={vendorId}
             />
           )}
           {vendorRegisterFormNumber == 3 && (
@@ -368,6 +374,7 @@ const CreateNewVendor = ({ setUserStepNumber }: any) => {
               updateOwner={updateOwner}
               addOwner={addOwner}
               removeOwner={removeOwner}
+              vendorId={vendorId}
             />
           )}
           {vendorRegisterFormNumber == 4 && (
@@ -376,6 +383,7 @@ const CreateNewVendor = ({ setUserStepNumber }: any) => {
               companyData={companyData}
               setCompanyData={setCompanyData}
               updateCompanyData={updateCompanyData}
+              vendorId={vendorId}
             />
           )}
         </div>
@@ -564,6 +572,7 @@ const CCompanyInfo = ({
   setUserStepNumber,
   companyData,
   updateCompanyData,
+  setVendorId,
 }: any) => {
   const [open, setOpen] = useState(false);
   const CompanyInformationMutation = useCreateCompanyInformation();
@@ -579,7 +588,9 @@ const CCompanyInfo = ({
     };
 
     CompanyInformationMutation.mutate(companyInformationData, {
-      onSuccess: () => {
+      onSuccess: (data) => {
+        const vendorId = data?.vendorId;
+        setVendorId(vendorId);
         setVendorRegisterFormNumber(1);
       },
     });
@@ -626,6 +637,7 @@ const CCompanyDetails = ({
   setVendorRegisterFormNumber,
   companyData,
   updateCompanyData,
+  vendorId,
 }: any) => {
   const ContactInformationMutation = useUpdateContactInformation();
   function handleNext() {
@@ -636,6 +648,7 @@ const CCompanyDetails = ({
       instagramURL: companyData.instagramLink || "",
       youtubeURL: companyData.youtubeLink || "",
       facebookURL: companyData.facebookLink || "",
+      vendorId: vendorId,
     };
     ContactInformationMutation.mutate(companyContactDetails, {
       onSuccess: () => {
@@ -675,6 +688,7 @@ const CBusinessADdress = ({
   setVendorRegisterFormNumber,
   companyData,
   updateCompanyData,
+  vendorId,
 }: any) => {
   const BusinessAddressMutation = useUpdateBusinessAddressInformation();
   function handleNext() {
@@ -685,6 +699,7 @@ const CBusinessADdress = ({
       state: companyData.state,
       country: companyData.country,
       zipcode: companyData.zipCode,
+      vendorId: vendorId,
     };
     BusinessAddressMutation.mutate(companyBusinessAddress, {
       onSuccess: () => {
@@ -727,10 +742,14 @@ const COwnershipInformation = ({
   updateOwner,
   removeOwner,
   addOwner,
+  vendorId,
 }: any) => {
   const OwnershipInformationMutation = useUpdateOwnershipInformation();
   function handleNext() {
-    const companyOwnershipInformation = companyData.owners;
+    const companyOwnershipInformation = {
+      ...companyData.owners,
+      vendorId: Number(vendorId),
+    };
     OwnershipInformationMutation.mutate(companyOwnershipInformation, {
       onSuccess: () => {
         setVendorRegisterFormNumber(4);
@@ -776,7 +795,9 @@ const CBankAccountInformation = ({
   setVendorRegisterFormNumber,
   companyData,
   updateCompanyData,
+  vendorId,
 }: any) => {
+  const navigate = useNavigate();
   const BankAccountMutation = useUpdateBankAccountInformation();
   function handleNext() {
     const companyBankAccountInformation = {
@@ -785,10 +806,11 @@ const CBankAccountInformation = ({
       payeeName: companyData.payeeName,
       routingNumber: companyData.routingNumber,
       bankType: companyData.bankType,
+      vendorId: vendorId,
     };
     BankAccountMutation.mutate(companyBankAccountInformation, {
       onSuccess: () => {
-        setVendorRegisterFormNumber(4);
+        navigate("/login");
       },
     });
   }
