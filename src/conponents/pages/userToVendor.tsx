@@ -792,7 +792,6 @@ const COwnershipInformation = ({
 };
 
 const CBankAccountInformation = ({
-  setVendorRegisterFormNumber,
   companyData,
   updateCompanyData,
   vendorId,

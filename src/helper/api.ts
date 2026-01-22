@@ -1,49 +1,83 @@
-// import axios from "axios";
-
-// export const axiosInstance = axios.create({
-//   baseURL: import.meta.env.VITE_APP_BASE_URL,
-// });
 
 
-import { VITE_BACKEND_URL } from "@/const/env";
 import axios from "axios";
+import { VITE_BACKEND_URL } from "@/const/env";
+import { refreshIdToken, tokenStorage } from "./refreshToken";
 
 export const axiosInstance = axios.create({
   baseURL: VITE_BACKEND_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
+  headers: { "Content-Type": "application/json" },
 });
-//  INTERCEPTOR – Add Token Automatically
-console.log("VITE_BACKEND_URL: ", VITE_BACKEND_URL)
 
-axiosInstance.interceptors.request.use(
-  (config) => {
-    let token = localStorage.getItem("access_token");
+let isRefreshing = false;
+let subscribers: ((token: string) => void)[] = [];
 
-    if (token) {
-      token = token.replace(/"/g, "");
-      config.headers.Authorization = `Bearer ${token}`; // Authorization header
-    }
+const subscribe = (cb: (token: string) => void) => {
+  subscribers.push(cb);
+};
 
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+const notify = (token: string) => {
+  subscribers.forEach((cb) => cb(token));
+  subscribers = [];
+};
+
+axiosInstance.interceptors.request.use((config) => {
+  const token = tokenStorage.getIdToken();
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
 
 axiosInstance.interceptors.response.use(
   (response) => response,
-  (error) => {
+
+  async (error) => {
+    const originalRequest = error.config;
+
+    const isAuthEndpoint =
+      originalRequest.url?.includes("/auth/signin") ||
+      originalRequest.url?.includes("/auth/refresh_token");
+
     if (
-      error.response &&
-      (error.response.status === 401 ||
-        error.response.data?.error === "Invalid or expired token.")
+      error.response?.status !== 401 ||
+      originalRequest._retry ||
+      isAuthEndpoint
     ) {
-      localStorage.removeItem("access_token");
-      window.location.href = "/";
+      return Promise.reject(error);
     }
-    return Promise.reject(error);
-  }
+
+    originalRequest._retry = true;
+
+    if (isRefreshing) {
+      return new Promise((resolve) => {
+        subscribe((token) => {
+          // const Token = token.replace(/"/g, "");
+          originalRequest.headers.Authorization = `Bearer ${token}`;
+          resolve(axiosInstance(originalRequest));
+        });
+      });
+    }
+
+    isRefreshing = true;
+
+    try {
+      const newToken = await refreshIdToken();
+      
+      notify(newToken);
+
+      originalRequest.headers.Authorization = `Bearer ${newToken}`;
+      return axiosInstance(originalRequest);
+    } catch (err) {
+      tokenStorage.clear();
+      window.location.href = "/";
+      return Promise.reject(err);
+    } finally {
+      isRefreshing = false;
+    }
+  },
 );
 
 export default axiosInstance;
