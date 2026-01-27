@@ -91,6 +91,7 @@ const Profile = () => {
       profileImage: userDetails?.profileImage,
       streetAddress1: userDetails?.streetAddress1,
       streetAddress2: userDetails?.streetAddress2,
+      currentAddressId:userData?.data[0]?.currentAddressId
     };
     createUserInfoMutation.mutate(userInfo);
   };
