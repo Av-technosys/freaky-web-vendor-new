@@ -2,14 +2,14 @@ import axios from "axios";
 import { VITE_BACKEND_URL } from "@/const/env";
 
 export const tokenStorage = {
-  getIdToken: () => localStorage.getItem("id_token"),
+  getIdToken: () => localStorage.getItem("access_token"),
   getRefreshToken: () => localStorage.getItem("refresh_token"),
   getUsername: () => localStorage.getItem("username"),
 
-  setIdToken: (token: string) => localStorage.setItem("id_token", token),
+  setIdToken: (token: string) => localStorage.setItem("access_token", token),
 
   clear: () => {
-    localStorage.removeItem("id_token");
+    localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
     localStorage.removeItem("username");
   },
@@ -36,6 +36,6 @@ export const refreshIdToken = async () => {
     throw new Error("Invalid refresh response");
   }
 
-  localStorage.setItem("id_token", newIdToken);
+  localStorage.setItem("access_token", newIdToken);
   return newIdToken;
 };

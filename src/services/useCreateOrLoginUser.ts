@@ -28,7 +28,7 @@ export const useUserLoginMutation = () => {
 
       const user = decodeIdToken(data.idToken);
 
-      localStorage.setItem("id_token", Token);
+      localStorage.setItem("access_token", Token);
       localStorage.setItem("refresh_token", refreshToken);
       localStorage.setItem("username", user.username);
 
@@ -81,7 +81,7 @@ export const useUserOtpSignUpMutation = () => {
       toast.success(`User Create successful`);
       const Token = data.idToken;
 
-      localStorage.setItem("id_token", Token);
+      localStorage.setItem("access_token", Token);
 
       navigate("/map-vnedor");
     },

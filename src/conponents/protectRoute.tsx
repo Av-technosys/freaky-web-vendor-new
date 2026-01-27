@@ -2,7 +2,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
 const ProtectedRoute = () => {
-  const token = localStorage.getItem("id_token");
+  const token = localStorage.getItem("access_token");
 
   if (!token) {
     return <Navigate to="/login" replace />;
