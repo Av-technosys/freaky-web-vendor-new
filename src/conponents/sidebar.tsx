@@ -22,6 +22,7 @@ import {
 import { Button, Separator } from "../components/ui";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { tokenStorage } from "@/helper/refreshToken";
 
 // Menu items.
 const items = [
@@ -80,7 +81,7 @@ function AppSidebar() {
   const navigate = useNavigate();
 
   const logoutHandler = () => {
-    localStorage.removeItem("access_token");
+    tokenStorage.clear()
     toast.success("Logout successfully...");
     navigate("/login");
   };
