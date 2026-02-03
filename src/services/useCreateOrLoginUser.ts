@@ -10,7 +10,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-export const useUserLoginMutation = () => {
   const decodeIdToken = (token: string): any => {
     const decoded = jwtDecode(token) as any;
 
@@ -18,6 +17,9 @@ export const useUserLoginMutation = () => {
       username: decoded["cognito:username"] ?? decoded.sub,
     };
   };
+
+export const useUserLoginMutation = () => {
+
   const navigate = useNavigate();
   return useMutation({
     mutationFn: loginUser,
@@ -28,7 +30,7 @@ export const useUserLoginMutation = () => {
 
       const user = decodeIdToken(data.idToken);
 
-      localStorage.setItem("access_token", Token);
+      localStorage.setItem("id_token", Token);
       localStorage.setItem("refresh_token", refreshToken);
       localStorage.setItem("username", user.username);
 
@@ -80,8 +82,14 @@ export const useUserOtpSignUpMutation = () => {
     onSuccess: (data) => {
       toast.success(`User Create successful`);
       const Token = data.idToken;
+      const refreshToken = data.refreshToken;
 
-      localStorage.setItem("access_token", Token);
+      const user = decodeIdToken(data.idToken);
+
+      localStorage.setItem("id_token", Token);
+      localStorage.setItem("refresh_token", refreshToken);
+      localStorage.setItem("username", user.username);
+
 
       navigate("/map-vnedor");
     },
