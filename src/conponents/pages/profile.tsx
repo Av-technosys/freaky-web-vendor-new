@@ -52,7 +52,6 @@ const Profile = () => {
     zipCode: "",
     addressLine1: "",
     addressLine2: "",
-
   });
 
   const { data: userData, isPending } = useGetUserDetails();
@@ -116,8 +115,7 @@ const Profile = () => {
       lastName: userDetails?.lastName,
       number: userDetails?.number,
       profileImage: userDetails?.profileImage,
-      streetAddress1: userDetails?.streetAddress1,
-      streetAddress2: userDetails?.streetAddress2,
+      ...address,
       currentAddressId: userData?.data[0]?.currentAddressId
     };
     createUserInfoMutation.mutate(userInfo);

@@ -8,7 +8,6 @@ import {
 } from "../../components/ui/table";
 import { useGetAllBookings } from "@/services/useGetAllBookings";
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { InputGroupAddon } from "@/components/ui/input-group";
 import { LoaderCircle } from "lucide-react";
@@ -23,8 +22,6 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { AvatarImage } from "@/components/ui";
-import { ProfilePicture } from "../common/ProfileIcon";
 import { BOOKING_TABLE_PAGE_SIZE, BOOKING_TABLE_HEADER } from "@/const";
 import { cn } from "@/lib/utils";
 
@@ -36,11 +33,11 @@ const Booking = () => {
   const [searchParams] = useSearchParams();
   const page = Number(searchParams.get("page")) || 1;
 
-  const [searchText, setSearchText] = useState("");
+  // const [searchText, setSearchText] = useState("");
   // const [page, setPage] = useState(1);
 
   const { data, isPending } = useGetAllBookings({
-    text: searchText,
+    // text: searchText,
     page,
     page_size: BOOKING_TABLE_PAGE_SIZE,
   });
