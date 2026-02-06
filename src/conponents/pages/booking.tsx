@@ -212,4 +212,4 @@ const Booking = () => {
   );
 };
 
-export default withAuthorization("booking")(Booking);
+export default withAuthorization("bookings")(Booking);

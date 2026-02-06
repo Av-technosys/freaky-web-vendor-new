@@ -642,4 +642,4 @@ const ManageService = () => {
   );
 };
 
-export default withAuthorization("service")(ManageService);
+export default withAuthorization("manage-services")(ManageService);
