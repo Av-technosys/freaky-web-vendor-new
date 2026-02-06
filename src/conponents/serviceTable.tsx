@@ -13,8 +13,8 @@ import {
 import { TiIconPencilPlus } from "./icons";
 import DeleteServiceDialog from "./deleteServiceDialog";
 
-import { LoaderCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SkeletonTable } from "@/components/skletob/table";
 
 export function ServicesTable({ tableData, isPending }: any) {
   const [searchParams] = useSearchParams();
@@ -38,13 +38,12 @@ export function ServicesTable({ tableData, isPending }: any) {
       <TableBody>
         {isPending && (
           <TableCell
-            colSpan={tableData?.Headings?.length || 4}
+            colSpan={12}
             className={`text-center  ${isPending && "py-10"}`}
           >
 
-            <div className="flex justify-center items-center w-full">
-              <LoaderCircle className="animate-spin w-6 h-6" />
-            </div>
+            <SkeletonTable />
+
           </TableCell>
         )}
 

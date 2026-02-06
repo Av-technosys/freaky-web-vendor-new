@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import LinearGradientText from "../components/LinearGradientText";
-import { Button, Card, CardContent } from "../components/ui";
+import { Button, Card, CardContent, Skeleton } from "../components/ui";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import {
   InputGroup,
@@ -54,7 +54,7 @@ const Header: React.FC = () => {
 
   const debouncedSearch = useDebounce(searchText, 800);
 
-  const { data: sessionData } = useGetUserDetails();
+  const { data: sessionData, isPending: isUserPending } = useGetUserDetails();
 
   const { data: searchData, isPending } = useGetSearchItems({
     service,
@@ -88,7 +88,7 @@ const Header: React.FC = () => {
               <div>
                 <div className="text-lg font-semibold text-gray-800">
                   <LinearGradientText>
-                    Welcome {sessionData?.data?.[0]?.firstName || "Nova"}!
+                    {isUserPending ? <Skeleton className="h-4 w-[150px]" /> : "Welcome" + " " + sessionData?.data?.[0]?.firstName || "Nova"}
                   </LinearGradientText>
                 </div>
                 <div className="text-sm text-gray-500">

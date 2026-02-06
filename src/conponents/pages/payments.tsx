@@ -15,6 +15,7 @@ import {
   TiIconClockHour2,
   TiIconFlag3,
 } from "../icons";
+import withAuthorization from "@/lib/withAuthorization";
 
 const data = [
   {
@@ -89,7 +90,7 @@ const data = [
   },
 ];
 
-export default function Payment() {
+const Payment = () => {
   return (
     <div className="my-2 space-y-3">
       <div className=" bg-white  max-w-[400px] overflow-x-scroll lg:overflow-hidden md:max-w-full p-3 shadow-lg rounded-lg border">
@@ -113,15 +114,14 @@ export default function Payment() {
                   <div
                     className={`
       inline-flex items-center gap-1 rounded-xl px-2 py-1
-      ${
-        item.status === "Pending"
-          ? "font-bold text-[#B5850B] bg-[#FFF6E9]"
-          : item.status === "Declined"
-          ? "font-bold text-[#B83131] bg-[#FFEAEA]"
-          : item.status === "Create"
-          ? "font-bold text-[#3D42AD] bg-[#EAECFF]"
-          : "text-[#165E3D] bg-[#EDFFEA] "
-      }
+      ${item.status === "Pending"
+                        ? "font-bold text-[#B5850B] bg-[#FFF6E9]"
+                        : item.status === "Declined"
+                          ? "font-bold text-[#B83131] bg-[#FFEAEA]"
+                          : item.status === "Create"
+                            ? "font-bold text-[#3D42AD] bg-[#EAECFF]"
+                            : "text-[#165E3D] bg-[#EDFFEA] "
+                      }
     `}
                   >
                     {item.status === "Pending" && <TiIconClockHour2 />}
@@ -162,3 +162,6 @@ export default function Payment() {
     </div>
   );
 }
+
+
+export default withAuthorization("payments")(Payment);

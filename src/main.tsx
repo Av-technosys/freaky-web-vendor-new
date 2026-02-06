@@ -6,7 +6,7 @@ import App from "./App";
 import "./index.css";
 import "react-markdown-editor-lite/lib/index.css";
 
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
 import Home from "./conponents/pages/dashboard";
 import Login from "./conponents/pages/login";
 import SignUp from "./conponents/pages/signUp";
@@ -36,7 +36,8 @@ const routes = createBrowserRouter([
       {
         element: <ProtectRoute />,
         children: [
-          { path: "/", element: <Home /> },
+          { index: true, element: <Navigate to="/dashboard" replace /> },
+          { path: "/dashboard", element: <Home /> },
           { path: "/company-profile", element: <CompanyProfile /> },
           { path: "/services", element: <Services /> },
           {
@@ -53,7 +54,7 @@ const routes = createBrowserRouter([
           { path: "/bookings", element: <Booking /> },
           { path: "/payments", element: <Payment /> },
 
-          { path: "/users", element: <Users /> },
+          { path: "/manage-users", element: <Users /> },
         ],
       },
     ],

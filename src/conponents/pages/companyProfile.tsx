@@ -28,6 +28,8 @@ import {
 } from "../../services/useGetVendorCompanyDetails";
 import { useQueryClient } from "@tanstack/react-query";
 import UpdateDocumentPopup from "../updateDocumentPopup";
+import withAuthorization from "@/lib/withAuthorization";
+import { SkeletonForm } from "@/components/skletob/form";
 
 // ------------------------ INITIAL VALUES ------------------------
 
@@ -87,9 +89,9 @@ const CompanyProfile = () => {
   const getImageUrlMutation = useGetImageUrl();
   const uploadImageMutation = useUploadImage();
 
-  const { data: vendorData } = useGetVendorDetails();
-  const { data: vendorOwnership } = useGetVendorOwnershipDetails();
-  const { data: allVendorDocuments } = useGetVendorDocuments();
+  const { data: vendorData, isPending: isVendorPending } = useGetVendorDetails();
+  const { data: vendorOwnership, isPending: isVendorOwnershipPending } = useGetVendorOwnershipDetails();
+  const { data: allVendorDocuments, isPending: isVendorDocumentsPending } = useGetVendorDocuments();
 
   const queryClient = useQueryClient();
 
@@ -402,6 +404,13 @@ const CompanyProfile = () => {
     setUpdatedDocumentDetails(doc);
   };
 
+  if (isVendorPending || isVendorOwnershipPending || isVendorDocumentsPending) {
+    return <div className=" flex flex-col gap-32 pl-4 pt-4">
+      <SkeletonForm />
+      <SkeletonForm />
+    </div>
+  }
+
   return (
     <>
       {
@@ -525,9 +534,8 @@ const CompanyProfile = () => {
                         >
                           {doc.documentUrl !== "choose file" ? (
                             <a
-                              href={`${import.meta.env.VITE_IMAGE_BASE_URL}/${
-                                doc.documentUrl
-                              }`}
+                              href={`${import.meta.env.VITE_IMAGE_BASE_URL}/${doc.documentUrl
+                                }`}
                               target="_blank"
                               className="w-full"
                               rel="noopener noreferrer"
@@ -575,4 +583,4 @@ const CompanyProfile = () => {
   );
 };
 
-export default CompanyProfile;
+export default withAuthorization("company-profile")(CompanyProfile);

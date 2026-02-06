@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import DeletePricebookDialog from "@/components/DeletePricebookDialog";
 import { useGetAllPriceBook } from "@/services/useGetAllPricebooks";
 import CreateNewPricebook from "@/components/CreateNewPricebook";
+import withAuthorization from "@/lib/withAuthorization";
 
 
 const ManagePaymentBook = () => {
@@ -78,4 +79,4 @@ const BadgePrimary = () => {
   return <Badge className=" bg-green-600">Primary</Badge>
 }
 
-export default ManagePaymentBook;
+export default withAuthorization("manage-payment-book")(ManagePaymentBook);

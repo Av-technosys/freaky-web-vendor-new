@@ -17,6 +17,8 @@ import {
   useInviteVendorEmployee,
 } from "@/services/useCreateOrUpdateCompanyDetails";
 import { USER_ACCESS_DROPDOWN } from "@/const/dropdown";
+import withAuthorization from "@/lib/withAuthorization";
+import { SkeletonText } from "@/components/skletob/text";
 
 
 
@@ -57,7 +59,7 @@ const Users = () => {
     setFields((prev: any) => [...prev, createField()]);
   };
 
-  const { data: vendorEmployees } = useGetVendorEmployees();
+  const { data: vendorEmployees, isPending } = useGetVendorEmployees();
   const deleteEmployeeMutation = useDeleteVendorEmployee();
   const inviteEmloyeeMutation = useInviteVendorEmployee();
 
@@ -181,12 +183,11 @@ const Users = () => {
             </p>
           </div>
 
-          <div className="w-full lg:mt-0 mt-10 text-black">
+          <div className="w-full lg:mt-0 mt-10  space-y-6">
             <div className="flex">
-              <Label className="ml-2">Name</Label>
+              <Label className="">Name</Label>
             </div>
-            <Separator className="mt-4" />
-            {vendorEmployees?.data?.map((data: any, index: number) => (
+            {isPending ? <SkeletonText /> : vendorEmployees?.data?.map((data: any, index: number) => (
               <div key={index}>
                 <div className="lg:flex grid grid-cols-2 justify-between w-full my-4">
                   <div className="flex items-center gap-4 w-1/3">
@@ -228,7 +229,6 @@ const Users = () => {
                   </div>
                 </div>
 
-                <Separator className="mt-4" />
               </div>
             ))}
           </div>
@@ -238,4 +238,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default withAuthorization("manage-users")(Users);

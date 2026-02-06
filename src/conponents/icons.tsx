@@ -26,6 +26,11 @@ import {
   IconAlertTriangleFilled,
   IconPlayerPlay,
   IconEye,
+  IconSubtask,
+  IconCalendarDown,
+  IconCalendarEvent,
+  IconBuildings,
+  IconBrandCashapp,
 } from "@tabler/icons-react";
 
 export function TiconLayoutDashboard(props: any) {
@@ -34,12 +39,34 @@ export function TiconLayoutDashboard(props: any) {
 export function TiIconTool(props: any) {
   return <IconTool {...props} />;
 }
+
+export function TiIconSubtask(props: any) {
+  return <IconSubtask {...props} />;
+}
+
 export function TiIconCalendar(props: any) {
   return <IconCalendar {...props} />;
 }
 export function TiIconUsers(props: any) {
   return <IconUsers {...props} />;
 }
+
+export function TCalendarDown(props: any) {
+  return <IconCalendarDown {...props} />;
+}
+
+export function TCalendarEvent(props: any) {
+  return <IconCalendarEvent {...props} />;
+}
+
+export function TBuildings(props: any) {
+  return <IconBuildings {...props} />;
+}
+
+export function TBrandCashApp(props: any) {
+  return <IconBrandCashapp {...props} />;
+}
+
 export function TiIconLogout(props: any) {
   return <IconLogout {...props} />;
 }

@@ -13,6 +13,7 @@ import {
 } from "../../components/ui/pagination";
 import { Plus } from "lucide-react";
 import { SERVICE_TABLE_HEADER, SERVICE_TABLE_PAGE_SIZE } from "@/const";
+import withAuthorization from "@/lib/withAuthorization";
 
 const Services = () => {
   const navigate = useNavigate();
@@ -127,4 +128,4 @@ const Services = () => {
   );
 };
 
-export default Services;
+export default withAuthorization("services")(Services);
