@@ -14,10 +14,10 @@ import { TiIconCameraFilled } from "../icons";
 import { useGetUserDetails } from "../../services/useGetUserDetails";
 import { useUpdateUserDetails } from "../../services/useCreateOrUpdateUserDetails";
 import { useGetImageUrl, useUploadImage } from "../../services/useUploadImage";
-import { InputGroupAddon } from "@/components/ui/input-group";
 import { LoaderCircle } from "lucide-react";
 import { US_STATES } from "@/const/usState";
 import DropdownSelector from "../dropdownSelector";
+import { SkeletonForm } from "@/components/skletob/form";
 
 
 const dropdownValuesCountries = {
@@ -124,9 +124,7 @@ const Profile = () => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4  gap-3">
       {isPending ? (
-        <InputGroupAddon align="inline-end">
-          <LoaderCircle className="animate-spin" />
-        </InputGroupAddon>
+        <SkeletonForm />
       ) : (
         <>
           <Card className="col-span-1 order-2  lg:col-span-3  py-4 bg-white shadow-lg rounded-xl">

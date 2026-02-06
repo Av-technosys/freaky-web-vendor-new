@@ -32,6 +32,7 @@ import { TiIconTrash } from "../icons";
 import { TooltipInfo } from "@/components/TooltipInfo";
 import { US_STATES } from "@/const/usState";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
+import withAuthorization from "@/lib/withAuthorization";
 
 const dropdownValuesProductCategories = {
   options: [
@@ -641,4 +642,4 @@ const ManageService = () => {
   );
 };
 
-export default ManageService;
+export default withAuthorization("service")(ManageService);

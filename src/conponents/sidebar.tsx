@@ -5,86 +5,22 @@ import {
   SidebarGroupContent,
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem,
+  SidebarMenuItem as ShadcnSidebarMenuItem,
 } from "../components/ui/sidebar";
 import logo from "../assets/Images/freaky_logo.png";
 
-import {
-  TiconLayoutDashboard,
-  TiIconCalendar,
-  TiIconLogout,
-  TiIconSearch,
-  TiIconSettings,
-  TiIconTool,
-  TiIconUser,
-  TiIconUsers,
-} from "./icons";
+
 import { Button, Separator } from "../components/ui";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { toast } from "sonner";
-import { tokenStorage } from "@/helper/refreshToken";
+import { Link, useLocation } from "react-router-dom";
+import { isShowSidebarItem } from "@/helper/sidebar/isSidebarShowItem";
+import { TiIconLogout } from "./icons";
+import { SIDEBAR_BOTTOM_ITEMS, SIDEBAR_ITEMS } from "@/const/navigation";
+import { logoutHandler } from "@/helper/sidebar/logoutHandler";
 
-// Menu items.
-const sidebarItems = [
-  {
-    title: "Dashboard",
-    url: "/",
-    icon: TiconLayoutDashboard,
-  },
-  {
-    title: "Manage Services",
-    url: "/services",
-    icon: TiIconTool,
-  },
-  {
-    title: "Booking",
-    url: "/bookings",
-    icon: TiIconCalendar,
-  },
-  {
-    title: "Calendar",
-    url: "/calendar",
-    icon: TiIconSearch,
-  },
-  {
-    title: "User Reviews",
-    url: "/reviews",
-    icon: TiIconSettings,
-  },
-  {
-    title: "Company Profile",
-    url: "/company-profile",
-    icon: TiIconUser,
-  },
-  {
-    title: "Payments",
-    url: "/payments",
-    icon: TiIconUser,
-  },
-];
 
-const bottomItems = [
-  {
-    title: "Profile",
-    url: "/profile",
-    icon: TiIconUsers,
-  },
-  {
-    title: "Manage Users",
-    url: "/users",
-    icon: TiIconUsers,
-  },
-];
 
 function AppSidebar() {
   const location = useLocation();
-  const navigate = useNavigate();
-
-  const logoutHandler = () => {
-    tokenStorage.clear()
-    toast.success("Logout successfully...");
-    navigate("/login");
-  };
 
   return (
     <Sidebar className=" ">
@@ -97,42 +33,18 @@ function AppSidebar() {
             <Separator />
             <SidebarGroupContent>
               <SidebarMenu className=" space-y-1.5 py-4">
-                {sidebarItems.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton
-                      className={` text-gray-900 font-medium  ${location.pathname === item.url
-                        ? "bg-linear-to-r from-[#FFE492] to-[#FFBAA4]"
-                        : ""
-                        }`}
-                      asChild
-                    >
-                      <Link to={item.url}>
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
+                {SIDEBAR_ITEMS.map((item) => {
+                  return (
+                    <ProtectedSidebarMenueItem pathName={location.pathname} key={item.title} item={item} />
+                  )
+                })}
               </SidebarMenu>
             </SidebarGroupContent>
             <Separator className=" my-1.5 mt-auto" />
             <div className=" mb-2">
               <SidebarMenu className=" space-y-1.5">
-                {bottomItems.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton
-                      className={`  text-gray-900 font-medium ${location.pathname === item.url
-                        ? "bg-linear-to-r from-[#FFE492] to-[#FFBAA4]"
-                        : ""
-                        }`}
-                      asChild
-                    >
-                      <Link to={item.url}>
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
+                {SIDEBAR_BOTTOM_ITEMS.map((item) => (
+                  <ProtectedSidebarMenueItem pathName={location.pathname} key={item.title} item={item} />
                 ))}
 
                 <Button onClick={logoutHandler} variant={"destructive"}>
@@ -147,3 +59,32 @@ function AppSidebar() {
   );
 }
 export default AppSidebar;
+
+const ProtectedSidebarMenueItem = ({ pathName, item }: { pathName: string, item: any }) => {
+  const isAllowed = isShowSidebarItem(item.url.slice(1));
+  if (!isAllowed) return null;
+  return (
+    <SidebarMenueItem pathName={pathName} item={item} />
+  )
+}
+
+
+const SidebarMenueItem = ({ pathName, item }: { pathName: string, item: any }) => {
+
+  return (
+    <ShadcnSidebarMenuItem>
+      <SidebarMenuButton
+        className={`  text-gray-900 font-medium ${pathName === item.url
+          ? "bg-linear-to-r from-[#FFE492] to-[#FFBAA4]"
+          : ""
+          }`}
+        asChild
+      >
+        <Link to={item.url}>
+          <item.icon />
+          <span>{item.title}</span>
+        </Link>
+      </SidebarMenuButton>
+    </ShadcnSidebarMenuItem>
+  )
+}

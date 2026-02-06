@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import ReviewCard from "../reviewCard";
 import { getVendorReviews } from "../../services/userGetVendorReview";
 import { useQueryClient } from "@tanstack/react-query";
-import { InputGroupAddon } from "@/components/ui/input-group";
-import { LoaderCircle } from "lucide-react";
+
+import withAuthorization from "@/lib/withAuthorization";
+import { SkeletonCard } from "@/components/skletob/card";
 
 const dropdownValuesTime = {
   title: "Time",
@@ -108,14 +109,6 @@ const Reviews = () => {
     setOpenDrawer(true);
   };
 
-  if (isPending) {
-    return (
-      <InputGroupAddon align="inline-end">
-        <LoaderCircle className="animate-spin" />
-      </InputGroupAddon>
-    );
-  }
-
   return (
     <>
       {openDrawer && (
@@ -151,11 +144,23 @@ const Reviews = () => {
       {/* <div>
         <ServicesReviews />
       </div> */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-4">
-        <ReviewCard drawerHandler={drawerHandler} userReviews={reviews} />
-      </div>
+
+      {isPending ? <ReviewSkeleton /> : <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-4"> <ReviewCard drawerHandler={drawerHandler} userReviews={reviews} /></div>}
+
     </>
   );
 };
 
-export default Reviews;
+export default withAuthorization("reviews")(Reviews);
+function ReviewSkeleton() {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-4">
+      <SkeletonCard />
+      <SkeletonCard />
+      <SkeletonCard />
+      <SkeletonCard />
+      <SkeletonCard />
+      <SkeletonCard />
+    </div>
+  )
+}

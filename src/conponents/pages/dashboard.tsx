@@ -4,6 +4,7 @@ import { ChartLineLinear } from "../common/ChartLineLinear";
 import RevenueStats from "../common/RevenueStats";
 import MetricsCards from "../common/MetricsCards";
 import { ChartPieDonut } from "../common/ChartPieDonut";
+import withAuthorization from "@/lib/withAuthorization";
 
 const DashBoard = () => {
   return (
@@ -28,4 +29,4 @@ const DashBoard = () => {
   );
 };
 
-export default DashBoard;
+export default withAuthorization("dashboard")(DashBoard);
