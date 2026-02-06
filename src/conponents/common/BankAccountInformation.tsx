@@ -1,9 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  CardContent,
-  CardTitle,
-  Card,
-} from "../../components/ui/card";
+import { CardContent, CardTitle, Card } from "../../components/ui/card";
 import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
 import {
@@ -22,18 +18,20 @@ interface BankAccountInformationProps {
     "accountNumber" | "bankName" | "payeeName" | "routingNumber" | "bankType"
   >;
   onUpdate: (key: keyof CompanyData, value: any) => void;
+  errors?: any;
   onPrevious: () => void;
   onSave: () => void;
-  className?: string
+  className?: string;
 }
 
 const BankAccountInformation = ({
   data,
   onUpdate,
-  className
+  errors,
+  className,
 }: //   onPrevious,
-  //   onSave,
-  BankAccountInformationProps) => {
+//   onSave,
+BankAccountInformationProps) => {
   return (
     <Card className={cn(className)}>
       <CardContent>
@@ -52,6 +50,11 @@ const BankAccountInformation = ({
                 onChange={(e) => onUpdate("accountNumber", e.target.value)}
                 required
               />
+              {errors?.bankAccountNumber && (
+                <p className="text-red-500 text-sm">
+                  {errors.bankAccountNumber}
+                </p>
+              )}
             </div>
 
             <div className="col-span-1 flex flex-col items-start justify-center gap-3">
@@ -65,6 +68,9 @@ const BankAccountInformation = ({
                 onChange={(e) => onUpdate("bankName", e.target.value)}
                 required
               />
+              {errors?.bankName && (
+                <p className="text-red-500 text-sm">{errors.bankName}</p>
+              )}
             </div>
           </div>
 
@@ -80,6 +86,9 @@ const BankAccountInformation = ({
                 onChange={(e) => onUpdate("payeeName", e.target.value)}
                 required
               />
+              {errors?.payeeName && (
+                <p className="text-red-500 text-sm">{errors.payeeName}</p>
+              )}
             </div>
 
             <div className="col-span-1 flex flex-col items-start justify-center gap-3">
@@ -93,6 +102,9 @@ const BankAccountInformation = ({
                 onChange={(e) => onUpdate("routingNumber", e.target.value)}
                 required
               />
+              {errors?.routingNumber && (
+                <p className="text-red-500 text-sm">{errors.routingNumber}</p>
+              )}
             </div>
           </div>
 
@@ -115,6 +127,9 @@ const BankAccountInformation = ({
                   </SelectItem>
                 </SelectContent>
               </Select>
+              {errors?.bankType && (
+                <p className="text-red-500 text-sm">{errors.bankType}</p>
+              )}
             </div>
           </div>
         </div>

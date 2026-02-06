@@ -44,6 +44,7 @@ interface CompanyInformationProps {
     | "incorporationDate"
   >;
   onUpdate: (key: keyof CompanyData, value: any) => void;
+  errors?: Record<string, string>;
   readOnly: boolean | any;
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -53,6 +54,7 @@ interface CompanyInformationProps {
 const CompanyInformation = ({
   data,
   onUpdate,
+  errors,
   readOnly,
   open,
   setOpen,
@@ -78,6 +80,9 @@ const CompanyInformation = ({
                 onChange={(e) => onUpdate("businessName", e.target.value)}
                 required
               />
+              {errors?.businessName && (
+                <p className="text-red-500 text-sm">{errors?.businessName}</p>
+              )}
             </div>
 
             <div className="col-span-1 flex flex-col items-start justify-center gap-3">
@@ -93,6 +98,9 @@ const CompanyInformation = ({
                     onUpdate("website", `https://${e.target.value}`)
                   }
                 />
+                {errors?.websiteURL && (
+                  <p className="text-red-500 text-sm">{errors.websiteURL}</p>
+                )}
               </InputGroup>
             </div>
           </div>
@@ -109,6 +117,9 @@ const CompanyInformation = ({
                 onChange={(e) => onUpdate("dbaName", e.target.value)}
                 required
               />
+              {errors?.DBAname && (
+                <p className="text-red-500 text-sm">{errors.DBAname}</p>
+              )}
             </div>
 
             <div className="col-span-1 flex flex-col items-start justify-center gap-3">
@@ -121,6 +132,9 @@ const CompanyInformation = ({
                 onChange={(e) => onUpdate("legalEntityName", e.target.value)}
                 required
               />
+              {errors?.legalEntityName && (
+                <p className="text-red-500 text-sm">{errors.legalEntityName}</p>
+              )}
             </div>
           </div>
 
@@ -145,6 +159,9 @@ const CompanyInformation = ({
                   <SelectItem value="corporation">Corporation</SelectItem>
                 </SelectContent>
               </Select>
+              {errors?.businessType && (
+                <p className="text-red-500 text-sm">{errors.businessType}</p>
+              )}
             </div>
 
             <div className="col-span-1  flex flex-col items-start justify-center gap-3">
@@ -173,6 +190,11 @@ const CompanyInformation = ({
                   />
                 </PopoverContent>
               </Popover>
+              {errors?.incorporationDate && (
+                <p className="text-red-500 text-sm">
+                  {errors.incorporationDate}
+                </p>
+              )}
             </div>
             <div className="col-span-1 flex flex-col items-start justify-center gap-3">
               <Label htmlFor="einNumber">EIN Number</Label>
@@ -198,6 +220,9 @@ const CompanyInformation = ({
                   <InputOTPSlot index={8} />
                 </InputOTPGroup>
               </InputOTP>
+              {errors?.einNumber && (
+                <p className="text-red-500 text-sm">{errors.einNumber}</p>
+              )}
             </div>
           </div>
         </div>

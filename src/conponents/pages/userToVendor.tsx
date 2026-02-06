@@ -46,6 +46,13 @@ import {
   useUpdateOwnershipInformation,
 } from "@/services/useCreateOrUpdateCompanyDetails";
 import { useNavigate } from "react-router-dom";
+import {
+  addressSchema,
+  bankSchema,
+  companySchema,
+  contactSchema,
+  ownershipSchema,
+} from "@/lib/validation/vendorSchema";
 
 const UserToVendor = () => {
   const [userStepNumber, setUserStepNumber] = React.useState(0);
@@ -256,6 +263,7 @@ const CreateNewVendor = ({ setUserStepNumber }: any) => {
     instagramLink: "",
     youtubeLink: "",
     facebookLink: "",
+    linkedinLink: "",
 
     address1: "",
     address2: "",
@@ -575,22 +583,40 @@ const CCompanyInfo = ({
   setVendorId,
 }: any) => {
   const [open, setOpen] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
   const CompanyInformationMutation = useCreateCompanyInformation();
+
   function handleNext() {
     const companyInformationData = {
-      businessName: companyData.businessName || "",
-      websiteURL: companyData.website || "",
-      DBAname: companyData.dbaName || "",
-      legalEntityName: companyData.legalEntityName || "",
-      einNumber: companyData.einNumber || "",
-      businessType: companyData.businessType || "",
-      incorporationDate: companyData.incorporationDate || Date.now(),
+      businessName: companyData.businessName,
+      websiteURL: companyData.website,
+      DBAname: companyData.dbaName,
+      legalEntityName: companyData.legalEntityName,
+      einNumber: String(companyData.einNumber),
+      businessType: companyData.businessType,
+      incorporationDate: companyData.incorporationDate,
     };
 
-    CompanyInformationMutation.mutate(companyInformationData, {
+    const result = companySchema.safeParse(companyInformationData);
+
+    if (!result.success) {
+      const fieldErrors = result.error.flatten().fieldErrors as any;
+      const formattedErrors: Record<string, string> = {};
+
+      Object.keys(fieldErrors).forEach((key) => {
+        formattedErrors[key] = fieldErrors[key]?.[0] || "";
+      });
+
+      setErrors(formattedErrors);
+      return;
+    }
+
+    setErrors({});
+
+    CompanyInformationMutation.mutate(result.data, {
       onSuccess: (data) => {
-        const vendorId = data?.vendorId;
-        setVendorId(vendorId);
+        setVendorId(data?.vendorId);
         setVendorRegisterFormNumber(1);
       },
     });
@@ -610,6 +636,7 @@ const CCompanyInfo = ({
           incorporationDate: companyData.incorporationDate,
         }}
         onUpdate={updateCompanyData}
+        errors={errors}
         readOnly={false}
         open={open}
         setOpen={setOpen}
@@ -639,6 +666,7 @@ const CCompanyDetails = ({
   updateCompanyData,
   vendorId,
 }: any) => {
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const ContactInformationMutation = useUpdateContactInformation();
   function handleNext() {
     const companyContactDetails = {
@@ -648,8 +676,26 @@ const CCompanyDetails = ({
       instagramURL: companyData.instagramLink || "",
       youtubeURL: companyData.youtubeLink || "",
       facebookURL: companyData.facebookLink || "",
+      linkedinURL: companyData.linkedinLink || "",
       vendorId: vendorId,
     };
+
+    const result = contactSchema.safeParse(companyContactDetails);
+
+    if (!result.success) {
+      const fieldErrors = result.error.flatten().fieldErrors as any;
+      const formattedErrors: Record<string, string> = {};
+
+      Object.keys(fieldErrors).forEach((key) => {
+        formattedErrors[key] = fieldErrors[key]?.[0] || "";
+      });
+
+      setErrors(formattedErrors);
+      return;
+    }
+
+    setErrors({});
+
     ContactInformationMutation.mutate(companyContactDetails, {
       onSuccess: () => {
         setVendorRegisterFormNumber(2);
@@ -667,8 +713,10 @@ const CCompanyDetails = ({
           instagramLink: companyData.instagramLink,
           youtubeLink: companyData.youtubeLink,
           facebookLink: companyData.facebookLink,
+          linkedinLink: companyData.linkedinLink,
         }}
         onUpdate={updateCompanyData}
+        errors={errors}
       />
       <div className="px-4 flex justify-end w-full">
         <Button
@@ -690,6 +738,7 @@ const CBusinessADdress = ({
   updateCompanyData,
   vendorId,
 }: any) => {
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const BusinessAddressMutation = useUpdateBusinessAddressInformation();
   function handleNext() {
     const companyBusinessAddress = {
@@ -701,6 +750,23 @@ const CBusinessADdress = ({
       zipcode: companyData.zipCode,
       vendorId: vendorId,
     };
+
+    const result = addressSchema.safeParse(companyBusinessAddress);
+
+    if (!result.success) {
+      const fieldErrors = result.error.flatten().fieldErrors as any;
+      const formattedErrors: Record<string, string> = {};
+
+      Object.keys(fieldErrors).forEach((key) => {
+        formattedErrors[key] = fieldErrors[key]?.[0] || "";
+      });
+
+      setErrors(formattedErrors);
+      return;
+    }
+
+    setErrors({});
+
     BusinessAddressMutation.mutate(companyBusinessAddress, {
       onSuccess: () => {
         setVendorRegisterFormNumber(3);
@@ -720,6 +786,7 @@ const CBusinessADdress = ({
           zipCode: companyData.zipCode,
         }}
         onUpdate={updateCompanyData}
+        errors={errors}
       />
       <div className="px-4 flex justify-end w-full">
         <Button
@@ -744,17 +811,36 @@ const COwnershipInformation = ({
   addOwner,
   vendorId,
 }: any) => {
+  const [errors, setErrors] = useState<any>({});
   const OwnershipInformationMutation = useUpdateOwnershipInformation();
+
   function handleNext() {
     const companyOwnershipInformation = {
-      ...companyData.owners,
-      vendorId: Number(vendorId),
+      owners: companyData.owners,
     };
-    OwnershipInformationMutation.mutate(companyOwnershipInformation, {
-      onSuccess: () => {
-        setVendorRegisterFormNumber(4);
+
+    console.log("companyOwnershipdeta", companyOwnershipInformation);
+    const result = ownershipSchema.safeParse(companyOwnershipInformation);
+
+    if (!result.success) {
+      const formattedErrors = result.error.format();
+      setErrors(formattedErrors);
+      return;
+    }
+
+    setErrors({});
+
+    OwnershipInformationMutation.mutate(
+      {
+        owners: companyData.owners,
+        vendorId: Number(vendorId),
       },
-    });
+      {
+        onSuccess: () => {
+          setVendorRegisterFormNumber(4);
+        },
+      },
+    );
   }
 
   return (
@@ -775,6 +861,7 @@ const COwnershipInformation = ({
         }
         onAddOwner={addOwner}
         onRemoveOwner={removeOwner}
+        errors={errors}
       />
       <div className="px-4 mt-auto flex justify-end w-full">
         <Button
@@ -797,6 +884,7 @@ const CBankAccountInformation = ({
   vendorId,
 }: any) => {
   const navigate = useNavigate();
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const BankAccountMutation = useUpdateBankAccountInformation();
   function handleNext() {
     const companyBankAccountInformation = {
@@ -807,6 +895,23 @@ const CBankAccountInformation = ({
       bankType: companyData.bankType,
       vendorId: vendorId,
     };
+
+    const result = bankSchema.safeParse(companyBankAccountInformation);
+
+    if (!result.success) {
+      const fieldErrors = result.error.flatten().fieldErrors as any;
+      const formattedErrors: Record<string, string> = {};
+
+      Object.keys(fieldErrors).forEach((key) => {
+        formattedErrors[key] = fieldErrors[key]?.[0] || "";
+      });
+
+      setErrors(formattedErrors);
+      return;
+    }
+
+    setErrors({});
+
     BankAccountMutation.mutate(companyBankAccountInformation, {
       onSuccess: () => {
         navigate("/login");
@@ -826,6 +931,7 @@ const CBankAccountInformation = ({
           bankType: companyData.bankType,
         }}
         onUpdate={updateCompanyData}
+        errors={errors}
         onPrevious={() => {}}
         onSave={() => {}}
       />

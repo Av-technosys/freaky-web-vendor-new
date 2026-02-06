@@ -5,7 +5,7 @@ export const apiConstant = {
     signUp: "v1/auth/signup",
     otpSignUp: "v1/auth/confirm",
     forgetPasswordUsingEmail: "v1/auth/forgot-password",
-    forgetPasswordUsingOTP: "v1/auth/confirm-forgot-password",
+    forgetPasswordUsingOTP: "v1/auth/confirm_forgot_password",
   },
   vendor: {
     getVendorDetails: "/v1/vendor/vendor_details",
@@ -36,6 +36,7 @@ export const apiConstant = {
     createService: "/v1/product/create",
     deleteImageById: "/v1/product/image",
     deleteBannerImage: "/v1/product/banner",
+    deleteCompanyLogo: "/v1/vendor/company_logo",
     getVendorInvites: "/v1/vendor/invites",
     createVendorEmployeeRequest: "/v1/vendor/employee_request",
     getAllVendorsForInvitation: "/v1/vendor/request_vendors",

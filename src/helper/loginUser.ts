@@ -5,7 +5,7 @@ export const loginUser = async (userData: any) => {
   try {
     const response = await axiosInstance.post(
       apiConstant.authentication.login,
-      userData
+      userData,
     );
     return response.data;
   } catch (error) {
@@ -18,8 +18,8 @@ export const signUpUser = async (userData: any) => {
   try {
     await axiosInstance.post(apiConstant.authentication.signUp, userData);
     return userData.username;
-  } catch (error) {
-    console.error("Error while sending request:", error);
+  } catch (error: any) {
+    throw error.response?.data || error;
   }
 };
 
@@ -27,7 +27,7 @@ export const otpSignUpUser = async (userData: any) => {
   try {
     const response = await axiosInstance.post(
       apiConstant.authentication.otpSignUp,
-      userData
+      userData,
     );
     return response.data;
   } catch (error) {
@@ -39,7 +39,7 @@ export const forgetPasswordUsingEmail = async (userData: any) => {
   try {
     await axiosInstance.post(
       apiConstant.authentication.forgetPasswordUsingEmail,
-      userData
+      userData,
     );
     return userData.username;
   } catch (error) {
@@ -49,12 +49,13 @@ export const forgetPasswordUsingEmail = async (userData: any) => {
 
 export const forgetPasswordUsingOTP = async (userData: any) => {
   try {
-    await axiosInstance.post(
+    const response = await axiosInstance.post(
       apiConstant.authentication.forgetPasswordUsingOTP,
-      userData
+      userData,
     );
-    return userData.username;
-  } catch (error) {
+    return response.data;
+  } catch (error: any) {
     console.error("Error while sending request:", error);
+    throw error.response?.data || error;
   }
 };

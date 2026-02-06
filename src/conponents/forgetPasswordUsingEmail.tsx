@@ -14,20 +14,38 @@ import {
 import { useUserForgetPasswordMutation } from "../services/useCreateOrLoginUser";
 
 import type { signUpProps } from "./emailPasswordSignUp";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const ForgetPasswordUsingEmail = ({
   setOtpPopup,
   otpPopup,
   setUserEmail,
 }: signUpProps) => {
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+
+  const isValidEmail = (value: any) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+
   const mutation = useUserForgetPasswordMutation();
   const submitHandler = (event: any) => {
     event.preventDefault();
+
+    if (!isValidEmail(email)) {
+      setError("Please enter a valid email address");
+      return;
+    }
+
+    setError("");
+
     const userData = {
-      username: event.target.email.value,
+      email: event.target.email.value,
     };
+
     mutation.mutate(userData);
-    setUserEmail(userData.username);
+    setUserEmail(userData.email);
     setOtpPopup(!otpPopup);
   };
   return (
@@ -50,11 +68,21 @@ const ForgetPasswordUsingEmail = ({
             <form onSubmit={(event) => submitHandler(event)}>
               <div className="flex flex-col gap-3 lg:gap-6">
                 <div className="w-full text-center font-bold">
-                  Forget Password
+                  Forgot Password
                 </div>
                 <div className="flex flex-col items-start gap-2">
                   <Label htmlFor="email">Email</Label>
-                  <Input name="email" id="email" type="text" required />
+
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                  {error && (
+                    <p className="text-sm text-red-500 mt-1">{error}</p>
+                  )}
                 </div>
                 <div>
                   <Button type="submit" className="w-full ">
@@ -72,7 +100,13 @@ const ForgetPasswordUsingEmail = ({
             </p>
             <div className="w-full mt-2 gap-3 flex items-center justify-between text-[14px]">
               <div>
-                <u>Other issue with Forget Password</u>
+                <Button
+                  className="text-gray-600 cursor-pointer"
+                  onClick={() => navigate("/login")}
+                  variant={"link"}
+                >
+                  Remember your password? Sign in
+                </Button>
               </div>
             </div>
           </CardFooter>

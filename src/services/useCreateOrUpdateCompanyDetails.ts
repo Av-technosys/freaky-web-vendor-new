@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   createCompanyInformation,
   createVendorDocuments,
+  deleteCompanyLogoHandler,
   deleteVendorDocument,
   deleteVendorEmployee,
   sendInvitationToEmployee,
@@ -182,6 +183,18 @@ export const useUpdateEmployeePermissions = () => {
     },
     onError: () => {
       toast.error("Unable to update vendor document.");
+    },
+  });
+};
+
+export const useDeleteCompanyLogo = () => {
+  return useMutation({
+    mutationFn: deleteCompanyLogoHandler,
+    onSuccess: () => {
+      toast.success("Image Deleted Successfully.");
+    },
+    onError: () => {
+      toast.error("Unable to delete image.");
     },
   });
 };

@@ -21,8 +21,12 @@ import BusinessAddress from "../common/BusinessAddress";
 import OwnershipInformation from "../common/OwnershipInformation";
 import BankAccountInformation from "../common/BankAccountInformation";
 import DocumentUpload from "../common/DocumentUpload";
-import { useCreateCompanyInformation, useUpdateBankAccountInformation, useUpdateBusinessAddressInformation, useUpdateContactInformation } from "@/services/useCreateOrUpdateCompanyDetails";
-
+import {
+  useCreateCompanyInformation,
+  useUpdateBankAccountInformation,
+  useUpdateBusinessAddressInformation,
+  useUpdateContactInformation,
+} from "@/services/useCreateOrUpdateCompanyDetails";
 
 const initialOwner: Owner = {
   firstName: "",
@@ -139,6 +143,7 @@ const CreateCompany = () => {
     instagramLink: "",
     youtubeLink: "",
     facebookLink: "",
+    linkedinLink: "",
 
     address1: "",
     address2: "",
@@ -219,7 +224,7 @@ const CreateCompany = () => {
                 } as DocumentFile,
               ],
             }
-          : doc
+          : doc,
       );
 
       return { ...prev, documents: updatedDocuments };
@@ -231,7 +236,7 @@ const CreateCompany = () => {
       const updatedDocuments = prev.documents.map((doc) =>
         doc.id === documentId
           ? { ...doc, files: doc.files.filter((f) => f.id !== fileId) }
-          : doc
+          : doc,
       );
       return { ...prev, documents: updatedDocuments };
     });
@@ -324,6 +329,7 @@ const CreateCompany = () => {
                       instagramLink: companyData.instagramLink,
                       youtubeLink: companyData.youtubeLink,
                       facebookLink: companyData.facebookLink,
+                      linkedinLink: companyData.linkedinLink,
                     }}
                     onUpdate={updateCompanyData}
                   />
