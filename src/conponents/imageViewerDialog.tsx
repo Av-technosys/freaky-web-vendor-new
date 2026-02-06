@@ -1,44 +1,36 @@
 import { cn } from "@/lib/utils";
 import { Button } from "../components/ui";
 
-import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTrigger,
-} from "../components/ui/alert-dialog";
 import { TiIconPlayerPlay } from "./icons";
+import { Dialog, DialogClose, DialogContent, DialogFooter } from "@/components/ui/dialog";
+import { DialogTrigger } from "@radix-ui/react-dialog";
 
 
 const ImageViewerDialog = ({ mediaUrl, className = "" }: any) => {
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
+    <Dialog>
+      <DialogTrigger asChild>
         <Button variant="outline" className={cn("h-7 w-7", className)}>
           <TiIconPlayerPlay size="12" color="#D30000" />
         </Button>
-      </AlertDialogTrigger>
+      </DialogTrigger>
 
-      <AlertDialogContent className="md:max-w-4xl">
-        <AlertDialogHeader>
-          <AlertDialogDescription>
-            <div className="w-full h-96">
-              <img
-                className="w-full h-full object-cover"
-                src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${mediaUrl}`}
-                alt="uploaded"
-              />
-            </div>
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+      <DialogContent className=" p-2">
+
+        <div className="w-ful ">
+          <img
+            className="w-full h-full object-contain"
+            src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${mediaUrl}`}
+            alt="uploaded"
+          />
+        </div>
+        <DialogFooter>
+          <Button variant={"outline"}>
+            <DialogClose>Cancel</DialogClose>
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 

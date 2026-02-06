@@ -63,6 +63,7 @@ function StatsCard({ title, amount, color }: any) {
   return (
     <Card
       key={title}
+      className=" shadow-none"
     >
       <CardHeader>
         <CardTitle className="text-gray-600 font-medium">

@@ -88,7 +88,7 @@ const Header: React.FC = () => {
               <div>
                 <div className="text-lg font-semibold text-gray-800">
                   <LinearGradientText>
-                    Welcome {sessionData?.data?.firstName || "Nova"}!
+                    Welcome {sessionData?.data?.[0]?.firstName || "Nova"}!
                   </LinearGradientText>
                 </div>
                 <div className="text-sm text-gray-500">

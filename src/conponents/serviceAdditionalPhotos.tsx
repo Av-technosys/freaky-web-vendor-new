@@ -30,7 +30,6 @@ const ServiceAdditionalPhotos = ({
   const productMediaImages =
     mediaImages.filter((item: any) => item.mediaType === "image") ?? [];
 
-  console.log("productMediaImages", productMediaImages);
 
   const productVideos =
     mediaImages.filter((item: any) => item.mediaType === "video") ?? [];
@@ -171,9 +170,9 @@ const ServiceAdditionalPhotos = ({
 
   return (
     <>
-      <div>
+      <div className=" mt-4">
         <span className="text-[#5E6366]">Additional Photos</span>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3 mt-2">
           {productId ? (
             <>
               {Array.from({ length: 5 }).map((_, index) => {
@@ -207,9 +206,8 @@ const ServiceAdditionalPhotos = ({
                         <div className="w-20 h-20 rounded-full overflow-hidden">
                           <img
                             className="w-full h-full object-cover"
-                            src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${
-                              mediaUrl.mediaUrl
-                            }`}
+                            src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${mediaUrl.mediaUrl
+                              }`}
                             alt="uploaded"
                           />
                         </div>

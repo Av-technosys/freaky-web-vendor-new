@@ -9,7 +9,7 @@ const MarkdownEditor: React.FC<any> = ({
   setLongDescription,
 }: any) => {
   return (
-    <div style={{ height: "300px" }}>
+    <div className=" h-96">
       <MdEditor
         value={longDescription}
         style={{ height: "100%", backgroundColor: "#F4F5FA" }}

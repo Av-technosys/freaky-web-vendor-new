@@ -24,7 +24,7 @@ const DeleteServiceDialog = ({ serviceId }: any) => {
     <>
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button variant={"outline"}>
+          <Button variant={"ghost"}>
             <TiIconTrash color="#D30000" />
           </Button>
         </AlertDialogTrigger>

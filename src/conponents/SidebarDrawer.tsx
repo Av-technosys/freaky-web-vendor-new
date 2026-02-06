@@ -69,10 +69,9 @@ export function SidebarDrawer() {
                   <NavLink
                     to={to}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 px-3 py-2 rounded-md transition-colors duration-150 hover:bg-gray-50 ${
-                        isActive
-                          ? "bg-linear-to-r from-[#FFE492] to-[#FFBAA4] font-medium"
-                          : "text-gray-700"
+                      `flex items-center gap-3 px-3 py-2 rounded-md transition-colors duration-150 hover:bg-gray-50 ${isActive
+                        ? "bg-linear-to-r from-[#FFE492] to-[#FFBAA4] font-medium"
+                        : "text-gray-700"
                       }`
                     }
                   >

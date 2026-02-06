@@ -31,7 +31,7 @@ export default function AppBreadcrumbs() {
 
     return (
         <Breadcrumb>
-            <BreadcrumbList className=" pl-4 mt-2">
+            <BreadcrumbList className=" pl-2 mt-2 mb-3">
                 {/* Home */}
                 <BreadcrumbItem>
                     <BreadcrumbLink asChild>
@@ -48,7 +48,7 @@ export default function AppBreadcrumbs() {
                         segment.replace(/-/g, " ");
 
                     return (
-                        <div key={to} className="flex items-center">
+                        <div key={to} className=" hover:underline flex items-center">
                             <BreadcrumbSeparator />
                             <BreadcrumbItem>
                                 {isLast ? (

@@ -16,6 +16,25 @@ import { useUpdateUserDetails } from "../../services/useCreateOrUpdateUserDetail
 import { useGetImageUrl, useUploadImage } from "../../services/useUploadImage";
 import { InputGroupAddon } from "@/components/ui/input-group";
 import { LoaderCircle } from "lucide-react";
+import { US_STATES } from "@/const/usState";
+import DropdownSelector from "../dropdownSelector";
+
+
+const dropdownValuesCountries = {
+  options: [
+    {
+      label: "United States",
+      value: "united_states",
+    }
+  ],
+};
+
+const dropdownValuesStates = {
+  options: US_STATES.map((state) => ({
+    label: state,
+    value: state,
+  })),
+};
 
 const Profile = () => {
   const [userDetails, setUserDetails] = useState({
@@ -23,9 +42,16 @@ const Profile = () => {
     lastName: "",
     email: "",
     number: "",
-    profileImage: "",
-    streetAddress1: "",
-    streetAddress2: "",
+    profileImage: ""
+  });
+
+  const [address, setAddress] = useState({
+    countery: dropdownValuesCountries.options[0].value,
+    state: dropdownValuesStates.options[0].value,
+    city: "",
+    zipCode: "",
+    addressLine1: "",
+    addressLine2: "",
   });
 
   const { data: userData, isPending } = useGetUserDetails();
@@ -36,7 +62,7 @@ const Profile = () => {
 
   useEffect(() => {
     if (userData) {
-      const userInfo = userData?.data[0];
+      const userInfo = userData?.data?.[0];
       setUserDetails((prev: any) => ({
         ...prev,
         firstName: userInfo?.firstName,
@@ -89,9 +115,8 @@ const Profile = () => {
       lastName: userDetails?.lastName,
       number: userDetails?.number,
       profileImage: userDetails?.profileImage,
-      streetAddress1: userDetails?.streetAddress1,
-      streetAddress2: userDetails?.streetAddress2,
-      currentAddressId:userData?.data[0]?.currentAddressId
+      ...address,
+      currentAddressId: userData?.data[0]?.currentAddressId
     };
     createUserInfoMutation.mutate(userInfo);
   };
@@ -106,8 +131,8 @@ const Profile = () => {
         <>
           <Card className="col-span-1 order-2  lg:col-span-3  py-4 bg-white shadow-lg rounded-xl">
             <CardHeader>
-              <CardTitle className="text-base text-[#111827s] font-bold">
-                Personal Information
+              <CardTitle className=" ">
+                <p className="text-lg">Personal Information</p>
               </CardTitle>
             </CardHeader>
             <div className="flex flex-col gap-6">
@@ -166,34 +191,90 @@ const Profile = () => {
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div>
-                    <Label className=" mb-2">Street Address Line 1</Label>
-                    <Input
-                      value={userDetails?.streetAddress1}
-                      onChange={(e) =>
-                        valueChangeHandler("streetAddress1", e.target.value)
-                      }
-                      name="streetAddress1"
-                      id="streetAddress1"
-                      type="text"
-                      required
-                    />
+
+                {/* Location of the service */}
+
+                <p className="text-lg mt-6">Address</p>
+                <div className="flex flex-col gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div className="col-span-1 flex flex-col items-start justify-center gap-2">
+                      <Label htmlFor="address1"  >Street Address Line 1</Label>
+                      <Input
+                        name="address1"
+                        id="address1"
+                        placeholder="Enter Street Address Line 1"
+                        type="text"
+                        value={address.addressLine1}
+                        onChange={(e) => setAddress((prev) => ({ ...prev, addressLine1: e.target.value }))}
+                        required
+                      />
+                    </div>
+
+                    <div className="col-span-1 flex flex-col items-start justify-center gap-2">
+                      <Label htmlFor="address2">Street Address Line 2</Label>
+                      <Input
+                        name="address2"
+                        id="address2"
+                        placeholder="Enter Street Address Line 2"
+                        type="text"
+                        value={address.addressLine2}
+                        onChange={(e) => setAddress((prev) => ({ ...prev, addressLine2: e.target.value }))}
+                        required
+                      />
+                    </div>
                   </div>
-                  <div className="col-span-1  flex flex-col items-start justify-center gap-3">
-                    <Label htmlFor="address">Street Address Line 2</Label>
-                    <Input
-                      value={userDetails?.streetAddress2}
-                      onChange={(e) =>
-                        valueChangeHandler("streetAddress2", e.target.value)
-                      }
-                      name="streetAddress2"
-                      id="streetAddress2"
-                      type="text"
-                      required
-                    />
+
+                  <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
+                    <div className="col-span-1 flex flex-col items-start justify-center w-full gap-2">
+                      <Label htmlFor="country">Country</Label>
+                      <div className=" w-full">
+                        <DropdownSelector
+                          values={dropdownValuesCountries}
+                          selectedValue={address.countery}
+                          onChange={({ value }: any) => setAddress((prev) => ({ ...prev, countery: value }))}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-span-1 flex flex-col items-start w-full justify-center gap-2">
+                      <Label htmlFor="state">State</Label>
+                      <div className="w-full" >
+                        <DropdownSelector
+                          values={dropdownValuesStates}
+                          selectedValue={address.state}
+                          onChange={({ value }: any) => setAddress((prev) => ({ ...prev, state: value }))}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-span-1 flex flex-col items-start justify-center gap-2">
+                      <Label htmlFor="city">City</Label>
+                      <Input
+                        name="city"
+                        id="city"
+                        placeholder="Enter City"
+                        type="text"
+                        value={address.city}
+                        onChange={(e) => setAddress((prev) => ({ ...prev, city: e.target.value }))}
+                        required
+                      />
+                    </div>
+
+                    <div className="col-span-1 flex flex-col items-start justify-center gap-2">
+                      <Label htmlFor="zipCode">Zip Code</Label>
+                      <Input
+                        placeholder="Enter Zip Code"
+                        name="zipCode"
+                        id="zipCode"
+                        type="number"
+                        value={address.zipCode}
+                        onChange={(e) => setAddress((prev) => ({ ...prev, zipCode: e.target.value }))}
+                        required
+                      />
+                    </div>
                   </div>
                 </div>
+
               </CardContent>
               <CardFooter className="w-full flex items-center justify-end ">
                 <Button
@@ -218,9 +299,8 @@ const Profile = () => {
               <div className="w-32 h-32  rounded-full overflow-hidden">
                 <img
                   className="object-cover"
-                  src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${
-                    userDetails?.profileImage
-                  }`}
+                  src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${userDetails?.profileImage
+                    }`}
                   alt="uploaded-image"
                 />
               </div>
