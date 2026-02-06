@@ -5,7 +5,7 @@ export const updateCompanyInformation = async (companyInformationData: any) => {
   try {
     const response = await axiosInstance.put(
       apiConstant.vendor.createCompanyInformation,
-      companyInformationData
+      companyInformationData,
     );
     return response.data;
   } catch (error) {
@@ -18,7 +18,7 @@ export const updateContactInformation = async (contactInformationData: any) => {
   try {
     const response = await axiosInstance.put(
       apiConstant.vendor.createContactInformation,
-      contactInformationData
+      contactInformationData,
     );
     return response.data;
   } catch (error) {
@@ -28,12 +28,12 @@ export const updateContactInformation = async (contactInformationData: any) => {
 };
 
 export const updateBusinessAddressInformation = async (
-  BusinessInformationData: any
+  BusinessInformationData: any,
 ) => {
   try {
     const response = await axiosInstance.put(
       apiConstant.vendor.createBusinessInformation,
-      BusinessInformationData
+      BusinessInformationData,
     );
     return response.data;
   } catch (error) {
@@ -43,12 +43,12 @@ export const updateBusinessAddressInformation = async (
 };
 
 export const updateBankAccountInformation = async (
-  BankAccountInformationData: any
+  BankAccountInformationData: any,
 ) => {
   try {
     const response = await axiosInstance.put(
       apiConstant.vendor.createBankAccountInformation,
-      BankAccountInformationData
+      BankAccountInformationData,
     );
     return response.data;
   } catch (error) {
@@ -58,12 +58,12 @@ export const updateBankAccountInformation = async (
 };
 
 export const updateOwnershipInformation = async (
-  ownershipInformationData: any
+  ownershipInformationData: any,
 ) => {
   try {
     const response = await axiosInstance.put(
       apiConstant.vendor.createOwnershipInformation,
-      ownershipInformationData
+      ownershipInformationData,
     );
     return response.data;
   } catch (error) {
@@ -76,7 +76,7 @@ export const createCompanyInformation = async (companyInformationData: any) => {
   try {
     const response = await axiosInstance.post(
       apiConstant.vendor.createCompanyInformation,
-      companyInformationData
+      companyInformationData,
     );
     return response.data;
   } catch (error) {
@@ -89,7 +89,7 @@ export const createVendorDocuments = async (vendorDocuments: any) => {
   try {
     const response = await axiosInstance.post(
       apiConstant.vendor.createVendorDocument,
-      vendorDocuments
+      vendorDocuments,
     );
     return response.data;
   } catch (error) {
@@ -101,7 +101,7 @@ export const updateVendorDocument = async (vendorDocument: any) => {
   try {
     const response = await axiosInstance.put(
       apiConstant.vendor.updateVendorDocument,
-      vendorDocument
+      vendorDocument,
     );
     return response.data;
   } catch (error) {
@@ -116,7 +116,7 @@ export const updateEmployeePermission = async ({
   try {
     const response = await axiosInstance.put(
       `${apiConstant.vendor.updateEmployeePermission}/${employeeId}`,
-      allowedPermissions
+      allowedPermissions,
     );
     return response.data;
   } catch (error) {
@@ -127,7 +127,7 @@ export const updateEmployeePermission = async ({
 export const deleteVendorEmployee = async (employeeId: any) => {
   try {
     const response = await axiosInstance.delete(
-      `${apiConstant.vendor.deleteVendorEmployee}/${employeeId}`
+      `${apiConstant.vendor.deleteVendorEmployee}/${employeeId}`,
     );
     return response.data;
   } catch (error) {
@@ -139,7 +139,7 @@ export const sendInvitationToEmployee = async (invite: any) => {
   try {
     const response = await axiosInstance.post(
       `${apiConstant.vendor.sendEmployeeInvitation}`,
-      invite
+      invite,
     );
     return response.data;
   } catch (error) {
@@ -150,10 +150,22 @@ export const sendInvitationToEmployee = async (invite: any) => {
 export const deleteVendorDocument = async (documentId: any) => {
   try {
     const response = await axiosInstance.delete(
-      `${apiConstant.vendor.deleteVendorDocument}/${documentId}`
+      `${apiConstant.vendor.deleteVendorDocument}/${documentId}`,
     );
     return response.data;
   } catch (error) {
     console.error("Error while sending request:", error);
+  }
+};
+
+export const deleteCompanyLogoHandler = async (id: any) => {
+  try {
+    const response = await axiosInstance.delete(
+      `${apiConstant.vendor.deleteCompanyLogo}/${id}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+    throw error;
   }
 };

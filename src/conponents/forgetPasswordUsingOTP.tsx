@@ -31,7 +31,7 @@ const ForgetPasswordUsingOTP = ({ userEmail }: otpProps) => {
     } else {
       const userData = {
         username: event.target.email.value,
-        confirm_password: event.target.confirm_password.value,
+        newPassword: event.target.confirm_password.value,
         code: code,
       };
       mutation.mutate(userData);
@@ -59,7 +59,7 @@ const ForgetPasswordUsingOTP = ({ userEmail }: otpProps) => {
             <form onSubmit={(event) => submitHandler(event)}>
               <div className="flex flex-col gap-3 ">
                 <div className="w-full text-center font-bold">
-                  Forget Password
+                  Forgot Password
                 </div>
                 <div className="flex flex-col gap-2 items-start">
                   <Label htmlFor="email">Email</Label>
@@ -68,6 +68,7 @@ const ForgetPasswordUsingOTP = ({ userEmail }: otpProps) => {
                     value={userEmail}
                     id="email"
                     type="text"
+                    placeholder="Enter your email"
                     required
                   />
                 </div>

@@ -41,6 +41,7 @@ export interface CompanyData {
   instagramLink: string;
   youtubeLink: string;
   facebookLink: string;
+  linkedinLink: string;
   address1: string;
   address2: string;
   country: string;

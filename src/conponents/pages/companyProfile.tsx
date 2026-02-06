@@ -84,8 +84,6 @@ const CompanyProfile = () => {
     { documentType: "business_license", documentUrl: "choose file" },
   ]);
 
-  console.log("documentsssssss", documentInputs);
-
   const getImageUrlMutation = useGetImageUrl();
   const uploadImageMutation = useUploadImage();
 
@@ -118,6 +116,7 @@ const CompanyProfile = () => {
     instagramLink: "",
     youtubeLink: "",
     facebookLink: "",
+    linkedinLink: "",
 
     address1: "",
     address2: "",
@@ -139,6 +138,7 @@ const CompanyProfile = () => {
   });
 
   const [companyLogo, setCompanyLogo] = useState<any>("");
+  const vendorId = vendorData?.data?.vendorId;
 
   useEffect(() => {
     const companyOwners = vendorOwnership?.data ?? [];
@@ -157,6 +157,7 @@ const CompanyProfile = () => {
         instagramLink: companyInfo?.instagramURL ?? "",
         youtubeLink: companyInfo?.youtubeURL ?? "",
         facebookLink: companyInfo?.facebookURL ?? "",
+        linkedinLink: companyInfo?.linkedinURL ?? "",
 
         address1: companyInfo?.streetAddressLine1 ?? "",
         address2: companyInfo?.streetAddressLine2 ?? "",
@@ -247,6 +248,7 @@ const CompanyProfile = () => {
       instagramURL: companyData.instagramLink || "",
       youtubeURL: companyData.youtubeLink || "",
       facebookURL: companyData.facebookLink || "",
+      linkedinURL: companyData.linkedinLink || "",
     };
 
     const companyBusinessAddress = {
@@ -291,14 +293,14 @@ const CompanyProfile = () => {
   const handleDocumentChange = (index: number, value: any) => {
     setDocumentInputs((prev) =>
       prev.map((item, i) =>
-        i === index ? { ...item, documentType: value.value } : item
-      )
+        i === index ? { ...item, documentType: value.value } : item,
+      ),
     );
   };
 
   const handleDocumentUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    index: number
+    index: number,
   ) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -334,8 +336,8 @@ const CompanyProfile = () => {
       });
       setDocumentInputs((prev) =>
         prev.map((item, i) =>
-          i === index ? { ...item, documentUrl: filePath } : item
-        )
+          i === index ? { ...item, documentUrl: filePath } : item,
+        ),
       );
 
       setVendorDocuments((prev: any[]) => [
@@ -390,7 +392,7 @@ const CompanyProfile = () => {
       documentDeleteMutation.mutate(id);
     } else {
       setDocumentInputs((prev: any[]) =>
-        prev.filter((_, index) => index !== indexId)
+        prev.filter((_, index) => index !== indexId),
       );
     }
   };
@@ -436,6 +438,7 @@ const CompanyProfile = () => {
               instagramLink: companyData.instagramLink,
               youtubeLink: companyData.youtubeLink,
               facebookLink: companyData.facebookLink,
+              linkedinLink: companyData.linkedinLink,
             }}
             onUpdate={updateCompanyData}
           />
@@ -563,6 +566,7 @@ const CompanyProfile = () => {
         </div>
 
         <CompanyLogo
+          vendorId={vendorId}
           companyLogo={companyLogo}
           handleCompanyLogo={handleCompanyLogo}
         />

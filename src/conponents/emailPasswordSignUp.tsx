@@ -38,9 +38,12 @@ const EmailPasswordSignUp = ({
         password: password,
         confirmPassword: confirmPassword,
       };
-      mutation.mutate(userData);
-      setUserEmail(userData.email);
-      setOtpPopup(!otpPopup);
+      mutation.mutate(userData, {
+        onSuccess: () => {
+          setUserEmail(userData.email);
+          setOtpPopup(!otpPopup);
+        },
+      });
     }
   };
   return (

@@ -10,16 +10,15 @@ import {
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-  const decodeIdToken = (token: string): any => {
-    const decoded = jwtDecode(token) as any;
+const decodeIdToken = (token: string): any => {
+  const decoded = jwtDecode(token) as any;
 
-    return {
-      username: decoded["cognito:username"] ?? decoded.sub,
-    };
+  return {
+    username: decoded["cognito:username"] ?? decoded.sub,
   };
+};
 
 export const useUserLoginMutation = () => {
-
   const navigate = useNavigate();
   return useMutation({
     mutationFn: loginUser,
@@ -69,8 +68,8 @@ export const useUserSignUpMutation = () => {
     onSuccess: () => {
       toast.success(`User Create successful`);
     },
-    onError: () => {
-      toast.error("Something went wrong");
+    onError: (error: any) => {
+      toast.error(error?.error || "user already exist");
     },
   });
 };
@@ -89,7 +88,6 @@ export const useUserOtpSignUpMutation = () => {
       localStorage.setItem("id_token", Token);
       localStorage.setItem("refresh_token", refreshToken);
       localStorage.setItem("username", user.username);
-
 
       navigate("/map-vnedor");
     },
@@ -112,13 +110,15 @@ export const useUserForgetPasswordMutation = () => {
 };
 
 export const useUserForgetPasswordUsingOTPMutation = () => {
+  const navigate = useNavigate();
   return useMutation({
     mutationFn: forgetPasswordUsingOTP,
-    onSuccess: () => {
-      toast.success(`Password Forgot Successfully...`);
+    onSuccess: (data: any) => {
+      toast.success(data.message || "Password reset successful 🎉");
+      navigate("/login");
     },
-    onError: () => {
-      toast.error("Something went wrong!");
+    onError: (error: any) => {
+      toast.error(error?.message || "Invalid OTP, please try again!");
     },
   });
 };

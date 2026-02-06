@@ -21,8 +21,17 @@ import { USER_ACCESS_DROPDOWN } from "@/const/dropdown";
 
 
 const Users = () => {
-  const singleField = { email: "", permissions: [] };
-  const [fields, setFields] = useState<any>(Array.from({ length: 3 }, () => singleField));
+  const createField = () => ({
+    id: crypto.randomUUID(), //yeh isliye lagaya hai taki har field ko unique id mil ske or delete par multiseletor bhii remove ho jaaye..
+    email: "",
+    permissions: [],
+  });
+
+  const [fields, setFields] = useState<any>([
+    createField(),
+    createField(),
+    createField(),
+  ]);
 
   const updateField = (index: number, value: string, fieldData: any) => {
     if (fieldData) {
@@ -45,7 +54,7 @@ const Users = () => {
   };
 
   const addField = () => {
-    setFields([...fields, singleField]);
+    setFields((prev: any) => [...prev, createField()]);
   };
 
   const { data: vendorEmployees } = useGetVendorEmployees();
@@ -94,7 +103,7 @@ const Users = () => {
           </div>
           <div className="w-full lg:mt-0 mt-10  space-y-4 text-black">
             {fields.map((field: any, index: number) => (
-              <div key={index} className="space-y-2 space-x-4  flex">
+              <div key={field.id} className="space-y-2 space-x-4  flex">
                 <InputGroup>
                   <InputGroupInput
                     type="email"
@@ -112,6 +121,7 @@ const Users = () => {
                 </InputGroup>
 
                 <MultipleSelector
+                  value={field.permissions}
                   field={field.email}
                   index={index}
                   updateField={updateField}
@@ -129,7 +139,7 @@ const Users = () => {
                 <button
                   onClick={() => {
                     setFields((prev: any[]) =>
-                      prev.filter((_, i) => i !== index)
+                      prev.filter((f) => f.id !== field.id),
                     );
                   }}
                   className="text-red-500 hover:text-red-700"
@@ -208,7 +218,7 @@ const Users = () => {
                         cancelText="Cancel"
                         onConfirm={() =>
                           employeeDeleteHandler(
-                            data?.vendor_employee?.vendorEmployeeId
+                            data?.vendor_employee?.vendorEmployeeId,
                           )
                         }
                       >

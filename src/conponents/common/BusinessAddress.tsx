@@ -19,10 +19,16 @@ interface BusinessAddressProps {
     "address1" | "address2" | "country" | "state" | "city" | "zipCode"
   >;
   onUpdate: (key: keyof CompanyData, value: any) => void;
+  errors?: any;
   className?: string;
 }
 
-const BusinessAddress = ({ data, onUpdate, className }: BusinessAddressProps) => {
+const BusinessAddress = ({
+  data,
+  onUpdate,
+  errors,
+  className,
+}: BusinessAddressProps) => {
   return (
     <Card className={cn(className)}>
       <CardContent>
@@ -40,6 +46,11 @@ const BusinessAddress = ({ data, onUpdate, className }: BusinessAddressProps) =>
                 onChange={(e) => onUpdate("address1", e.target.value)}
                 required
               />
+              {errors?.streetAddressLine1 && (
+                <p className="text-red-500 text-sm">
+                  {errors.streetAddressLine1}
+                </p>
+              )}
             </div>
 
             <div className="col-span-1 flex flex-col items-start justify-center gap-3">
@@ -53,6 +64,11 @@ const BusinessAddress = ({ data, onUpdate, className }: BusinessAddressProps) =>
                 onChange={(e) => onUpdate("address2", e.target.value)}
                 required
               />
+              {errors?.streetAddressLine2 && (
+                <p className="text-red-500 text-sm">
+                  {errors.streetAddressLine2}
+                </p>
+              )}
             </div>
           </div>
 
@@ -62,8 +78,8 @@ const BusinessAddress = ({ data, onUpdate, className }: BusinessAddressProps) =>
 
               <Select
                 value={data.country || "united_states"}
-                onValueChange={() => { }} // prevents selecting anything else
-              //   disabled   // disables dropdown opening
+                onValueChange={() => {}} // prevents selecting anything else
+                //   disabled   // disables dropdown opening
               >
                 <SelectTrigger className="w-full" id="country">
                   <SelectValue placeholder="United States" />
@@ -73,6 +89,9 @@ const BusinessAddress = ({ data, onUpdate, className }: BusinessAddressProps) =>
                   <SelectItem value="united_states">United States</SelectItem>
                 </SelectContent>
               </Select>
+              {errors?.country && (
+                <p className="text-red-500 text-sm">{errors.country}</p>
+              )}
             </div>
 
             <div className="col-span-1 flex flex-col items-start justify-center gap-3">
@@ -94,6 +113,9 @@ const BusinessAddress = ({ data, onUpdate, className }: BusinessAddressProps) =>
                   ))}
                 </SelectContent>
               </Select>
+              {errors?.state && (
+                <p className="text-red-500 text-sm">{errors.state}</p>
+              )}
             </div>
 
             <div className="col-span-1 flex flex-col items-start justify-center gap-3">
@@ -107,6 +129,9 @@ const BusinessAddress = ({ data, onUpdate, className }: BusinessAddressProps) =>
                 onChange={(e) => onUpdate("city", e.target.value)}
                 required
               />
+              {errors?.city && (
+                <p className="text-red-500 text-sm">{errors.city}</p>
+              )}
             </div>
 
             <div className="col-span-1 flex flex-col items-start justify-center gap-3">
@@ -120,6 +145,9 @@ const BusinessAddress = ({ data, onUpdate, className }: BusinessAddressProps) =>
                 onChange={(e) => onUpdate("zipCode", e.target.value)}
                 required
               />
+              {errors?.zipcode && (
+                <p className="text-red-500 text-sm">{errors.zipcode}</p>
+              )}
             </div>
           </div>
         </div>

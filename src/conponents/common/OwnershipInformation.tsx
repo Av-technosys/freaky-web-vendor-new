@@ -23,6 +23,7 @@ interface OwnershipInformationProps {
   onUpdateAuthorizedSignatory: (index: number) => void;
   onAddOwner: () => void;
   onRemoveOwner: (index: number) => void; // Add this prop
+  errors?: any;
   className?: string;
 }
 
@@ -32,6 +33,7 @@ const OwnershipInformation = ({
   onUpdateAuthorizedSignatory,
   onAddOwner,
   onRemoveOwner, // Add this to destructuring
+  errors,
   className,
 }: OwnershipInformationProps) => {
   return (
@@ -78,6 +80,11 @@ const OwnershipInformation = ({
                     placeholder="Enter First Name"
                     required
                   />
+                  {errors?.owners?.[index]?.firstName?._errors?.length > 0 && (
+                    <p className="text-red-500 text-sm">
+                      {errors.owners[index].firstName._errors[0]}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex flex-col gap-3">
@@ -90,6 +97,11 @@ const OwnershipInformation = ({
                     placeholder="Enter Last Name"
                     required
                   />
+                  {errors?.owners?.[index]?.lastName?._errors?.length > 0 && (
+                    <p className="text-red-500 text-sm">
+                      {errors.owners[index].lastName._errors[0]}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -123,6 +135,11 @@ const OwnershipInformation = ({
                     <InputOTPSlot index={8} />
                   </InputOTPGroup>
                 </InputOTP>
+                {errors?.owners?.[index]?.ssnNumber?._errors?.length > 0 && (
+                  <p className="text-red-500 text-sm">
+                    {errors.owners[index].ssnNumber._errors[0]}
+                  </p>
+                )}
               </div>
 
               <div className="flex flex-col gap-6 mt-3">
@@ -135,12 +152,18 @@ const OwnershipInformation = ({
                         onUpdateOwner(
                           index,
                           "streetAddressLine1",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                       placeholder="Enter Street Address Line 1"
                       required
                     />
+                    {errors?.owners?.[index]?.streetAddressLine1?._errors
+                      ?.length > 0 && (
+                      <p className="text-red-500 text-sm">
+                        {errors.owners[index].streetAddressLine1._errors[0]}
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex flex-col gap-3">
@@ -151,12 +174,18 @@ const OwnershipInformation = ({
                         onUpdateOwner(
                           index,
                           "streetAddressLine2",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                       placeholder="Enter Street Address Line 2"
                       required
                     />
+                    {errors?.owners?.[index]?.streetAddressLine2?._errors
+                      ?.length > 0 && (
+                      <p className="text-red-500 text-sm">
+                        {errors.owners[index].streetAddressLine2._errors[0]}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -171,6 +200,11 @@ const OwnershipInformation = ({
                       placeholder="Enter Country"
                       required
                     />
+                    {errors?.owners?.[index]?.country?._errors?.length > 0 && (
+                      <p className="text-red-500 text-sm">
+                        {errors.owners[index].country._errors[0]}
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex flex-col gap-3">
@@ -183,6 +217,11 @@ const OwnershipInformation = ({
                       placeholder="Enter State"
                       required
                     />
+                    {errors?.owners?.[index]?.state?._errors?.length > 0 && (
+                      <p className="text-red-500 text-sm">
+                        {errors.owners[index].state._errors[0]}
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex flex-col gap-3">
@@ -195,6 +234,11 @@ const OwnershipInformation = ({
                       placeholder="Enter City"
                       required
                     />
+                    {errors?.owners?.[index]?.city?._errors?.length > 0 && (
+                      <p className="text-red-500 text-sm">
+                        {errors.owners[index].city._errors[0]}
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex flex-col gap-3">
@@ -208,6 +252,11 @@ const OwnershipInformation = ({
                       placeholder="Enter Zip Code"
                       required
                     />
+                    {errors?.owners?.[index]?.zipcode?._errors?.length > 0 && (
+                      <p className="text-red-500 text-sm">
+                        {errors.owners[index].zipcode._errors[0]}
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -224,6 +273,12 @@ const OwnershipInformation = ({
                   placeholder="Min 25%"
                   required
                 />
+                {errors?.owners?.[index]?.ownershipPercentage?._errors?.length >
+                  0 && (
+                  <p className="text-red-500 text-sm">
+                    {errors.owners[index].ownershipPercentage._errors[0]}
+                  </p>
+                )}
               </div>
 
               <div className="flex items-center gap-6 mt-4 pt-4 border-t border-gray-200">
