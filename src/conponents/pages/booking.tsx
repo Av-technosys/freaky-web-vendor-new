@@ -1,4 +1,3 @@
-import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
 import {
   Table,
   TableBody,
@@ -24,6 +23,10 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { AvatarImage } from "@/components/ui";
+import { ProfilePicture } from "../common/ProfileIcon";
+import { BOOKING_TABLE_PAGE_SIZE, BOOKING_TABLE_HEADER } from "@/const";
+import { cn } from "@/lib/utils";
 
 const Booking = () => {
   const navigate = useNavigate();
@@ -35,21 +38,16 @@ const Booking = () => {
 
   const [searchText, setSearchText] = useState("");
   // const [page, setPage] = useState(1);
-  const pageSize = 5;
 
   const { data, isPending } = useGetAllBookings({
     text: searchText,
     page,
-    page_size: pageSize,
+    page_size: BOOKING_TABLE_PAGE_SIZE,
   });
 
   const totalPages = data?.pagination?.total_pages;
 
   const bookings = data?.data || [];
-  // Assuming backend might implement pagination metadata structure. If array is returned directly as per prompt description "which is an array show that to table also", we might not have total count for pagination from this endpoint unless it wraps response.
-  // The prompt says "it returns data of all the booking items ... data return format ... which is an array show that to table also".
-  // If it's just an array, simple next/prev based on array length might be ambiguous if backend doesn't return total.
-  // Assuming standard pagination, if we get less than page_size items, we are at the end.
 
   const drawerHandler = (id: any) => {
     setBookingId(id);
@@ -65,8 +63,8 @@ const Booking = () => {
           bookingId={bookingId}
         />
       )}
-      <div className="my-2 space-y-3">
-        <div className="flex justify-between items-center gap-2 px-1">
+      <div className="mb-2 space-y-3">
+        {/* <div className="flex justify-between items-center gap-2 px-1">
           <Input
             placeholder="Search..."
             value={searchText}
@@ -76,7 +74,7 @@ const Booking = () => {
             }}
             className="max-w-[300px] bg-white"
           />
-        </div>
+        </div> */}
 
         <div className="max-w-[400px] bg-white overflow-x-scroll lg:overflow-hidden md:max-w-full p-3 shadow-lg rounded-lg border">
           {isPending ? (
@@ -85,13 +83,17 @@ const Booking = () => {
             </InputGroupAddon>
           ) : (
             <Table>
-              <TableHeader className="text-[#89868D]  ">
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Service Name</TableHead>
-                  <TableHead>Amount</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Action</TableHead>
+              <TableHeader className="  ">
+                <TableRow>{
+                  BOOKING_TABLE_HEADER.map((heading: string, index: number) => {
+                    return (
+                      <TableHead key={index} className={cn(" text-gray-800 font-semibold  px-4 md:px-1", heading === "Action" && "text-end w-32")}>
+                        {heading}
+                      </TableHead>
+                    );
+                  })
+                }
+
                 </TableRow>
               </TableHeader>
 
@@ -105,20 +107,9 @@ const Booking = () => {
                 ) : (
                   bookings.map((item: any) => (
                     <TableRow key={item.id} className=" ">
-                      <TableCell className="font-medium text-[#89868D]">
-                        <div className="w-full h-full flex items-center justify-start  gap-3">
-                          <Avatar>
-                            <AvatarFallback className="text-xs  p-3  rounded-full bg-slate-200">
-                              {item.contactName?.charAt(0) || "?"}
-                            </AvatarFallback>
-                          </Avatar>
-                          {item.contactName}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-[#89868D]">
-                        {item.productName}
-                      </TableCell>
-                      <TableCell className="text-[#89868D]">
+                      <TableCell className="font-medium text-gray-700">{item.contactName}</TableCell>
+                      <TableCell className="text-gray-700">{item.productName}</TableCell>
+                      <TableCell className="text-gray-700">
                         {new Intl.NumberFormat("en-US", {
                           style: "currency",
                           currency: "USD",
@@ -132,19 +123,19 @@ const Booking = () => {
                           item.bookingStatus == "PENDING"
                             ? "text-yellow-400 font-bold"
                             : item.bookingStatus == "CANCELLED" ||
-                                item.bookingStatus == "REJECTED"
-                              ? "text-red-500 font-bold"
-                              : "text-green-400 font-bold"
+                              item.bookingStatus == "REJECTED"
+                              ? "text-red-500 font-semibold"
+                              : "text-green-500 font-semibold"
                         }
                       >
                         {item.bookingStatus}
                       </TableCell>
 
-                      <TableCell className="text-[#89868D]">
+                      <TableCell className=" flex justify-end text-gray-700">
                         <Button
                           onClick={() => drawerHandler(item.id)}
-                          variant={"outline"}
-                          className="border-none cursor-pointer shadow-none rounded-full w-10 h-10 text-blue-500"
+                          variant={"ghost"}
+                          className=" cursor-pointer rounded-full w-10 h-10 text-blue-500"
                         >
                           <TiIconEye />
                         </Button>
@@ -160,12 +151,11 @@ const Booking = () => {
                         <PaginationContent>
                           <PaginationItem className="border border-gray-200 rounded-md">
                             <PaginationPrevious
-                              className={`cursor-pointer ${
-                                page == 1 && "pointer-events-none opacity-50"
-                              }`}
+                              className={`cursor-pointer ${page == 1 && "pointer-events-none opacity-50"
+                                }`}
                               onClick={() =>
                                 navigate(
-                                  `?page=${page - 1}&page_size=${pageSize}`,
+                                  `?page=${page - 1}&page_size=${BOOKING_TABLE_PAGE_SIZE}`,
                                 )
                               }
                             />
@@ -176,12 +166,11 @@ const Booking = () => {
                                 <PaginationItem
                                   onClick={() =>
                                     navigate(
-                                      `?page=${index + 1}&page_size=${pageSize}`,
+                                      `?page=${index + 1}&page_size=${BOOKING_TABLE_PAGE_SIZE}`,
                                     )
                                   }
-                                  className={`border border-gray-200 rounded-md ${
-                                    page == index + 1 && "text-orange-500"
-                                  }`}
+                                  className={`border border-gray-200 rounded-md ${page == index + 1 && "text-orange-500"
+                                    }`}
                                 >
                                   <PaginationLink href="#">
                                     {index + 1}
@@ -192,13 +181,12 @@ const Booking = () => {
                           )}
                           <PaginationItem className="border border-gray-200 rounded-md">
                             <PaginationNext
-                              className={`cursor-pointer  ${
-                                page == totalPages &&
+                              className={`cursor-pointer  ${page == totalPages &&
                                 "pointer-events-none opacity-50"
-                              }`}
+                                }`}
                               onClick={() =>
                                 navigate(
-                                  `?page=${page + 1}&page_size=${pageSize}`,
+                                  `?page=${page + 1}&page_size=${BOOKING_TABLE_PAGE_SIZE}`,
                                 )
                               }
                             />

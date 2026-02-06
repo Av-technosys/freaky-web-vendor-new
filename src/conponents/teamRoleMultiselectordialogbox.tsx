@@ -12,37 +12,7 @@ import {
   DialogDescription,
 } from "../components/ui/dialog";
 import { useUpdateEmployeePermissions } from "@/services/useCreateOrUpdateCompanyDetails";
-
-const roles = [
-  {
-    title: "Admin",
-    description: "Admin manages operations and resources.",
-  },
-  {
-    title: "Dashboard",
-    description: "Monitor, manage, and control system",
-  },
-  {
-    title: "Manage_Services",
-    description: "Organize, track, and modify services.",
-  },
-  {
-    title: "Booking",
-    description: "View, manage, and track bookings",
-  },
-  {
-    title: "Reviews",
-    description: "View and manage customer reviews",
-  },
-  {
-    title: "Manage_Bookings",
-    description: "Track, update, and control bookings",
-  },
-  {
-    title: "Company_Profile",
-    description: "Manage your business profile information",
-  },
-];
+import { USER_ACCESS_DROPDOWN } from "@/const/dropdown";
 
 export default function MultiselectorDialog({
   children,
@@ -82,29 +52,27 @@ export default function MultiselectorDialog({
   return (
     <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-
-      <DialogContent className="lg:max-w-2xl  rounded-4xl">
+      <DialogContent className="lg:max-w-2xl">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold">Edit Roles</DialogTitle>
-
           <DialogDescription className="mt-4">
-            {roles?.map((role: any, index: number) => (
+            {USER_ACCESS_DROPDOWN?.map((role: any, index: number) => (
               <div
                 key={index}
                 className="flex justify-between items-center mb-4"
               >
                 <div>
-                  <h3 className="text-black text-normal">{role.title}</h3>
+                  <h3 className="text-black text-normal">{role.label}</h3>
                   <p className="text-gray-500 ">{role?.description}</p>
                 </div>
                 <div>
                   <Checkbox
                     checked={allowedPermissions.includes(
-                      role?.title?.toLowerCase()
+                      role?.value?.toLowerCase()
                     )}
                     onCheckedChange={(checked) =>
                       togglePermission(
-                        role?.title?.toLowerCase(),
+                        role?.value?.toLowerCase(),
                         checked === true
                       )
                     }

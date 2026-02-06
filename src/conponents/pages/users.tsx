@@ -16,23 +16,13 @@ import {
   useDeleteVendorEmployee,
   useInviteVendorEmployee,
 } from "@/services/useCreateOrUpdateCompanyDetails";
+import { USER_ACCESS_DROPDOWN } from "@/const/dropdown";
 
-const categories = [
-  { value: "admin", label: "Admin" },
-  { value: "dashboard", label: "Dashboard" },
-  { value: "manage_services", label: "Manage Services" },
-  { value: "booking", label: "Booking" },
-  { value: "review", label: "Review" },
-  { value: "manage_bookings", label: "Manage Bookings" },
-  { value: "company_profile", label: "Company Profile" },
-];
+
 
 const Users = () => {
-  const [fields, setFields] = useState<any>([
-    { email: "", permissions: [] },
-    { email: "", permissions: [] },
-    { email: "", permissions: [] },
-  ]);
+  const singleField = { email: "", permissions: [] };
+  const [fields, setFields] = useState<any>(Array.from({ length: 3 }, () => singleField));
 
   const updateField = (index: number, value: string, fieldData: any) => {
     if (fieldData) {
@@ -55,7 +45,7 @@ const Users = () => {
   };
 
   const addField = () => {
-    setFields([...fields, { email: "", permissions: [] }]);
+    setFields([...fields, singleField]);
   };
 
   const { data: vendorEmployees } = useGetVendorEmployees();
@@ -88,8 +78,8 @@ const Users = () => {
     <>
       <div className="rounded-lg  shadow-2xl shadow-gray-200 bg-white">
         <div className="p-6">
-          <h1 className="text-4xl  ">Manage Users</h1>
-          <p className="text-sm mt-2 text-gray-600">
+          <h1 className="text-3xl  ">Manage Users</h1>
+          <p className="  mt-2 text-gray-600">
             Manage your team members and their account permissions here.
           </p>
           <Separator className="mt-4" />
@@ -97,7 +87,7 @@ const Users = () => {
         <div className="lg:flex w-full p-6">
           <div className="lg:w-1/2 w-full">
             <h1 className="text-3xl">Invite team members</h1>
-            <p className="text-sm mt-2 text-gray-600">
+            <p className=" mt-2 text-gray-600">
               Get your projects up and running faster by inviting your team to
               collaborate.
             </p>
@@ -126,7 +116,7 @@ const Users = () => {
                   index={index}
                   updateField={updateField}
                   commandProps={{ label: "Select Role" }}
-                  defaultOptions={categories}
+                  defaultOptions={USER_ACCESS_DROPDOWN}
                   placeholder="Select Role"
                   emptyIndicator={
                     <p className="text-center text-black text-sm">
@@ -192,9 +182,8 @@ const Users = () => {
                   <div className="flex items-center gap-4 w-1/3">
                     <img
                       className="w-8 h-8 rounded-full"
-                      src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${
-                        data?.user?.profileImage
-                      }`}
+                      src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${data?.user?.profileImage
+                        }`}
                       alt={data?.user?.firstName}
                     />
                     <Label className="ml-2">{data?.user?.firstName}</Label>

@@ -25,7 +25,7 @@ import { toast } from "sonner";
 import { tokenStorage } from "@/helper/refreshToken";
 
 // Menu items.
-const items = [
+const sidebarItems = [
   {
     title: "Dashboard",
     url: "/",
@@ -63,7 +63,7 @@ const items = [
   },
 ];
 
-const item = [
+const bottomItems = [
   {
     title: "Profile",
     url: "/profile",
@@ -97,11 +97,11 @@ function AppSidebar() {
             <Separator />
             <SidebarGroupContent>
               <SidebarMenu className=" space-y-1.5 py-4">
-                {items.map((item) => (
+                {sidebarItems.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
-                      className={`  ${location.pathname === item.url
-                        ? "bg-gradient-to-r from-[#FFE492] to-[#FFBAA4]"
+                      className={` text-gray-900 font-medium  ${location.pathname === item.url
+                        ? "bg-linear-to-r from-[#FFE492] to-[#FFBAA4]"
                         : ""
                         }`}
                       asChild
@@ -116,13 +116,13 @@ function AppSidebar() {
               </SidebarMenu>
             </SidebarGroupContent>
             <Separator className=" my-1.5 mt-auto" />
-            <div className="">
-              <SidebarMenu>
-                {item.map((item) => (
+            <div className=" mb-2">
+              <SidebarMenu className=" space-y-1.5">
+                {bottomItems.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
-                      className={`  ${location.pathname === item.url
-                        ? "bg-gradient-to-r from-[#FFE492] to-[#FFBAA4]"
+                      className={`  text-gray-900 font-medium ${location.pathname === item.url
+                        ? "bg-linear-to-r from-[#FFE492] to-[#FFBAA4]"
                         : ""
                         }`}
                       asChild

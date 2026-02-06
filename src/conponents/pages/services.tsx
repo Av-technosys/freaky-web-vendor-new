@@ -11,21 +11,23 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "../../components/ui/pagination";
+import { Plus } from "lucide-react";
+import { SERVICE_TABLE_HEADER, SERVICE_TABLE_PAGE_SIZE } from "@/const";
 
 const Services = () => {
   const navigate = useNavigate();
-  const pageSize = 10;
+
   const [searchParams] = useSearchParams();
   const page = Number(searchParams.get("page")) || 1;
 
-  const { data, isPending } = useGetVendorServices(page, pageSize);
+  const { data, isPending } = useGetVendorServices(page, SERVICE_TABLE_PAGE_SIZE);
 
   const services = data?.data;
 
   const totalPages = data?.pagination?.total_pages;
 
   const tableData = {
-    Headings: ["ID", "Services", "Product Type", "Action"],
+    Headings: SERVICE_TABLE_HEADER,
     ListData: services,
   };
 
@@ -36,13 +38,13 @@ const Services = () => {
           onClick={() => navigate("/services/manage-service")}
           className=" px-6 cursor-pointer"
         >
-          Add New
+          <Plus />     Service
         </Button>
         <Button
           onClick={() => navigate("/services/manage-payment-book")}
           className=" px-6 cursor-pointer"
         >
-          Manage Payment Book
+          Payment Book
         </Button>
       </div>
       {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -88,11 +90,10 @@ const Services = () => {
             <PaginationContent>
               <PaginationItem className="border border-gray-200 rounded-md">
                 <PaginationPrevious
-                  className={`cursor-pointer ${
-                    page == 1 && "pointer-events-none opacity-50"
-                  }`}
+                  className={`cursor-pointer ${page == 1 && "pointer-events-none opacity-50"
+                    }`}
                   onClick={() =>
-                    navigate(`?page=${page - 1}&page_size=${pageSize}`)
+                    navigate(`?page=${page - 1}&page_size=${SERVICE_TABLE_PAGE_SIZE}`)
                   }
                 />
               </PaginationItem>
@@ -100,11 +101,10 @@ const Services = () => {
                 return (
                   <PaginationItem
                     onClick={() =>
-                      navigate(`?page=${index + 1}&page_size=${pageSize}`)
+                      navigate(`?page=${index + 1}&page_size=${SERVICE_TABLE_PAGE_SIZE}`)
                     }
-                    className={`border border-gray-200 rounded-md ${
-                      page == index + 1 && "text-orange-500"
-                    }`}
+                    className={`border border-gray-200 rounded-md ${page == index + 1 && "text-orange-500"
+                      }`}
                   >
                     <PaginationLink href="#">{index + 1}</PaginationLink>
                   </PaginationItem>
@@ -112,11 +112,10 @@ const Services = () => {
               })}
               <PaginationItem className="border border-gray-200 rounded-md">
                 <PaginationNext
-                  className={`cursor-pointer  ${
-                    page == totalPages && "pointer-events-none opacity-50"
-                  }`}
+                  className={`cursor-pointer  ${page == totalPages && "pointer-events-none opacity-50"
+                    }`}
                   onClick={() =>
-                    navigate(`?page=${page + 1}&page_size=${pageSize}`)
+                    navigate(`?page=${page + 1}&page_size=${SERVICE_TABLE_PAGE_SIZE}`)
                   }
                 />
               </PaginationItem>
@@ -129,12 +128,3 @@ const Services = () => {
 };
 
 export default Services;
-
-// function StatusCardItem({ title, value }: { title: string; value: number }) {
-//   return (
-//     <div>
-//       <p className="text-[#8B8D97] text-[13px]">{title}</p>
-//       <p>{value}</p>
-//     </div>
-//   );
-// }

@@ -6,21 +6,21 @@ import AppBreadcrumbs from "./components/AppBreadcrumbs";
 
 const App = () => {
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen bg-[#FAF7EF] flex">
       {/* Fixed Sidebar */}
-      <SidebarProvider>
+      <SidebarProvider className="">
         <AppSidebar />
-
-        {/* Main Content Area */}
-        <div className="flex-1 bg-[#FAF7EF]  flex flex-col px-2">
-          <Header />
-          <AppBreadcrumbs />
-          <main className="flex-1 mt-4">
-            <Outlet />
-          </main>
-          {/* <Footer /> */}
-        </div>
       </SidebarProvider>
+
+      {/* Main Content Area */}
+      <div className="flex-1  w-full flex flex-col px-2">
+        <Header />
+        <AppBreadcrumbs />
+        <main className="flex-1">
+          <Outlet />
+        </main>
+        {/* <Footer /> */}
+      </div>
     </div>
   );
 };

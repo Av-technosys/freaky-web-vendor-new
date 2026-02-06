@@ -23,12 +23,9 @@ export default function MetricsCards() {
         <Card
           key={index}
           className="
-            rounded-2xl shadow-sm border bg-white
-             max-sm:py-1 
-
-          "
+            rounded-2xl shadow-sm border bg-white"
         >
-          <CardContent className="flex items-center gap-4 p-2">
+          <CardContent className="flex items-center gap-4 ">
             {/* Icon */}
             <div className="w-12 h-12">
               <img
@@ -40,8 +37,8 @@ export default function MetricsCards() {
 
             {/* Text */}
             <div>
-              <p className="text-gray-600 text-sm font-medium">{item.title}</p>
-              <p className="text-[20px] font-bold text-gray-800 mt-1">
+              <p className="text-gray-600 font-medium">{item.title}</p>
+              <p className="text-xl font-bold text-gray-800 mt-1">
                 {item.value}
               </p>
             </div>
