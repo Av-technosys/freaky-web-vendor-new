@@ -12,6 +12,14 @@ import { Switch } from "../../components/ui/switch";
 import { type Owner } from "../../types/company";
 import { Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { US_STATES } from "@/const/usState";
 
 interface OwnershipInformationProps {
   data: {
@@ -192,14 +200,23 @@ const OwnershipInformation = ({
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="flex flex-col gap-3">
                     <Label>Country</Label>
-                    <Input
-                      value={owner.country}
-                      onChange={(e) =>
-                        onUpdateOwner(index, "country", e.target.value)
+
+                    <Select
+                      value={owner.country || "united_states"}
+                      onValueChange={(value) =>
+                        onUpdateOwner(index, "country", value)
                       }
-                      placeholder="Enter Country"
-                      required
-                    />
+                    >
+                      <SelectTrigger className="w-full" id="country">
+                        <SelectValue placeholder="United States" />
+                      </SelectTrigger>
+
+                      <SelectContent>
+                        <SelectItem value="united_states">
+                          United States
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
                     {errors?.owners?.[index]?.country?._errors?.length > 0 && (
                       <p className="text-red-500 text-sm">
                         {errors.owners[index].country._errors[0]}
@@ -208,15 +225,26 @@ const OwnershipInformation = ({
                   </div>
 
                   <div className="flex flex-col gap-3">
-                    <Label>State</Label>
-                    <Input
+                    <Label htmlFor="state">State</Label>
+
+                    <Select
                       value={owner.state}
-                      onChange={(e) =>
-                        onUpdateOwner(index, "state", e.target.value)
+                      onValueChange={(value) =>
+                        onUpdateOwner(index, "state", value)
                       }
-                      placeholder="Enter State"
-                      required
-                    />
+                    >
+                      <SelectTrigger className="w-full" id="state" name="state">
+                        <SelectValue placeholder="Select State" />
+                      </SelectTrigger>
+
+                      <SelectContent>
+                        {US_STATES.map((state) => (
+                          <SelectItem key={state} value={state}>
+                            {state}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     {errors?.owners?.[index]?.state?._errors?.length > 0 && (
                       <p className="text-red-500 text-sm">
                         {errors.owners[index].state._errors[0]}
@@ -250,6 +278,7 @@ const OwnershipInformation = ({
                         onUpdateOwner(index, "zipcode", e.target.value)
                       }
                       placeholder="Enter Zip Code"
+                      className="appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                       required
                     />
                     {errors?.owners?.[index]?.zipcode?._errors?.length > 0 && (
@@ -271,6 +300,7 @@ const OwnershipInformation = ({
                   }
                   min={25}
                   placeholder="Min 25%"
+                  className="appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                   required
                 />
                 {errors?.owners?.[index]?.ownershipPercentage?._errors?.length >

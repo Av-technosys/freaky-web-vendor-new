@@ -143,6 +143,7 @@ const BusinessAddress = ({
                 type="number"
                 value={data.zipCode}
                 onChange={(e) => onUpdate("zipCode", e.target.value)}
+                className="appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 required
               />
               {errors?.zipcode && (

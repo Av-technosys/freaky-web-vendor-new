@@ -5,6 +5,7 @@ import {
   forgetPasswordUsingOTP,
   loginUser,
   otpSignUpUser,
+  resendOtp,
   signUpUser,
 } from "../helper/loginUser";
 import { useNavigate } from "react-router-dom";
@@ -47,11 +48,11 @@ export const useUserLoginMutation = () => {
         if (vendorId) {
           navigate("/");
         } else {
-          navigate("/map-vnedor");
+          navigate("/map-vendor");
         }
       } catch (error) {
         console.error("Invalid token", error);
-        navigate("/map-vnedor");
+        navigate("/map-vendor");
       }
     },
 
@@ -74,6 +75,18 @@ export const useUserSignUpMutation = () => {
   });
 };
 
+export const useUserResendOtpMutation = () => {
+  return useMutation({
+    mutationFn: resendOtp,
+    onSuccess: () => {
+      toast.success(`OTP send to your email`);
+    },
+    onError: (error: any) => {
+      toast.error(error?.error || "Something went wrong");
+    },
+  });
+};
+
 export const useUserOtpSignUpMutation = () => {
   const navigate = useNavigate();
   return useMutation({
@@ -89,7 +102,7 @@ export const useUserOtpSignUpMutation = () => {
       localStorage.setItem("refresh_token", refreshToken);
       localStorage.setItem("username", user.username);
 
-      navigate("/map-vnedor");
+      navigate("/map-vendor");
     },
     onError: () => {
       toast.error("Something went wrong!");

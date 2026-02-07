@@ -19,13 +19,12 @@ import { US_STATES } from "@/const/usState";
 import DropdownSelector from "../dropdownSelector";
 import { SkeletonForm } from "@/components/skletob/form";
 
-
 const dropdownValuesCountries = {
   options: [
     {
       label: "United States",
       value: "united_states",
-    }
+    },
   ],
 };
 
@@ -42,7 +41,7 @@ const Profile = () => {
     lastName: "",
     email: "",
     number: "",
-    profileImage: ""
+    profileImage: "",
   });
 
   const [address, setAddress] = useState({
@@ -116,7 +115,7 @@ const Profile = () => {
       number: userDetails?.number,
       profileImage: userDetails?.profileImage,
       ...address,
-      currentAddressId: userData?.data[0]?.currentAddressId
+      currentAddressId: userData?.data[0]?.currentAddressId,
     };
     createUserInfoMutation.mutate(userInfo);
   };
@@ -196,14 +195,19 @@ const Profile = () => {
                 <div className="flex flex-col gap-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div className="col-span-1 flex flex-col items-start justify-center gap-2">
-                      <Label htmlFor="address1"  >Street Address Line 1</Label>
+                      <Label htmlFor="address1">Street Address Line 1</Label>
                       <Input
                         name="address1"
                         id="address1"
                         placeholder="Enter Street Address Line 1"
                         type="text"
                         value={address.addressLine1}
-                        onChange={(e) => setAddress((prev) => ({ ...prev, addressLine1: e.target.value }))}
+                        onChange={(e) =>
+                          setAddress((prev) => ({
+                            ...prev,
+                            addressLine1: e.target.value,
+                          }))
+                        }
                         required
                       />
                     </div>
@@ -216,7 +220,12 @@ const Profile = () => {
                         placeholder="Enter Street Address Line 2"
                         type="text"
                         value={address.addressLine2}
-                        onChange={(e) => setAddress((prev) => ({ ...prev, addressLine2: e.target.value }))}
+                        onChange={(e) =>
+                          setAddress((prev) => ({
+                            ...prev,
+                            addressLine2: e.target.value,
+                          }))
+                        }
                         required
                       />
                     </div>
@@ -229,18 +238,22 @@ const Profile = () => {
                         <DropdownSelector
                           values={dropdownValuesCountries}
                           selectedValue={address.countery}
-                          onChange={({ value }: any) => setAddress((prev) => ({ ...prev, countery: value }))}
+                          onChange={({ value }: any) =>
+                            setAddress((prev) => ({ ...prev, countery: value }))
+                          }
                         />
                       </div>
                     </div>
 
                     <div className="col-span-1 flex flex-col items-start w-full justify-center gap-2">
                       <Label htmlFor="state">State</Label>
-                      <div className="w-full" >
+                      <div className="w-full">
                         <DropdownSelector
                           values={dropdownValuesStates}
                           selectedValue={address.state}
-                          onChange={({ value }: any) => setAddress((prev) => ({ ...prev, state: value }))}
+                          onChange={({ value }: any) =>
+                            setAddress((prev) => ({ ...prev, state: value }))
+                          }
                         />
                       </div>
                     </div>
@@ -253,7 +266,12 @@ const Profile = () => {
                         placeholder="Enter City"
                         type="text"
                         value={address.city}
-                        onChange={(e) => setAddress((prev) => ({ ...prev, city: e.target.value }))}
+                        onChange={(e) =>
+                          setAddress((prev) => ({
+                            ...prev,
+                            city: e.target.value,
+                          }))
+                        }
                         required
                       />
                     </div>
@@ -262,17 +280,22 @@ const Profile = () => {
                       <Label htmlFor="zipCode">Zip Code</Label>
                       <Input
                         placeholder="Enter Zip Code"
+                        className="appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                         name="zipCode"
                         id="zipCode"
                         type="number"
                         value={address.zipCode}
-                        onChange={(e) => setAddress((prev) => ({ ...prev, zipCode: e.target.value }))}
+                        onChange={(e) =>
+                          setAddress((prev) => ({
+                            ...prev,
+                            zipCode: e.target.value,
+                          }))
+                        }
                         required
                       />
                     </div>
                   </div>
                 </div>
-
               </CardContent>
               <CardFooter className="w-full flex items-center justify-end ">
                 <Button
@@ -297,8 +320,9 @@ const Profile = () => {
               <div className="w-32 h-32  rounded-full overflow-hidden">
                 <img
                   className="object-cover"
-                  src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${userDetails?.profileImage
-                    }`}
+                  src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${
+                    userDetails?.profileImage
+                  }`}
                   alt="uploaded-image"
                 />
               </div>

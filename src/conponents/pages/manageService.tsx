@@ -1,11 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Button,
-  Card,
-  CardContent,
-  Input,
-  Label,
-} from "../../components/ui";
+import { Button, Card, CardContent, Input, Label } from "../../components/ui";
 import DropdownSelector from "../dropdownSelector";
 
 import uploadImage from "../../assets/uploadImage.png";
@@ -47,13 +41,12 @@ const dropdownValuesProductCategories = {
   ],
 };
 
-
 const dropdownValuesCountries = {
   options: [
     {
       label: "United States",
       value: "united_states",
-    }
+    },
   ],
 };
 
@@ -74,10 +67,8 @@ const dropdownValuesProductPriceType = {
       label: "TIRE",
       value: "TIRE",
     },
-
   ],
 };
-
 
 // function formatDate(date: Date | undefined) {
 //   if (!date) {
@@ -112,13 +103,12 @@ const ManageService = () => {
     zipCode: "",
     addressLine1: "",
     addressLine2: "",
-
   });
   const [pricingType, setPricingType] = useState("FLAT");
   const [unitPricing, setUnitPricing] = useState({
     price: "0",
     lowerBound: "0",
-    upperBound: "0"
+    upperBound: "0",
   });
   const [longDescription, setLongDescription] = useState<String>("");
 
@@ -157,8 +147,6 @@ const ManageService = () => {
     setCategoryName(value.label);
   }
 
-
-
   const handleBannerImage = async (e: any) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -186,7 +174,7 @@ const ManageService = () => {
               color: "#dc2626",
               border: "1px solid #dc2626",
             },
-          }
+          },
         );
         e.target.value = "";
         URL.revokeObjectURL(objectUrl);
@@ -256,7 +244,7 @@ const ManageService = () => {
             });
             navigate("/services");
           },
-        }
+        },
       );
     } else {
       createMutation.mutate(
@@ -268,7 +256,7 @@ const ManageService = () => {
             });
             navigate("/services");
           },
-        }
+        },
       );
     }
   };
@@ -300,7 +288,7 @@ const ManageService = () => {
                   <div className="grid grid-cols-2 gap-5">
                     <div className="col-span-1 flex flex-col gap-4 py-2  ">
                       <div className="w-full">
-                        <Label htmlFor="service-name"  >Service Name</Label>
+                        <Label htmlFor="service-name">Service Name</Label>
                         <Input
                           placeholder="Enter Service Name"
                           className="  mt-2"
@@ -313,7 +301,7 @@ const ManageService = () => {
                         />
                       </div>
                       <div className="w-full flex flex-col gap-1">
-                        <Label htmlFor="product-type"  >Product Type</Label>
+                        <Label htmlFor="product-type">Product Type</Label>
                         <DropdownSelector
                           values={dropdownValuesProductCategories}
                           selectedValue={categoryName}
@@ -321,7 +309,9 @@ const ManageService = () => {
                         />
                       </div>
                       <div className="w-full flex items-center justify-between">
-                        <Label htmlFor="return-policy" className="">Return Policy</Label>
+                        <Label htmlFor="return-policy" className="">
+                          Return Policy
+                        </Label>
                         {/* <div className="flex gap-3">
                       <Label className="text-[#8B8D97]" htmlFor="airplane-mode">
                         Add Discount
@@ -337,7 +327,10 @@ const ManageService = () => {
 
                       <div className=" grid grid-cols-2 gap-4  w-full">
                         <div>
-                          <Label htmlFor="delivery-radius" className="flex items-center gap-2  ">
+                          <Label
+                            htmlFor="delivery-radius"
+                            className="flex items-center gap-2  "
+                          >
                             Delivery Radius
                             <TooltipInfo content="Delivery radius in Km how far orders can be delivered." />
                           </Label>
@@ -357,7 +350,10 @@ const ManageService = () => {
                           />
                         </div>
                         <div>
-                          <Label htmlFor="max-booking" className="flex items-center gap-2  ">
+                          <Label
+                            htmlFor="max-booking"
+                            className="flex items-center gap-2  "
+                          >
                             Max Booking At a Time
                             <TooltipInfo content=" Max Booking defines how Max Quantity of product at a time." />
                           </Label>
@@ -365,7 +361,9 @@ const ManageService = () => {
                           <Input
                             id="max-booking"
                             value={maxBooking}
-                            onChange={(e) => setMaxBooking(Number(e.target.value))}
+                            onChange={(e) =>
+                              setMaxBooking(Number(e.target.value))
+                            }
                             placeholder="Enter Maximum Quantity"
                             type="number"
                             className="mt-2"
@@ -376,35 +374,47 @@ const ManageService = () => {
                         </div>
                       </div>
 
-
-
                       {/* Location of the service */}
 
                       <p className="text-lg mt-6">Location of the service</p>
                       <div className="flex flex-col gap-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                           <div className="col-span-1 flex flex-col items-start justify-center gap-2">
-                            <Label htmlFor="address1"  >Street Address Line 1</Label>
+                            <Label htmlFor="address1">
+                              Street Address Line 1
+                            </Label>
                             <Input
                               name="address1"
                               id="address1"
                               placeholder="Enter Street Address Line 1"
                               type="text"
                               value={address.addressLine1}
-                              onChange={(e) => setAddress((prev) => ({ ...prev, addressLine1: e.target.value }))}
+                              onChange={(e) =>
+                                setAddress((prev) => ({
+                                  ...prev,
+                                  addressLine1: e.target.value,
+                                }))
+                              }
                               required
                             />
                           </div>
 
                           <div className="col-span-1 flex flex-col items-start justify-center gap-2">
-                            <Label htmlFor="address2">Street Address Line 2</Label>
+                            <Label htmlFor="address2">
+                              Street Address Line 2
+                            </Label>
                             <Input
                               name="address2"
                               id="address2"
                               placeholder="Enter Street Address Line 2"
                               type="text"
                               value={address.addressLine2}
-                              onChange={(e) => setAddress((prev) => ({ ...prev, addressLine2: e.target.value }))}
+                              onChange={(e) =>
+                                setAddress((prev) => ({
+                                  ...prev,
+                                  addressLine2: e.target.value,
+                                }))
+                              }
                               required
                             />
                           </div>
@@ -417,18 +427,28 @@ const ManageService = () => {
                               <DropdownSelector
                                 values={dropdownValuesCountries}
                                 selectedValue={address.countery}
-                                onChange={({ value }: any) => setAddress((prev) => ({ ...prev, countery: value }))}
+                                onChange={({ value }: any) =>
+                                  setAddress((prev) => ({
+                                    ...prev,
+                                    countery: value,
+                                  }))
+                                }
                               />
                             </div>
                           </div>
 
                           <div className="col-span-1 flex flex-col items-start w-full justify-center gap-2">
                             <Label htmlFor="state">State</Label>
-                            <div className="w-full" >
+                            <div className="w-full">
                               <DropdownSelector
                                 values={dropdownValuesStates}
                                 selectedValue={address.state}
-                                onChange={({ value }: any) => setAddress((prev) => ({ ...prev, state: value }))}
+                                onChange={({ value }: any) =>
+                                  setAddress((prev) => ({
+                                    ...prev,
+                                    state: value,
+                                  }))
+                                }
                               />
                             </div>
                           </div>
@@ -441,7 +461,12 @@ const ManageService = () => {
                               placeholder="Enter City"
                               type="text"
                               value={address.city}
-                              onChange={(e) => setAddress((prev) => ({ ...prev, city: e.target.value }))}
+                              onChange={(e) =>
+                                setAddress((prev) => ({
+                                  ...prev,
+                                  city: e.target.value,
+                                }))
+                              }
                               required
                             />
                           </div>
@@ -450,64 +475,83 @@ const ManageService = () => {
                             <Label htmlFor="zipCode">Zip Code</Label>
                             <Input
                               placeholder="Enter Zip Code"
+                              className="appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                               name="zipCode"
                               id="zipCode"
                               type="number"
                               value={address.zipCode}
-                              onChange={(e) => setAddress((prev) => ({ ...prev, zipCode: e.target.value }))}
+                              onChange={(e) =>
+                                setAddress((prev) => ({
+                                  ...prev,
+                                  zipCode: e.target.value,
+                                }))
+                              }
                               required
                             />
                           </div>
                         </div>
                       </div>
 
-
                       {/* Pricing of the service */}
 
                       <p className="text-lg mt-6">Pricing </p>
                       <div className="flex flex-col gap-4">
                         <div className="col-span-1 flex flex-col items-start justify-center w-full gap-2">
-                          <Label htmlFor="country">Pricing type <TooltipInfo content="Price type set with service, once set during service creation, it cannot be changed later." /> </Label>
+                          <Label htmlFor="country">
+                            Pricing type{" "}
+                            <TooltipInfo content="Price type set with service, once set during service creation, it cannot be changed later." />{" "}
+                          </Label>
                           <div className=" w-full">
                             <DropdownSelector
                               values={dropdownValuesProductPriceType}
                               selectedValue={pricingType}
-                              onChange={({ value }: any) => setPricingType(value)}
+                              onChange={({ value }: any) =>
+                                setPricingType(value)
+                              }
                             />
                           </div>
                         </div>
                         <div className="grid grid-cols-3 gap-5">
-                          {
-                            pricingType === "TIRE" && (
-                              <>
-                                <div className="col-span-1 flex flex-col items-start justify-center gap-2">
-                                  <Label htmlFor="unitPrice"  >Lower bound</Label>
-                                  <Input
-                                    name="unitPrice"
-                                    id="unitPrice"
-                                    placeholder="Enter unit pricing"
-                                    type="number"
-                                    value={unitPricing.lowerBound}
-                                    onChange={(e) => setUnitPricing((prev) => ({ ...prev, lowerBound: e.target.value }))}
-                                    required
-                                  />
-                                </div>
-                                <div className="col-span-1 flex flex-col items-start justify-center gap-2">
-                                  <Label htmlFor="unitPrice"  >Upper bound</Label>
-                                  <Input
-                                    name="unitPrice"
-                                    id="unitPrice"
-                                    placeholder="Enter unit pricing"
-                                    type="number"
-                                    value={unitPricing.upperBound}
-                                    onChange={(e) => setUnitPricing((prev) => ({ ...prev, upperBound: e.target.value }))}
-                                    required
-                                  />
-                                </div></>
-                            )
-                          }
+                          {pricingType === "TIRE" && (
+                            <>
+                              <div className="col-span-1 flex flex-col items-start justify-center gap-2">
+                                <Label htmlFor="unitPrice">Lower bound</Label>
+                                <Input
+                                  name="unitPrice"
+                                  id="unitPrice"
+                                  placeholder="Enter unit pricing"
+                                  type="number"
+                                  value={unitPricing.lowerBound}
+                                  onChange={(e) =>
+                                    setUnitPricing((prev) => ({
+                                      ...prev,
+                                      lowerBound: e.target.value,
+                                    }))
+                                  }
+                                  required
+                                />
+                              </div>
+                              <div className="col-span-1 flex flex-col items-start justify-center gap-2">
+                                <Label htmlFor="unitPrice">Upper bound</Label>
+                                <Input
+                                  name="unitPrice"
+                                  id="unitPrice"
+                                  placeholder="Enter unit pricing"
+                                  type="number"
+                                  value={unitPricing.upperBound}
+                                  onChange={(e) =>
+                                    setUnitPricing((prev) => ({
+                                      ...prev,
+                                      upperBound: e.target.value,
+                                    }))
+                                  }
+                                  required
+                                />
+                              </div>
+                            </>
+                          )}
                           <div className="col-span-1 flex flex-col items-start justify-center gap-2">
-                            <Label htmlFor="unitPrice"  >Unit price</Label>
+                            <Label htmlFor="unitPrice">Unit price</Label>
                             <InputGroup>
                               <InputGroupAddon>
                                 <DollarSign />
@@ -517,25 +561,26 @@ const ManageService = () => {
                                   placeholder="Enter unit pricing"
                                   type="number"
                                   value={unitPricing.price}
-                                  onChange={(e) => setUnitPricing((prev) => ({ ...prev, price: e.target.value }))}
+                                  onChange={(e) =>
+                                    setUnitPricing((prev) => ({
+                                      ...prev,
+                                      price: e.target.value,
+                                    }))
+                                  }
                                   required
                                 />
                               </InputGroupAddon>
                             </InputGroup>
                           </div>
-
                         </div>
                       </div>
-
                     </div>
                     <div className="col-span-1 py-2 grid h-full ">
                       <div className="w-full items-start  gap-2 flex flex-col">
                         <Label className="text-[#8B8D97] ">
-
                           Product Long Description
                         </Label>
                         <div className="w-full h-96">
-
                           <MarkdownEditor
                             longDescription={longDescription}
                             setLongDescription={setLongDescription}
@@ -571,7 +616,6 @@ const ManageService = () => {
             <span className="text-[#5E6366]">Service banner image</span>
             <Card className="w-full flex items-center justify-center  rounded-lg bg-[#F4F5FA]">
               <div className="w-full group  gap-1  flex flex-col items-center">
-
                 {productId && mediaBanner != "" ? (
                   <div className="relative w-fit mx-auto group">
                     {/* Buttons */}
@@ -591,25 +635,28 @@ const ManageService = () => {
                     <div className="w-24 h-24 rounded-full overflow-hidden">
                       <img
                         className="w-full h-full object-cover"
-                        src={`${import.meta.env.VITE_IMAGE_BASE_URL
-                          }/${mediaBanner}`}
+                        src={`${
+                          import.meta.env.VITE_IMAGE_BASE_URL
+                        }/${mediaBanner}`}
                         alt="uploaded-image"
                       />
                     </div>
                   </div>
                 ) : (
                   <div
-                    className={`${mediaBanner != ""
-                      ? "w-24 h-24 rounded-full overflow-hidden"
-                      : "w-10 h-12 flex items-center justify-center p-1"
-                      }`}
+                    className={`${
+                      mediaBanner != ""
+                        ? "w-24 h-24 rounded-full overflow-hidden"
+                        : "w-10 h-12 flex items-center justify-center p-1"
+                    }`}
                   >
                     <img
                       className="object-cover"
                       src={
                         mediaBanner != ""
-                          ? `${import.meta.env.VITE_IMAGE_BASE_URL
-                          }/${mediaBanner}`
+                          ? `${
+                              import.meta.env.VITE_IMAGE_BASE_URL
+                            }/${mediaBanner}`
                           : uploadImage
                       }
                       alt="Banner"

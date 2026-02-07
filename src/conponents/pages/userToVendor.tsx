@@ -164,7 +164,7 @@ const MainCard = ({ setUserStepNumber }: any) => {
             {/* Create a new vendor */}
             <div className=" mt-6">
               <Label className=" mb-1">
-                Create a new company account (join use like a vendor)
+                Create a new company account (join as a vendor)
               </Label>
               <Button
                 onClick={() => onClickHandler(2)}

@@ -64,27 +64,36 @@ export const contactSchema = z.object({
   instagramURL: z
     .string()
     .trim()
-    .min(1, "Instagram link required")
+    .optional()
     .refine(
-      (val) => val.startsWith("https://"),
+      (val) => !val || val.startsWith("https://"),
       "Instagram link must start with https://",
+    ),
+
+  linkedinURL: z
+    .string()
+    .trim()
+    .optional()
+    .refine(
+      (val) => !val || val.startsWith("https://"),
+      "Linkedin link must start with https://",
     ),
 
   youtubeURL: z
     .string()
     .trim()
-    .min(1, "YouTube link required")
+    .optional()
     .refine(
-      (val) => val.startsWith("https://"),
+      (val) => !val || val.startsWith("https://"),
       "YouTube link must start with https://",
     ),
 
   facebookURL: z
     .string()
     .trim()
-    .min(1, "Facebook link required")
+    .optional()
     .refine(
-      (val) => val.startsWith("https://"),
+      (val) => !val || val.startsWith("https://"),
       "Facebook link must start with https://",
     ),
 });

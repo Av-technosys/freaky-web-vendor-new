@@ -23,6 +23,18 @@ export const signUpUser = async (userData: any) => {
   }
 };
 
+export const resendOtp = async (userEmail: any) => {
+  try {
+    const response = await axiosInstance.post(
+      apiConstant.authentication.resendOtp,
+       { email: userEmail } 
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+  }
+};
+
 export const otpSignUpUser = async (userData: any) => {
   try {
     const response = await axiosInstance.post(

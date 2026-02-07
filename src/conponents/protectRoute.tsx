@@ -3,6 +3,7 @@ import { jwtDecode } from "jwt-decode";
 
 const ProtectedRoute = () => {
   const token = localStorage.getItem("id_token");
+  const location = window.location.pathname;
 
   if (!token) {
     return <Navigate to="/login" replace />;
@@ -23,11 +24,15 @@ const ProtectedRoute = () => {
       }
     }
 
+    if (!vendorId && location === "/map-vendor") {
+      return <Outlet />;
+    }
+
     if (vendorId) {
       return <Outlet />;
     }
 
-    return <Navigate to="/map-vnedor" replace />;
+    return <Navigate to="/map-vendor" replace />;
   } catch (error) {
     console.error("Token decode failed", error);
     return <Navigate to="/login" replace />;

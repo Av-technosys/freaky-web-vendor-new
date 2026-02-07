@@ -5,7 +5,7 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
+  
   CardHeader,
   CardTitle,
   Input,
@@ -15,15 +15,24 @@ import {
   InputOTPSlot,
   Label,
 } from "../components/ui";
-import { useUserOtpSignUpMutation } from "../services/useCreateOrLoginUser";
+import {
+  useUserOtpSignUpMutation,
+  useUserResendOtpMutation,
+} from "../services/useCreateOrLoginUser";
 import { toast } from "sonner";
+
 
 export type otpProps = {
   userEmail: any;
+  setOtpPopup: any;
+  otpPopup: any;
 };
 
-const OtpSignUp = ({ userEmail }: otpProps) => {
+const OtpSignUp = ({ userEmail, setOtpPopup, otpPopup }: otpProps) => {
   const mutation = useUserOtpSignUpMutation();
+  const resendOtpMutation = useUserResendOtpMutation();
+
+
   const submitHandler = (event: any) => {
     event.preventDefault();
     const code = event.target.code.value;
@@ -36,6 +45,10 @@ const OtpSignUp = ({ userEmail }: otpProps) => {
       };
       mutation.mutate(userData);
     }
+  };
+
+  const resendHandler = () => {
+    resendOtpMutation.mutate(userEmail);
   };
 
   return (
@@ -58,7 +71,7 @@ const OtpSignUp = ({ userEmail }: otpProps) => {
             <form onSubmit={(event) => submitHandler(event)}>
               <div className="flex flex-col gap-3 ">
                 <div className="w-full text-center font-bold">Sign Up</div>
-                <div>
+                <div className="flex flex-col gap-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
                     readOnly
@@ -68,7 +81,7 @@ const OtpSignUp = ({ userEmail }: otpProps) => {
                     required
                   />
                 </div>
-                <div>
+                <div className="flex flex-col gap-2">
                   <Label htmlFor="otp">Enter OTP</Label>
                   <InputOTP name="code" maxLength={6}>
                     <InputOTPGroup>
@@ -84,26 +97,38 @@ const OtpSignUp = ({ userEmail }: otpProps) => {
                     </InputOTPGroup>
                   </InputOTP>
                 </div>
-                <div>
+                <div className="flex flex-col gap-2 mt-3">
+                  <Button
+                    type="button"
+                    onClick={resendHandler}
+                    disabled={resendOtpMutation.isPending}
+                    variant={"outline"}
+                    className="w-full"
+                  >
+                    {resendOtpMutation.isPending
+                      ? "Resending..."
+                      : "Resend OTP"}
+                  </Button>
                   <Button type="submit" className="w-full">
                     Verify OTP
                   </Button>
+                  <Button
+                    type="button"
+                    onClick={() => setOtpPopup(!otpPopup)}
+                    className="text-gray-600 "
+                    variant="outline"
+                  >
+                    Back
+                  </Button>
                 </div>
+                <p className="text-center text-[11px] text-gray-700">
+                  {" "}
+                  By continuing, you agree to the <br /> Terms of use and
+                  Privacy Policy.
+                </p>
               </div>
             </form>
           </CardContent>
-          <CardFooter className="flex-col gap-2">
-            <p className="text-center text-[14px] text-gray-700">
-              {" "}
-              By continuing, you agree to the <br /> Terms of use and Privacy
-              Policy.
-            </p>
-            <div className="w-full mt-2 flex items-center justify-between text-[14px]">
-              <div>
-                <u>Other issue with sign up</u>
-              </div>
-            </div>
-          </CardFooter>
         </Card>
       </div>
     </>
