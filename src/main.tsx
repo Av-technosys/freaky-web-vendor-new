@@ -72,14 +72,14 @@ const routes = createBrowserRouter([
     element: <ForgetPassword />,
   },
   {
-    path: "/map-vendor",
-    element: <UserToVendor />,
-  },
-  {
     element: <ProtectRoute />,
     children: [
       { path: "/select-company", element: <SelectCompany /> },
       { path: "/create-company", element: <CreateCompany /> },
+      {
+        path: "/map-vendor",
+        element: <UserToVendor />,
+      },
     ],
   },
 ]);
@@ -90,5 +90,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <RouterProvider router={routes} />
       <Toaster position="top-center" />
     </QueryClientProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

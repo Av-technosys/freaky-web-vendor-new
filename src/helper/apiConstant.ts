@@ -4,6 +4,7 @@ export const apiConstant = {
     login: "v1/auth/signin",
     signUp: "v1/auth/signup",
     otpSignUp: "v1/auth/confirm",
+    resendOtp: "v1/auth/resend_otp",
     forgetPasswordUsingEmail: "v1/auth/forgot-password",
     forgetPasswordUsingOTP: "v1/auth/confirm_forgot_password",
   },

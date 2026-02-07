@@ -97,7 +97,8 @@ BankAccountInformationProps) => {
                 placeholder="Enter Routing Number (ABA)"
                 name="routingNumber"
                 id="routingNumber"
-                type="text"
+                type="number"
+                className="appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 value={data.routingNumber}
                 onChange={(e) => onUpdate("routingNumber", e.target.value)}
                 required

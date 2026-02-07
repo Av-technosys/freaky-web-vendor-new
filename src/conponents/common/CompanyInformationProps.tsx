@@ -6,7 +6,7 @@ import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-  InputGroupText,
+  
 } from "../../components/ui/input-group";
 import {
   InputOTP,
@@ -89,10 +89,10 @@ const CompanyInformation = ({
               <Label htmlFor="website">Website</Label>
               <InputGroup>
                 <InputGroupAddon>
-                  <InputGroupText>https://</InputGroupText>
+                  {/* <InputGroupText>https://</InputGroupText> */}
                 </InputGroupAddon>
                 <InputGroupInput
-                  placeholder="example.com"
+                  placeholder="https://www.example.com"
                   value={data.website.replace("https://", "")}
                   onChange={(e) =>
                     onUpdate("website", `https://${e.target.value}`)
@@ -111,6 +111,7 @@ const CompanyInformation = ({
               <Input
                 name="dbaName"
                 id="dbaName"
+                placeholder="Enter DBA Name"
                 type="text"
                 value={data.dbaName}
                 readOnly={isReadOnly}
@@ -127,6 +128,7 @@ const CompanyInformation = ({
               <Input
                 name="legalEntityName"
                 id="legalEntityName"
+                placeholder="Enter Entity Name"
                 type="text"
                 value={data.legalEntityName}
                 onChange={(e) => onUpdate("legalEntityName", e.target.value)}
@@ -170,7 +172,7 @@ const CompanyInformation = ({
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
-                    className="w-full justify-between font-normal"
+                    className="w-full justify-between text-gray-500 font-normal"
                   >
                     {data.incorporationDate
                       ? data.incorporationDate.toLocaleDateString()
@@ -183,6 +185,7 @@ const CompanyInformation = ({
                     mode="single"
                     selected={data.incorporationDate}
                     captionLayout="dropdown"
+                    disabled={{ after: new Date() }}
                     onSelect={(date: Date | undefined) => {
                       onUpdate("incorporationDate", date);
                       setOpen(false);

@@ -35,7 +35,11 @@ const SignUp = () => {
               setUserEmail={setUserEmail}
             />
           ) : (
-            <OtpSignUp userEmail={userEmail} />
+            <OtpSignUp
+              userEmail={userEmail}
+              setOtpPopup={setOtpPopup}
+              otpPopup={otpPopup}
+            />
           )}
         </div>
         <div className="order-1 hidden md:block md:order-2 p-2 md:p-0 w-full h-screen">

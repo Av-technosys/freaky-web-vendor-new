@@ -5,6 +5,7 @@ import {
   forgetPasswordUsingOTP,
   loginUser,
   otpSignUpUser,
+  resendOtp,
   signUpUser,
 } from "../helper/loginUser";
 import { useNavigate } from "react-router-dom";
@@ -70,6 +71,18 @@ export const useUserSignUpMutation = () => {
     },
     onError: (error: any) => {
       toast.error(error?.error || "user already exist");
+    },
+  });
+};
+
+export const useUserResendOtpMutation = () => {
+  return useMutation({
+    mutationFn: resendOtp,
+    onSuccess: () => {
+      toast.success(`OTP send to your email`);
+    },
+    onError: (error: any) => {
+      toast.error(error?.error || "Something went wrong");
     },
   });
 };

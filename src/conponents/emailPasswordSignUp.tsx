@@ -89,8 +89,12 @@ const EmailPasswordSignUp = ({
                   />
                 </div>
                 <div>
-                  <Button type="submit" className="w-full">
-                    Sign Up
+                  <Button
+                    disabled={mutation.isPending}
+                    type="submit"
+                    className="w-full"
+                  >
+                    {mutation.isPending ? "Singing Up..." : "Sign Up"}
                   </Button>
                 </div>
               </div>

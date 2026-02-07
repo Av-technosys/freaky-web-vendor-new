@@ -3,6 +3,7 @@ import { jwtDecode } from "jwt-decode";
 
 const ProtectedRoute = () => {
   const token = localStorage.getItem("id_token");
+  const location = window.location.pathname;
 
   if (!token) {
     return <Navigate to="/login" replace />;
@@ -21,6 +22,10 @@ const ProtectedRoute = () => {
       } catch {
         vendorId = null;
       }
+    }
+
+    if (!vendorId && location === "/map-vendor") {
+      return <Outlet />;
     }
 
     if (vendorId) {
