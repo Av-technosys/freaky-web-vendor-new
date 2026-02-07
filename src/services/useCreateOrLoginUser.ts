@@ -47,11 +47,11 @@ export const useUserLoginMutation = () => {
         if (vendorId) {
           navigate("/");
         } else {
-          navigate("/map-vnedor");
+          navigate("/map-vendor");
         }
       } catch (error) {
         console.error("Invalid token", error);
-        navigate("/map-vnedor");
+        navigate("/map-vendor");
       }
     },
 
@@ -89,7 +89,7 @@ export const useUserOtpSignUpMutation = () => {
       localStorage.setItem("refresh_token", refreshToken);
       localStorage.setItem("username", user.username);
 
-      navigate("/map-vnedor");
+      navigate("/map-vendor");
     },
     onError: () => {
       toast.error("Something went wrong!");

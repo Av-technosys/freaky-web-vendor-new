@@ -15,7 +15,7 @@ export const tokenStorage = {
   },
 };
 
-export const refreshIdToken = async () => {
+export const rotateIdToken = async () => {
   const refreshToken = tokenStorage.getRefreshToken();
 
   const username = tokenStorage.getUsername();
