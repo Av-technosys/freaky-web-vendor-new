@@ -11,17 +11,24 @@ import logo from "../assets/Images/freaky_logo.png";
 
 
 import { Button, Separator } from "../components/ui";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { isShowSidebarItem } from "@/helper/sidebar/isSidebarShowItem";
 import { TiIconLogout } from "./icons";
 import { SIDEBAR_BOTTOM_ITEMS, SIDEBAR_ITEMS } from "@/const/navigation";
-import { logoutHandler } from "@/helper/sidebar/logoutHandler";
+import { tokenStorage } from "@/helper/refreshToken";
+import { toast } from "sonner";
 
 
 
 function AppSidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const logoutHandler = () => {
 
+    tokenStorage.clear()
+    toast.success("Logout successfully...");
+    navigate("/login");
+  };
   return (
     <Sidebar className=" ">
       <div className=" p-2 pr-0 bg-transparent h-full   ">

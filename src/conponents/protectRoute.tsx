@@ -27,7 +27,7 @@ const ProtectedRoute = () => {
       return <Outlet />;
     }
 
-    return <Navigate to="/map-vnedor" replace />;
+    return <Navigate to="/map-vendor" replace />;
   } catch (error) {
     console.error("Token decode failed", error);
     return <Navigate to="/login" replace />;

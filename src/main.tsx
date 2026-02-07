@@ -24,7 +24,7 @@ import SelectCompany from "./conponents/pages/selectCompany";
 import CreateCompany from "./conponents/pages/createCompany";
 import ManagePaymentBook from "./conponents/pages/managePaymentBook";
 import ManageService from "./conponents/pages/manageService";
-import UserToVendor from "./conponents/pages/userToVendor";
+import UserToVendor from "./conponents/pages/mapVendor";
 
 const queryClient = new QueryClient();
 
@@ -72,7 +72,7 @@ const routes = createBrowserRouter([
     element: <ForgetPassword />,
   },
   {
-    path: "/map-vnedor",
+    path: "/map-vendor",
     element: <UserToVendor />,
   },
   {

@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { VITE_BACKEND_URL } from "@/const/env";
-import { refreshIdToken, tokenStorage } from "./refreshToken";
+import { rotateIdToken, tokenStorage } from "./refreshToken";
 
 export const axiosInstance = axios.create({
   baseURL: VITE_BACKEND_URL,
@@ -64,8 +64,8 @@ axiosInstance.interceptors.response.use(
     isRefreshing = true;
 
     try {
-      const newToken = await refreshIdToken();
-      
+      const newToken = await rotateIdToken();
+
       notify(newToken);
 
       originalRequest.headers.Authorization = `Bearer ${newToken}`;
