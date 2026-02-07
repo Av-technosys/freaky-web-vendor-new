@@ -49,6 +49,18 @@ export const getVendorEmployees = async () => {
   }
 };
 
+export const getEmployeePermissionsByType = async (employeeId: any) => {
+  try {
+    const response = await axiosInstance.get(
+      `${apiConstant.vendor.getEmployeePermissions}/${employeeId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+    throw error;
+  }
+};
+
 export const getAllVendors = async (search: string) => {
   try {
     const response = await axiosInstance.get(
@@ -77,7 +89,7 @@ type NotificationResponse = {
   data: any[];
   hasNextPage: boolean;
   nextPage: number;
-  totalCount:any
+  totalCount: any
 };
 
 export const getVendorNotifications = async ({

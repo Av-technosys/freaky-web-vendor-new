@@ -27,3 +27,18 @@ export const createVendorEmployeeRequest = async (vendorId: any) => {
     throw error;
   }
 };
+
+export const acceptVendorInvite = async (vendorId: any) => {
+  try {
+    const response = await axiosInstance.put(
+      `${apiConstant.vendor.acceptVendorInvite}`,
+      {
+        vendorId: vendorId,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error while accepting invite:", error);
+    throw error;
+  }
+};

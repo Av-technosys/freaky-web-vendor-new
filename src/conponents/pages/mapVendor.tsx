@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
   Label,
+  Skeleton,
 } from "@/components/ui";
 import { cn } from "@/lib/utils";
 import {
@@ -18,7 +19,7 @@ import {
   LoaderCircle,
   Search,
 } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CompanyInformation from "../common/CompanyInformationProps";
 import ContactDetails from "../common/ContactDetails";
 import BusinessAddress from "../common/BusinessAddress";
@@ -45,6 +46,7 @@ import {
   useUpdateContactInformation,
   useUpdateOwnershipInformation,
 } from "@/services/useCreateOrUpdateCompanyDetails";
+import { useAcceptVendorInvite } from "@/services/useAcceptVendorInvite";
 import { useNavigate } from "react-router-dom";
 import {
   addressSchema,
@@ -53,16 +55,52 @@ import {
   contactSchema,
   ownershipSchema,
 } from "@/lib/validation/vendorSchema";
+import { rotateIdToken } from "@/helper/refreshToken";
+import { jwtDecode } from "jwt-decode";
 
 const UserToVendor = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("id_token");
+    if (token) {
+      try {
+        const decodedToken: any = jwtDecode(token);
+        const vendorRaw = decodedToken["custom:vendor_ids"];
+        if (vendorRaw) {
+          const vendorObj = JSON.parse(vendorRaw);
+          const vendorId = vendorObj.vendorId;
+
+          console.log("vendorRaw: ", vendorId);
+          if (vendorId) {
+            navigate("/");
+          }
+        }
+      } catch (error) {
+        console.error("Invalid token", error);
+
+      }
+    }
+  }, [])
+
+
   const [userStepNumber, setUserStepNumber] = React.useState(0);
+  const [selectedVendorId, setSelectedVendorId] = React.useState<string | null>(
+    null
+  );
+
   return (
     <motion.div className=" bg-linear-to-tr from-orange-200 to-orange-300 h-full min-h-screen w-full flex justify-center items-center">
       {userStepNumber == 0 ? (
-        <MainCard setUserStepNumber={setUserStepNumber} />
+        <MainCard
+          setUserStepNumber={setUserStepNumber}
+          setSelectedVendorId={setSelectedVendorId}
+        />
       ) : null}
       {userStepNumber == 1 && (
-        <AcceptRequestFromVendor setUserStepNumber={setUserStepNumber} />
+        <AcceptRequestFromVendor
+          setUserStepNumber={setUserStepNumber}
+          selectedVendorId={selectedVendorId}
+        />
       )}
       {userStepNumber == 2 && (
         <CreateNewVendor setUserStepNumber={setUserStepNumber} />
@@ -76,7 +114,7 @@ const UserToVendor = () => {
 
 export default UserToVendor;
 
-const MainCard = ({ setUserStepNumber }: any) => {
+const MainCard = ({ setUserStepNumber, setSelectedVendorId }: any) => {
   const { data: VendorInvites, isPending } = useGetVendorInvites();
 
   const varient = {
@@ -99,7 +137,10 @@ const MainCard = ({ setUserStepNumber }: any) => {
       duration: 0.3,
     },
   };
-  function onClickHandler(num: number) {
+  function onClickHandler(num: number, vendorId?: string) {
+    if (vendorId) {
+      setSelectedVendorId(vendorId);
+    }
     setUserStepNumber(num);
   }
   return (
@@ -112,9 +153,10 @@ const MainCard = ({ setUserStepNumber }: any) => {
           <CardContent>
             <div className="">
               {isPending && (
-                <Label className="mb-2 text-sm text-gray-500">
-                  Loading vendor requests...
-                </Label>
+                <div className=" space-y-2">
+                  <Skeleton className="h-7 w-full" />
+                  <Skeleton className="h-7 w-full" />
+                </div>
               )}
               {!isPending && VendorInvites?.data?.length > 0 && (
                 <>
@@ -125,7 +167,7 @@ const MainCard = ({ setUserStepNumber }: any) => {
                   {VendorInvites.data.map((vendor: any, index: number) => (
                     <Button
                       key={index}
-                      onClick={() => onClickHandler(1)}
+                      onClick={() => onClickHandler(1, vendor?.vendorId)}
                       variant="outline"
                       size="lg"
                       className="bg-green-700 text-white hover:bg-green-600 hover:text-white h-14 mt-2 flex gap-4 justify-start w-full"
@@ -147,7 +189,7 @@ const MainCard = ({ setUserStepNumber }: any) => {
                           {vendor?.businessName}
                         </p>
                         <p>
-                          {vendor?.city}, {vendor?.country}
+                          {vendor?.city} {vendor?.country}
                         </p>
                       </div>
                     </Button>
@@ -192,13 +234,36 @@ const MainCard = ({ setUserStepNumber }: any) => {
   );
 };
 
-const AcceptRequestFromVendor = ({ setUserStepNumber }: any) => {
+const AcceptRequestFromVendor = ({
+  setUserStepNumber,
+  selectedVendorId,
+}: any) => {
   const varients = {
     initial: { opacity: 0.8, scale: 0.98, translateX: 60 },
     animate: { opacity: 1, scale: 1, translateX: 0 },
     exit: { opacity: 0 },
     transition: { duration: 0.3 },
   };
+  const navigate = useNavigate();
+  const [isPending, setIsPending] = React.useState(false);
+  function handleAccepBtnClick() {
+    if (selectedVendorId) {
+      setIsPending(true);
+      acceptInviteMutation.mutate(selectedVendorId, {
+        onSuccess: async () => {
+          await rotateIdToken();
+          setIsPending(false);
+          navigate("/");
+        },
+        onError: () => {
+          setIsPending(false);
+        },
+      });
+    }
+  }
+
+  const acceptInviteMutation = useAcceptVendorInvite();
+
   return (
     <motion.div {...varients}>
       <CCard>
@@ -206,8 +271,16 @@ const AcceptRequestFromVendor = ({ setUserStepNumber }: any) => {
           <CardTitle>Accept request from vendor</CardTitle>
         </CardHeader>
         <CardContent>
-          <Button className=" w-full mt-6">
-            <Check />
+          <Button
+            className=" w-full mt-6"
+            disabled={isPending}
+            onClick={handleAccepBtnClick}
+          >
+            {isPending ? (
+              <LoaderCircle className="animate-spin mr-2" />
+            ) : (
+              <Check className="mr-2" />
+            )}
             Accept
           </Button>
         </CardContent>
@@ -932,8 +1005,8 @@ const CBankAccountInformation = ({
         }}
         onUpdate={updateCompanyData}
         errors={errors}
-        onPrevious={() => {}}
-        onSave={() => {}}
+        onPrevious={() => { }}
+        onSave={() => { }}
       />
 
       <div className="px-4 flex justify-end w-full">
