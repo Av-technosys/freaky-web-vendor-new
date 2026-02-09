@@ -29,7 +29,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import UpdateDocumentPopup from "../updateDocumentPopup";
 import withAuthorization from "@/lib/withAuthorization";
-import { SkeletonForm } from "@/components/skletob/form";
+import { SkeletonForm } from "@/components/skleton/form";
 
 // ------------------------ INITIAL VALUES ------------------------
 

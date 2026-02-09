@@ -1,4 +1,4 @@
-import { SkeletonText } from "@/components/skletob/text"
+import { SkeletonText } from "@/components/skleton/text"
 import { Label } from "@/components/ui"
 import { useGetVendorEmployees } from "@/services/useGetVendorCompanyDetails";
 import MultiselectorDialog from "./teamRoleMultiselectordialogbox";

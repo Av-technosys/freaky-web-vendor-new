@@ -14,7 +14,7 @@ import { TiIconPencilPlus } from "./icons";
 import DeleteServiceDialog from "./deleteServiceDialog";
 
 import { cn } from "@/lib/utils";
-import { SkeletonTable } from "@/components/skletob/table";
+import { SkeletonTable } from "@/components/skleton/table";
 
 export function ServicesTable({ tableData, isPending }: any) {
   const [searchParams] = useSearchParams();

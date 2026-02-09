@@ -6,7 +6,7 @@ import { getVendorReviews } from "../../services/userGetVendorReview";
 import { useQueryClient } from "@tanstack/react-query";
 
 import withAuthorization from "@/lib/withAuthorization";
-import { SkeletonCard } from "@/components/skletob/card";
+import { SkeletonCard } from "@/components/skleton/card";
 
 const dropdownValuesTime = {
   title: "Time",
