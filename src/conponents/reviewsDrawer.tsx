@@ -4,12 +4,12 @@ import {
   SheetContent,
   SidebarGroup,
   SidebarGroupLabel,
+  Skeleton,
 } from "../components/ui";
 import { getVendorReviewById } from "../services/userGetVendorReview";
 import { useEffect, useState } from "react";
 import { ProfilePicture } from "./common/ProfileIcon";
-import { InputGroupAddon } from "@/components/ui/input-group";
-import { LoaderCircle } from "lucide-react";
+import { SkeletonAvatarCard } from "@/components/skleton/avtarCard";
 
 type reviewDrawerProps = {
   open: any;
@@ -33,9 +33,12 @@ export function ReviewsDrawer({ open, setOpen, reviewId }: reviewDrawerProps) {
           </SidebarGroup>
 
           {isPending ? (
-            <InputGroupAddon align="inline-end">
-              <LoaderCircle className="animate-spin" />
-            </InputGroupAddon>
+            <>
+              <div className="px-4">
+                <SkeletonAvatarCard />
+              </div>
+              <ReviewSkeleton />
+            </>
           ) : (
             <div className=" px-4">
               <div className=" border my-4 rounded-xl shadow-xs p-2 w-full flex items-center gap-3 justify-between  ">
@@ -107,7 +110,7 @@ export function ReviewsDrawer({ open, setOpen, reviewId }: reviewDrawerProps) {
                                 />
                               </div>
                             );
-                          }
+                          },
                         )}
                       </div>
                     </div>
@@ -129,3 +132,13 @@ const Heading = ({ children }: { children: React.ReactNode }) => {
 const Text = ({ children }: { children: React.ReactNode }) => {
   return <p className=" text-black ">{children}</p>;
 };
+
+function ReviewSkeleton() {
+  return (
+    <div className="grid grid-cols-1 gap-5 mt-4 px-4">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <Skeleton key={i} className="h-9 w-full" />
+      ))}
+    </div>
+  );
+}

@@ -17,17 +17,16 @@ import { Skeleton } from "../components/ui";
 type ComponentProps = {
   children: React.ReactNode;
   employeeId: any;
-}
+};
 
 export default function MultiselectorDialog({
   children,
   employeeId,
 }: ComponentProps) {
-
   const [openDialog, setOpenDialog] = useState(false);
   const { data: employeePermissions, isPending } = useGetEmployeePermissions(
     employeeId,
-    openDialog
+    openDialog,
   );
 
   const [allowedPermissions, setAllowedPermissions] = useState<string[]>([]);
@@ -59,7 +58,7 @@ export default function MultiselectorDialog({
     setAllowedPermissions((prev: string[]) =>
       checked
         ? [...new Set([...prev, roleKey])]
-        : prev.filter((item) => item !== roleKey)
+        : prev.filter((item) => item !== roleKey),
     );
   };
 
@@ -70,7 +69,7 @@ export default function MultiselectorDialog({
         onSuccess: () => {
           setOpenDialog(false);
         },
-      }
+      },
     );
   };
 
@@ -88,7 +87,7 @@ export default function MultiselectorDialog({
                 <Skeleton className="h-4 w-full" />
               </div>
             ) : (
-              <>
+              <div className="h-80 pr-4 w-full overflow-y-auto">
                 {USER_ACCESS_DROPDOWN?.map((role: any) => (
                   <div
                     key={role.label}
@@ -101,12 +100,12 @@ export default function MultiselectorDialog({
                     <div>
                       <Checkbox
                         checked={allowedPermissions.includes(
-                          role?.value?.toLowerCase()
+                          role?.value?.toLowerCase(),
                         )}
                         onCheckedChange={(checked) =>
                           togglePermission(
                             role?.value?.toLowerCase(),
-                            checked === true
+                            checked === true,
                           )
                         }
                       />
@@ -116,7 +115,7 @@ export default function MultiselectorDialog({
                 <div className="float-right flex gap-2 text-xl font-bold mt-4">
                   <Button onClick={updateHandler}>Update</Button>
                 </div>
-              </>
+              </div>
             )}
           </DialogDescription>
         </DialogHeader>
