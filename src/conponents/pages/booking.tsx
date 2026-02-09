@@ -24,7 +24,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { BOOKING_TABLE_PAGE_SIZE, BOOKING_TABLE_HEADER } from "@/const";
 import { cn } from "@/lib/utils";
 import withAuthorization from "@/lib/withAuthorization";
-import { SkeletonTable } from "@/components/skletob/table";
+import { SkeletonTable } from "@/components/skleton/table";
 
 const Booking = () => {
   const navigate = useNavigate();
