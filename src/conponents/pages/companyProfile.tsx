@@ -17,6 +17,7 @@ import {
   useUpdateBankAccountInformation,
   useUpdateBusinessAddressInformation,
   useUpdateCompanyInformation,
+  useUpdateCompanyLogo,
   useUpdateContactInformation,
   useUpdateOwnershipInformation,
 } from "../../services/useCreateOrUpdateCompanyDetails";
@@ -89,9 +90,12 @@ const CompanyProfile = () => {
   const getImageUrlMutation = useGetImageUrl();
   const uploadImageMutation = useUploadImage();
 
-  const { data: vendorData, isPending: isVendorPending } = useGetVendorDetails();
-  const { data: vendorOwnership, isPending: isVendorOwnershipPending } = useGetVendorOwnershipDetails();
-  const { data: allVendorDocuments, isPending: isVendorDocumentsPending } = useGetVendorDocuments();
+  const { data: vendorData, isPending: isVendorPending } =
+    useGetVendorDetails();
+  const { data: vendorOwnership, isPending: isVendorOwnershipPending } =
+    useGetVendorOwnershipDetails();
+  const { data: allVendorDocuments, isPending: isVendorDocumentsPending } =
+    useGetVendorDocuments();
 
   const queryClient = useQueryClient();
 
@@ -102,6 +106,8 @@ const CompanyProfile = () => {
   const OwnershipInformationMutation = useUpdateOwnershipInformation();
   const vendorDocumentMutation = useCreateVendorDocument();
   const documentDeleteMutation = useDeleteVendorDocument();
+
+  const createOrUpdateCompanyLogo = useUpdateCompanyLogo();
 
   const [companyData, setCompanyData] = useState<CompanyData>({
     businessName: "",
@@ -240,7 +246,6 @@ const CompanyProfile = () => {
       einNumber: companyData.einNumber || "",
       businessType: companyData.businessType || "",
       incorporationDate: companyData.incorporationDate || Date.now(),
-      companyLogo: companyLogo || "",
     };
 
     const companyContactDetails = {
@@ -385,7 +390,12 @@ const CompanyProfile = () => {
         url: uploadRes.data.uploadUrl,
         file,
       });
+      const filePath = uploadRes.data.filePath;
       setCompanyLogo(uploadRes.data.filePath);
+
+      createOrUpdateCompanyLogo.mutate({
+        companyLogo: filePath,
+      });
     }
   };
 
@@ -405,10 +415,12 @@ const CompanyProfile = () => {
   };
 
   if (isVendorPending || isVendorOwnershipPending || isVendorDocumentsPending) {
-    return <div className=" flex flex-col gap-32 pl-4 pt-4">
-      <SkeletonForm />
-      <SkeletonForm />
-    </div>
+    return (
+      <div className=" flex flex-col gap-32 pl-4 pt-4">
+        <SkeletonForm />
+        <SkeletonForm />
+      </div>
+    );
   }
 
   return (
@@ -534,8 +546,9 @@ const CompanyProfile = () => {
                         >
                           {doc.documentUrl !== "choose file" ? (
                             <a
-                              href={`${import.meta.env.VITE_IMAGE_BASE_URL}/${doc.documentUrl
-                                }`}
+                              href={`${import.meta.env.VITE_IMAGE_BASE_URL}/${
+                                doc.documentUrl
+                              }`}
                               target="_blank"
                               className="w-full"
                               rel="noopener noreferrer"
@@ -576,6 +589,7 @@ const CompanyProfile = () => {
         <CompanyLogo
           vendorId={vendorId}
           companyLogo={companyLogo}
+          setCompanyLogo={setCompanyLogo}
           handleCompanyLogo={handleCompanyLogo}
         />
       </div>

@@ -43,13 +43,13 @@ export default function DropdownSelector({
             id={values.title}
             className={cn(
               "flex w-full items-center justify-between rounded-lg border focus:border-black bg-white px-3 py-2 text-sm text-slate-900 shadow-xs ",
-              className
+              className,
             )}
           >
             <span className="text-[#8B8D97]">
               {
                 values?.options?.filter(
-                  (item: any) => item?.value === selectedValue
+                  (item: any) => item?.value === selectedValue,
                 )[0]?.label
               }
             </span>

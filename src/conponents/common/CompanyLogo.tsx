@@ -11,15 +11,26 @@ import ImageViewerDialog from "../imageViewerDialog";
 import { useQueryClient } from "@tanstack/react-query";
 import { useDeleteCompanyLogo } from "@/services/useCreateOrUpdateCompanyDetails";
 import uploadImage from "../../assets/uploadImage.png";
+import { useRef } from "react";
 
-const CompanyLogo = ({ vendorId, companyLogo, handleCompanyLogo }: any) => {
+const CompanyLogo = ({
+  vendorId,
+  companyLogo,
+  setCompanyLogo,
+  handleCompanyLogo,
+}: any) => {
   const queryClient = useQueryClient();
+  const fileInputRef = useRef<any>(null);
 
   const deleteCompanyLogoMutation = useDeleteCompanyLogo();
 
   const imageDeleteHandler = (id: number | any) => {
     deleteCompanyLogoMutation.mutate(id, {
       onSuccess: () => {
+        setCompanyLogo("");
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
         queryClient.invalidateQueries({
           queryKey: ["vendor-details"],
         });
@@ -41,6 +52,7 @@ const CompanyLogo = ({ vendorId, companyLogo, handleCompanyLogo }: any) => {
 
               <Button
                 variant="outline"
+                disabled={deleteCompanyLogoMutation.isPending}
                 className="h-7 w-7"
                 onClick={() => imageDeleteHandler(vendorId)}
               >
@@ -67,6 +79,7 @@ const CompanyLogo = ({ vendorId, companyLogo, handleCompanyLogo }: any) => {
         <Button type="submit">
           <TiIconCameraFilled />
           <input
+            ref={fileInputRef}
             className="w-30 bg-none rounded-md p-1 text-[9px] cursor-pointer"
             placeholder="Upload Image"
             type="file"

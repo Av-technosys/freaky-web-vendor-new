@@ -17,7 +17,7 @@ const ImageViewerDialog = ({ mediaUrl, className = "" }: any) => {
 
       <DialogContent className=" p-2">
 
-        <div className="w-ful ">
+        <div className="w-full h-96 overscroll-y-auto ">
           <img
             className="w-full h-full object-contain"
             src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${mediaUrl}`}
