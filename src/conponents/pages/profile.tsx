@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Button,
   Card,
@@ -9,15 +9,21 @@ import {
   Input,
   Label,
 } from "../../components/ui";
+import uploadImage from "../../assets/uploadImage.png";
 
-import { TiIconCameraFilled } from "../icons";
+import { TiIconCameraFilled, TiIconTrash } from "../icons";
 import { useGetUserDetails } from "../../services/useGetUserDetails";
-import { useUpdateUserDetails } from "../../services/useCreateOrUpdateUserDetails";
+import {
+  useDeleteProfileImage,
+  useUpdateProfileImage,
+  useUpdateUserDetails,
+} from "../../services/useCreateOrUpdateUserDetails";
 import { useGetImageUrl, useUploadImage } from "../../services/useUploadImage";
 import { LoaderCircle } from "lucide-react";
 import { US_STATES } from "@/const/usState";
 import DropdownSelector from "../dropdownSelector";
 import { SkeletonForm } from "@/components/skleton/form";
+import ImageViewerDialog from "../imageViewerDialog";
 
 const dropdownValuesCountries = {
   options: [
@@ -36,6 +42,7 @@ const dropdownValuesStates = {
 };
 
 const Profile = () => {
+  const fileInputRef = useRef<any>(null);
   const [userDetails, setUserDetails] = useState({
     firstName: "",
     lastName: "",
@@ -45,7 +52,7 @@ const Profile = () => {
   });
 
   const [address, setAddress] = useState({
-    countery: dropdownValuesCountries.options[0].value,
+    country: dropdownValuesCountries.options[0].value,
     state: dropdownValuesStates.options[0].value,
     city: "",
     zipCode: "",
@@ -55,6 +62,9 @@ const Profile = () => {
 
   const { data: userData, isPending } = useGetUserDetails();
   const createUserInfoMutation = useUpdateUserDetails();
+  const createOrUpdateProfileImage = useUpdateProfileImage();
+  const deleteProfileImageMutation = useDeleteProfileImage();
+
   const { isPending: isSaving } = createUserInfoMutation;
   const getImageUrlMutation = useGetImageUrl();
   const uploadImageMutation = useUploadImage();
@@ -69,8 +79,15 @@ const Profile = () => {
         email: userInfo?.email,
         number: userInfo?.number,
         profileImage: userInfo?.profileImage,
-        streetAddress1: userInfo?.streetAddress1,
-        streetAddress2: userInfo?.streetAddress2,
+      }));
+      setAddress((prev: any) => ({
+        ...prev,
+        country: userInfo?.country,
+        state: userInfo?.state,
+        city: userInfo?.city,
+        zipCode: userInfo?.postalCode,
+        addressLine1: userInfo?.streetAddress1,
+        addressLine2: userInfo?.streetAddress2,
       }));
     }
   }, [userData]);
@@ -101,10 +118,16 @@ const Profile = () => {
         url: uploadRes.data.uploadUrl,
         file,
       });
+      const filePath = uploadRes.data.filePath;
+
       setUserDetails((prev) => ({
         ...prev,
-        profileImage: uploadRes.data.filePath,
+        profileImage: filePath,
       }));
+
+      createOrUpdateProfileImage.mutate({
+        profileImage: filePath,
+      });
     }
   };
 
@@ -113,11 +136,24 @@ const Profile = () => {
       firstName: userDetails?.firstName,
       lastName: userDetails?.lastName,
       number: userDetails?.number,
-      profileImage: userDetails?.profileImage,
       ...address,
       currentAddressId: userData?.data[0]?.currentAddressId,
     };
     createUserInfoMutation.mutate(userInfo);
+  };
+
+  const imageDeleteHandler = (id: number | any) => {
+    deleteProfileImageMutation.mutate(id, {
+      onSuccess: () => {
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+        setUserDetails((prev: any) => ({
+          ...prev,
+          profileImage: "",
+        }));
+      },
+    });
   };
 
   return (
@@ -237,9 +273,9 @@ const Profile = () => {
                       <div className=" w-full">
                         <DropdownSelector
                           values={dropdownValuesCountries}
-                          selectedValue={address.countery}
+                          selectedValue={address.country}
                           onChange={({ value }: any) =>
-                            setAddress((prev) => ({ ...prev, countery: value }))
+                            setAddress((prev) => ({ ...prev, country: value }))
                           }
                         />
                       </div>
@@ -317,19 +353,56 @@ const Profile = () => {
               <CardTitle className=" text-xl">Profile Picture</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="w-32 h-32  rounded-full overflow-hidden">
+              {/* <div className="w-32 h-32  rounded-full overflow-hidden">
                 <img
                   className="object-cover"
                   src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${userDetails?.profileImage
                     }`}
                   alt="uploaded-image"
                 />
-              </div>
+              </div> */}
+              {userDetails?.profileImage ? (
+                <div className="relative w-fit  mx-auto group">
+                  {/* Buttons */}
+                  <div className="absolute inset-4 flex items-center justify-between px-2 opacity-0 group-hover:opacity-100 transition">
+                    <ImageViewerDialog mediaUrl={userDetails?.profileImage} />
+
+                    <Button
+                      variant="outline"
+                      disabled={deleteProfileImageMutation.isPending}
+                      className="h-7 w-7"
+                      onClick={() =>
+                        imageDeleteHandler(userData?.data?.[0]?.id)
+                      }
+                    >
+                      <TiIconTrash size="12" color="#D30000" />
+                    </Button>
+                  </div>
+
+                  {/* Image */}
+                  <div className="w-32 h-32 rounded-full overflow-hidden">
+                    <img
+                      className="w-full h-full object-cover"
+                      src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${userDetails?.profileImage}`}
+                      alt="uploaded-image"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="w-20 h-20 rounded-full flex items-center  border border-gray-200 justify-center overflow-hidden">
+                  <img
+                    className="object-cover"
+                    src={uploadImage}
+                    alt="Banner"
+                  />
+                </div>
+              )}
             </CardContent>
             <CardFooter>
               <Button type="submit">
                 <TiIconCameraFilled />
                 <input
+                  ref={fileInputRef}
                   className="w-30 bg-none rounded-md p-1 text-[9px] cursor-pointer"
                   placeholder="Upload Image"
                   type="file"

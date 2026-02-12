@@ -169,3 +169,16 @@ export const deleteCompanyLogoHandler = async (id: any) => {
     throw error;
   }
 };
+
+export const updateCompanyLogo = async (userInfo: any) => {
+  try {
+    const response = await axiosInstance.put(
+      `${apiConstant.vendor.uploadCompanyLogo}`,
+      userInfo,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+    throw error;
+  }
+};

@@ -1,3 +1,5 @@
+
+
 //api const
 export const apiConstant = {
   authentication: {
@@ -26,6 +28,7 @@ export const apiConstant = {
     getEmployeePermissions: "/v1/vendor/employees/permissions",
     deleteVendorDocument: "/v1/vendor/document",
     deleteVendorEmployee: "/v1/vendor/employees",
+    uploadCompanyLogo: "/v1/vendor/company_logo",
     getAllServices: "/v1/vendor/product/meta",
     getAllPriceBook: "/v1/vendor/pricebook",
     createPriceBook: "/v1/vendor/pricebook/create",
@@ -56,6 +59,8 @@ export const apiConstant = {
   user: {
     getUserDetails: "/v1/user/personal_details",
     updateUserDetails: "/v1/user/update_details",
+    updateProfileImage: "/v1/user/profile_picture",
+    deleteProfileImage: "/v1/user/profile_picture",
   },
   booking: {
     createExternalBooking: "v1/booking/create_external_booking",

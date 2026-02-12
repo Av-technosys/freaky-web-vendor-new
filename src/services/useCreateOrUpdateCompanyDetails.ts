@@ -9,6 +9,7 @@ import {
   updateBankAccountInformation,
   updateBusinessAddressInformation,
   updateCompanyInformation,
+  updateCompanyLogo,
   updateContactInformation,
   updateEmployeePermission,
   updateOwnershipInformation,
@@ -195,6 +196,16 @@ export const useDeleteCompanyLogo = () => {
     },
     onError: () => {
       toast.error("Unable to delete image.");
+    },
+  });
+};
+
+export const useUpdateCompanyLogo = () => {
+  return useMutation({
+    mutationFn: updateCompanyLogo,
+
+    onError: () => {
+      toast.error("Unable to upload company logo.");
     },
   });
 };
