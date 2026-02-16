@@ -43,9 +43,9 @@ const ManagePaymentBook = () => {
       <Label className=" pl-4 ">Pricebooks</Label>
       {proceBooksData?.map((priceBook: any) => {
         return (
-          <Card key={priceBook?.id} className="mt-2">
+          <Card key={priceBook?.id} className="mt-2 py-2">
             <CardDescription>
-              <div className="w-full px-6 flex items-center justify-between">
+              <div className="w-full px-4 flex items-center justify-between">
                 <div className=" flex gap-2 items-center">
                   <div className="text-base ">{priceBook?.name}</div>
                   {priceBook.isStandard && <BadgeStandard />}

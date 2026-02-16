@@ -5,7 +5,7 @@ export const USER_ACCESS_DROPDOWN = [
     { value: "bookings", label: "Booking", description: "View, manage, and track bookings" },
     { value: "calendar", label: "Calendar", description: "View and manage your calendar" },
     { value: "reviews", label: "Review", description: "View and manage customer reviews" },
-    { value: "payments", label: "Payment", description: "Manage payment settings and transactions" },
+    { value: "manage-payment-book", label: "Payment", description: "Manage payment settings and transactions" },
     { value: "company-profile", label: "Company Profile", description: "Manage your business profile information" },
     { value: "manage-users", label: "Manage User", description: "Manage user accounts and permissions" },
 ];

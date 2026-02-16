@@ -11,7 +11,11 @@ import {
   SelectValue,
 } from "../../components/ui/select";
 import { cn } from "@/lib/utils";
-import { US_STATES } from "@/const/usState";
+import { US_STATES } from "@/const/locatoins";
+import { useLoadScript, Autocomplete } from "@react-google-maps/api";
+import { VITE_GOOGLE_MAPS_API_KEY } from "@/const/env";
+import { useState } from "react";
+import { getAddressValue, googleAddressItems } from "@/utils/addressUtils";
 
 interface BusinessAddressProps {
   data: Pick<
@@ -23,12 +27,67 @@ interface BusinessAddressProps {
   className?: string;
 }
 
+const libraries: ("places")[] = ["places"];
+
 const BusinessAddress = ({
   data,
   onUpdate,
   errors,
   className,
 }: BusinessAddressProps) => {
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: VITE_GOOGLE_MAPS_API_KEY,
+    libraries,
+  });
+
+  const [autocomplete, setAutocomplete] =
+    useState<google.maps.places.Autocomplete | null>(null);
+
+  const onLoad = (auto: google.maps.places.Autocomplete) => {
+    setAutocomplete(auto);
+  };
+
+  const onPlaceChanged = () => {
+    if (!autocomplete) return;
+
+    const place = autocomplete.getPlace();
+
+    if (!place.geometry?.location) return;
+
+    onUpdate("address1", place.formatted_address);
+    onUpdate(
+      "address2",
+      getAddressValue(
+        place.address_components,
+        googleAddressItems.administrative_area_level_2
+      )
+    );
+    onUpdate("country", "united_states"); // Force US as per profile.tsx
+    onUpdate(
+      "state",
+      getAddressValue(
+        place.address_components,
+        googleAddressItems.administrative_area_level_1
+      )
+    );
+    onUpdate(
+      "city",
+      getAddressValue(place.address_components, googleAddressItems.locality)
+    );
+    onUpdate(
+      "zipCode",
+      getAddressValue(place.address_components, googleAddressItems.postal_code)
+    );
+    onUpdate(
+      "latitude",
+      place.geometry?.location?.lat().toString() || ""
+    );
+    onUpdate(
+      "longitude",
+      place.geometry?.location?.lng().toString() || ""
+    );
+  };
+
   return (
     <Card className={cn(className)}>
       <CardContent>
@@ -37,15 +96,33 @@ const BusinessAddress = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div className="col-span-1 flex flex-col items-start justify-center gap-3">
               <Label htmlFor="address1">Street Address Line 1</Label>
-              <Input
-                name="address1"
-                id="address1"
-                placeholder="Enter Street Address Line 1"
-                type="text"
-                value={data.address1}
-                onChange={(e) => onUpdate("address1", e.target.value)}
-                required
-              />
+              {isLoaded ? (
+                <Autocomplete
+                  className="w-full"
+                  onLoad={onLoad}
+                  onPlaceChanged={onPlaceChanged}
+                >
+                  <Input
+                    name="address1"
+                    id="address1"
+                    placeholder="Enter Street Address Line 1"
+                    type="text"
+                    value={data.address1}
+                    onChange={(e) => onUpdate("address1", e.target.value)}
+                    required
+                  />
+                </Autocomplete>
+              ) : (
+                <Input
+                  name="address1"
+                  id="address1"
+                  placeholder="Enter Street Address Line 1"
+                  type="text"
+                  value={data.address1}
+                  onChange={(e) => onUpdate("address1", e.target.value)}
+                  required
+                />
+              )}
               {errors?.streetAddressLine1 && (
                 <p className="text-red-500 text-sm">
                   {errors.streetAddressLine1}
@@ -78,8 +155,8 @@ const BusinessAddress = ({
 
               <Select
                 value={data.country || "united_states"}
-                onValueChange={() => {}} // prevents selecting anything else
-                //   disabled   // disables dropdown opening
+                onValueChange={() => { }} // prevents selecting anything else
+              //   disabled   // disables dropdown opening
               >
                 <SelectTrigger className="w-full" id="country">
                   <SelectValue placeholder="United States" />

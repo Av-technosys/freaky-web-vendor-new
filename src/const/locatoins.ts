@@ -50,3 +50,20 @@ export const US_STATES = [
     "Wisconsin",
     "Wyoming",
 ];
+
+
+export const US_STATE_LABEL_VALUE = {
+    options: US_STATES.map((state) => ({
+        label: state,
+        value: state,
+    })),
+};
+
+export const COUNTRY_LABEL_VALUE = {
+    options: [
+        {
+            label: "United States",
+            value: "united_states",
+        },
+    ],
+};

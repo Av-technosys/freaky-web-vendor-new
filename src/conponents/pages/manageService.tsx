@@ -4,6 +4,10 @@ import DropdownSelector from "../dropdownSelector";
 
 import uploadImage from "../../assets/uploadImage.png";
 import { useNavigate, useParams } from "react-router-dom";
+import { useLoadScript, Autocomplete } from '@react-google-maps/api';
+import { VITE_GOOGLE_MAPS_API_KEY } from '@/const/env';
+import { getAddressValue, googleAddressItems } from "@/utils/addressUtils";
+
 import { useGetVendorServiceByServiceId } from "../../services/useGetVendorServices";
 import { useGetImageUrl, useUploadImage } from "../../services/useUploadImage";
 import {
@@ -24,7 +28,7 @@ import MarkdownEditor from "../textEditor";
 import { DollarSign, LoaderCircle } from "lucide-react";
 import { TiIconTrash } from "../icons";
 import { TooltipInfo } from "@/components/TooltipInfo";
-import { US_STATES } from "@/const/usState";
+import { US_STATES } from "@/const/locatoins";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import withAuthorization from "@/lib/withAuthorization";
 
@@ -142,6 +146,45 @@ const ManageService = () => {
       setMaxBooking(data.product.maxQuantity || "");
     }
   }, [data, productId]);
+
+  const libraries: ('places')[] = ['places'];
+
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: VITE_GOOGLE_MAPS_API_KEY,
+    libraries,
+  });
+
+  const [autocomplete, setAutocomplete] =
+    useState<google.maps.places.Autocomplete | null>(null);
+
+  const onLoad = (auto: google.maps.places.Autocomplete) => {
+    setAutocomplete(auto);
+  };
+
+  const onPlaceChanged = () => {
+    if (!autocomplete) return;
+
+    const place = autocomplete.getPlace();
+
+    if (!place.geometry?.location) return;
+
+    // const lat = place.geometry.location.lat();
+    // const lng = place.geometry.location.lng();
+
+    console.log("places: ", place);
+
+    setAddress((prev: any) => ({
+      ...prev,
+      country: "united_states",
+      state: getAddressValue(place.address_components, googleAddressItems.administrative_area_level_1),
+      city: getAddressValue(place.address_components, googleAddressItems.locality),
+      zipCode: getAddressValue(place.address_components, googleAddressItems.postal_code),
+      addressLine1: getAddressValue(place.address_components, googleAddressItems.administrative_area_level_2) || place.formatted_address,
+      addressLine2: "", // Reset or keep previous?
+      // latitude: lat,
+      // longitude: lng,
+    }));
+  };
 
   function handleProductCategoryChange(value: any) {
     setCategoryName(value.label);
@@ -383,20 +426,25 @@ const ManageService = () => {
                             <Label htmlFor="address1">
                               Street Address Line 1
                             </Label>
-                            <Input
-                              name="address1"
-                              id="address1"
-                              placeholder="Enter Street Address Line 1"
-                              type="text"
-                              value={address.addressLine1}
-                              onChange={(e) =>
-                                setAddress((prev) => ({
-                                  ...prev,
-                                  addressLine1: e.target.value,
-                                }))
-                              }
-                              required
-                            />
+                            {isLoaded && (
+                              <Autocomplete className='w-full' onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
+                                <Input
+                                  name="address1"
+                                  id="address1"
+                                  placeholder="Enter Street Address Line 1"
+                                  type="text"
+                                  // value={address.addressLine1} 
+                                  defaultValue={address.addressLine1}
+                                  onChange={(e) =>
+                                    setAddress((prev) => ({
+                                      ...prev,
+                                      addressLine1: e.target.value,
+                                    }))
+                                  }
+                                  required
+                                />
+                              </Autocomplete>
+                            )}
                           </div>
 
                           <div className="col-span-1 flex flex-col items-start justify-center gap-2">
@@ -635,28 +683,25 @@ const ManageService = () => {
                     <div className="w-24 h-24 rounded-full overflow-hidden">
                       <img
                         className="w-full h-full object-cover"
-                        src={`${
-                          import.meta.env.VITE_IMAGE_BASE_URL
-                        }/${mediaBanner}`}
+                        src={`${import.meta.env.VITE_IMAGE_BASE_URL
+                          }/${mediaBanner}`}
                         alt="uploaded-image"
                       />
                     </div>
                   </div>
                 ) : (
                   <div
-                    className={`${
-                      mediaBanner != ""
-                        ? "w-24 h-24 rounded-full overflow-hidden"
-                        : "w-10 h-12 flex items-center justify-center p-1"
-                    }`}
+                    className={`${mediaBanner != ""
+                      ? "w-24 h-24 rounded-full overflow-hidden"
+                      : "w-10 h-12 flex items-center justify-center p-1"
+                      }`}
                   >
                     <img
                       className="object-cover"
                       src={
                         mediaBanner != ""
-                          ? `${
-                              import.meta.env.VITE_IMAGE_BASE_URL
-                            }/${mediaBanner}`
+                          ? `${import.meta.env.VITE_IMAGE_BASE_URL
+                          }/${mediaBanner}`
                           : uploadImage
                       }
                       alt="Banner"

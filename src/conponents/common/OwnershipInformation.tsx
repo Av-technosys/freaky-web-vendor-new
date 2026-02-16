@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { US_STATES } from "@/const/usState";
+import { US_STATES } from "@/const/locatoins";
 
 interface OwnershipInformationProps {
   data: {
@@ -168,10 +168,10 @@ const OwnershipInformation = ({
                     />
                     {errors?.owners?.[index]?.streetAddressLine1?._errors
                       ?.length > 0 && (
-                      <p className="text-red-500 text-sm">
-                        {errors.owners[index].streetAddressLine1._errors[0]}
-                      </p>
-                    )}
+                        <p className="text-red-500 text-sm">
+                          {errors.owners[index].streetAddressLine1._errors[0]}
+                        </p>
+                      )}
                   </div>
 
                   <div className="flex flex-col gap-3">
@@ -190,10 +190,10 @@ const OwnershipInformation = ({
                     />
                     {errors?.owners?.[index]?.streetAddressLine2?._errors
                       ?.length > 0 && (
-                      <p className="text-red-500 text-sm">
-                        {errors.owners[index].streetAddressLine2._errors[0]}
-                      </p>
-                    )}
+                        <p className="text-red-500 text-sm">
+                          {errors.owners[index].streetAddressLine2._errors[0]}
+                        </p>
+                      )}
                   </div>
                 </div>
 
@@ -305,10 +305,10 @@ const OwnershipInformation = ({
                 />
                 {errors?.owners?.[index]?.ownershipPercentage?._errors?.length >
                   0 && (
-                  <p className="text-red-500 text-sm">
-                    {errors.owners[index].ownershipPercentage._errors[0]}
-                  </p>
-                )}
+                    <p className="text-red-500 text-sm">
+                      {errors.owners[index].ownershipPercentage._errors[0]}
+                    </p>
+                  )}
               </div>
 
               <div className="flex items-center gap-6 mt-4 pt-4 border-t border-gray-200">

@@ -132,6 +132,8 @@ const CompanyProfile = () => {
     state: "",
     city: "",
     zipCode: "",
+    latitude: "",
+    longitude: "",
 
     owners: [initialOwner],
     authorizedSignatory: 0,
@@ -265,6 +267,8 @@ const CompanyProfile = () => {
       state: companyData.state,
       country: companyData.country,
       zipcode: companyData.zipCode,
+      latitude: companyData.latitude,
+      longitude: companyData.longitude,
     };
 
     const companyBankAccountInformation = {
@@ -546,9 +550,8 @@ const CompanyProfile = () => {
                         >
                           {doc.documentUrl !== "choose file" ? (
                             <a
-                              href={`${import.meta.env.VITE_IMAGE_BASE_URL}/${
-                                doc.documentUrl
-                              }`}
+                              href={`${import.meta.env.VITE_IMAGE_BASE_URL}/${doc.documentUrl
+                                }`}
                               target="_blank"
                               className="w-full"
                               rel="noopener noreferrer"

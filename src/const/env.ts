@@ -1,4 +1,5 @@
 let url = import.meta.env.VITE_BACKEND_URL || "";
+export const VITE_GOOGLE_MAPS_API_KEY: string = import.meta.env.VITE_GOOGLE_MAPS_API_KEY!;
 
 // Fix common typo where slashes are missing after protocol
 if (url.startsWith("http:") && !url.startsWith("http://")) {
