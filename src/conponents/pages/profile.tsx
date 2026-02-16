@@ -1,3 +1,6 @@
+import { useLoadScript, Autocomplete } from '@react-google-maps/api';
+import { VITE_GOOGLE_MAPS_API_KEY } from '@/const/env';
+
 import { useEffect, useRef, useState } from "react";
 import {
   Button,
@@ -20,26 +23,18 @@ import {
 } from "../../services/useCreateOrUpdateUserDetails";
 import { useGetImageUrl, useUploadImage } from "../../services/useUploadImage";
 import { LoaderCircle } from "lucide-react";
-import { US_STATES } from "@/const/usState";
+import { COUNTRY_LABEL_VALUE, US_STATE_LABEL_VALUE } from "@/const/locatoins";
 import DropdownSelector from "../dropdownSelector";
 import { SkeletonForm } from "@/components/skleton/form";
 import ImageViewerDialog from "../imageViewerDialog";
+import { getAddressValue, googleAddressItems } from "@/utils/addressUtils";
 
-const dropdownValuesCountries = {
-  options: [
-    {
-      label: "United States",
-      value: "united_states",
-    },
-  ],
-};
 
-const dropdownValuesStates = {
-  options: US_STATES.map((state) => ({
-    label: state,
-    value: state,
-  })),
-};
+
+const libraries: ('places')[] = ['places'];
+
+
+
 
 const Profile = () => {
   const fileInputRef = useRef<any>(null);
@@ -52,13 +47,19 @@ const Profile = () => {
   });
 
   const [address, setAddress] = useState({
-    country: dropdownValuesCountries.options[0].value,
-    state: dropdownValuesStates.options[0].value,
+    country: COUNTRY_LABEL_VALUE.options[0].value,
+    state: US_STATE_LABEL_VALUE.options[0].value,
     city: "",
     zipCode: "",
     addressLine1: "",
     addressLine2: "",
+    latitude: "",
+    longitude: "",
   });
+
+  useEffect(() => {
+    console.log(address);
+  }, [address])
 
   const { data: userData, isPending } = useGetUserDetails();
   const createUserInfoMutation = useUpdateUserDetails();
@@ -156,6 +157,51 @@ const Profile = () => {
     });
   };
 
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: VITE_GOOGLE_MAPS_API_KEY,
+    libraries,
+  });
+
+  const [autocomplete, setAutocomplete] =
+    useState<google.maps.places.Autocomplete | null>(null);
+
+  /* const [googleAddress, setGoogleAddress] = useState<any>('');
+   const [latLng, setLatLng] = useState<{ lat: number; lng: number } | null>(null); */
+
+  const onLoad = (auto: google.maps.places.Autocomplete) => {
+    setAutocomplete(auto);
+  };
+
+  const onPlaceChanged = () => {
+    if (!autocomplete) return;
+
+    const place = autocomplete.getPlace();
+
+    if (!place.geometry?.location) return;
+
+    const lat = place.geometry.location.lat();
+    const lng = place.geometry.location.lng();
+
+    console.log("places: ", place);
+
+    setAddress((prev: any) => ({
+      ...prev,
+      country: "united_states",
+      state: getAddressValue(place.address_components, googleAddressItems.administrative_area_level_1),
+      city: getAddressValue(place.address_components, googleAddressItems.locality),
+      zipCode: getAddressValue(place.address_components, googleAddressItems.postal_code),
+      addressLine1: getAddressValue(place.address_components, googleAddressItems.administrative_area_level_2),
+      addressLine2: place.formatted_address,
+      latitude: lat,
+      longitude: lng,
+    }));
+
+    // setGoogleAddress(place.formatted_address || '');
+    // setLatLng({ lat, lng });
+  };
+
+
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4  gap-3">
       {isPending ? (
@@ -229,10 +275,23 @@ const Profile = () => {
 
                 <p className="text-lg mt-6">Address</p>
                 <div className="flex flex-col gap-4">
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div className="col-span-1 flex flex-col items-start justify-center gap-2">
                       <Label htmlFor="address1">Street Address Line 1</Label>
-                      <Input
+                      {isLoaded && (
+                        <Autocomplete className=' w-full' onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
+                          <Input
+                            name="address1"
+                            id="address1"
+                            placeholder="Enter Street Address Line 1"
+                            type="text"
+                            defaultValue={address.addressLine2}
+                            required
+                          />
+                        </Autocomplete>
+                      )}
+                      {/* <Input
                         name="address1"
                         id="address1"
                         placeholder="Enter Street Address Line 1"
@@ -245,7 +304,7 @@ const Profile = () => {
                           }))
                         }
                         required
-                      />
+                      /> */}
                     </div>
 
                     <div className="col-span-1 flex flex-col items-start justify-center gap-2">
@@ -255,7 +314,7 @@ const Profile = () => {
                         id="address2"
                         placeholder="Enter Street Address Line 2"
                         type="text"
-                        value={address.addressLine2}
+                        value={address.addressLine1}
                         onChange={(e) =>
                           setAddress((prev) => ({
                             ...prev,
@@ -272,7 +331,7 @@ const Profile = () => {
                       <Label htmlFor="country">Country</Label>
                       <div className=" w-full">
                         <DropdownSelector
-                          values={dropdownValuesCountries}
+                          values={COUNTRY_LABEL_VALUE}
                           selectedValue={address.country}
                           onChange={({ value }: any) =>
                             setAddress((prev) => ({ ...prev, country: value }))
@@ -285,7 +344,7 @@ const Profile = () => {
                       <Label htmlFor="state">State</Label>
                       <div className="w-full">
                         <DropdownSelector
-                          values={dropdownValuesStates}
+                          values={US_STATE_LABEL_VALUE}
                           selectedValue={address.state}
                           onChange={({ value }: any) =>
                             setAddress((prev) => ({ ...prev, state: value }))

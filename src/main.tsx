@@ -20,8 +20,6 @@ import ForgetPassword from "./conponents/pages/forgetPassword";
 import ProtectRoute from "./conponents/protectRoute";
 import Payment from "./conponents/pages/payments";
 import { Toaster } from "./components/ui";
-import SelectCompany from "./conponents/pages/selectCompany";
-import CreateCompany from "./conponents/pages/createCompany";
 import ManagePaymentBook from "./conponents/pages/managePaymentBook";
 import ManageService from "./conponents/pages/manageService";
 import UserToVendor from "./conponents/pages/mapVendor";
@@ -74,8 +72,6 @@ const routes = createBrowserRouter([
   {
     element: <ProtectRoute />,
     children: [
-      { path: "/select-company", element: <SelectCompany /> },
-      { path: "/create-company", element: <CreateCompany /> },
       {
         path: "/map-vendor",
         element: <UserToVendor />,

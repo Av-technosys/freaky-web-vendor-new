@@ -48,6 +48,8 @@ export interface CompanyData {
   state: string;
   city: string;
   zipCode: string;
+  latitude: string;
+  longitude: string;
   owners: Owner[];
   authorizedSignatory: number;
   accountNumber: string;

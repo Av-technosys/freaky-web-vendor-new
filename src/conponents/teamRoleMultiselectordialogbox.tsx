@@ -7,7 +7,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "../components/ui/dialog";
 import { useUpdateEmployeePermissions } from "@/services/useCreateOrUpdateCompanyDetails";
 import { USER_ACCESS_DROPDOWN } from "@/const/dropdown";
@@ -76,10 +75,11 @@ export default function MultiselectorDialog({
   return (
     <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="lg:max-w-2xl">
+      <DialogContent className=" max-h-[90vh] overflow-y-auto lg:max-w-2xl">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold">Edit Roles</DialogTitle>
-          <DialogDescription className="mt-4">
+
+          <div className="mt-4">
             {isPending ? (
               <div className="space-y-2">
                 <Skeleton className="h-4 w-full" />
@@ -87,7 +87,7 @@ export default function MultiselectorDialog({
                 <Skeleton className="h-4 w-full" />
               </div>
             ) : (
-              <div className="h-80 pr-4 w-full overflow-y-auto">
+              <div className=" pr-4 w-full overflow-y-auto">
                 {USER_ACCESS_DROPDOWN?.map((role: any) => (
                   <div
                     key={role.label}
@@ -117,7 +117,7 @@ export default function MultiselectorDialog({
                 </div>
               </div>
             )}
-          </DialogDescription>
+          </div>
         </DialogHeader>
       </DialogContent>
     </Dialog>

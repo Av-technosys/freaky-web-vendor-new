@@ -1,7 +1,6 @@
 import { useState } from "react";
 import leftImage from "@/./assets/Rectangle 3.svg";
 import rightImage from "@/./assets/Rectangle 2.svg";
-import mainImage from "@/./assets/signInImage.png";
 import SocialsLogin from "../socialsLogin";
 import EmailPasswordLogin from "../emailPasswordLogin";
 const Login = () => {
@@ -38,7 +37,7 @@ const Login = () => {
         <div className="order-1 hidden md:block md:order-2 p-2 md:p-0 w-full h-screen">
           <img
             className="w-full h-full object-cover"
-            src={mainImage}
+            src={"https://freaky-files.s3.ap-south-1.amazonaws.com/uploads/signInImage.png"}
             alt="mainImage"
           />
         </div>

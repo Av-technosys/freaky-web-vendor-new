@@ -344,6 +344,8 @@ const CreateNewVendor = ({ setUserStepNumber }: any) => {
     state: "",
     city: "",
     zipCode: "",
+    latitude: "",
+    longitude: "",
 
     owners: [initialOwner],
     authorizedSignatory: 0,
@@ -818,6 +820,8 @@ const CBusinessADdress = ({
       streetAddressLine1: companyData.address1,
       streetAddressLine2: companyData.address2,
       city: companyData.city,
+      latitude: companyData.latitude,
+      longitude: companyData.longitude,
       state: companyData.state,
       country: companyData.country,
       zipcode: companyData.zipCode,

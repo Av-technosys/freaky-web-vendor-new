@@ -2,33 +2,36 @@ import { useEffect, useState } from "react";
 import LinearGradientText from "../components/LinearGradientText";
 import { Button, Card, CardContent, Skeleton } from "../components/ui";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
+// import {
+//   InputGroup,
+//   InputGroupAddon,
+//   InputGroupInput,
+// } from "../components/ui/input-group";
+// import DropdownSelector from "./dropdownSelector";
 import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "../components/ui/input-group";
-import DropdownSelector from "./dropdownSelector";
-import { TiIconBell, TiIconSearch } from "./icons";
+  TiIconBell,
+  // TiIconSearch
+} from "./icons";
 import { SidebarDrawer } from "./SidebarDrawer";
-import { useGetSearchItems } from "@/services/useGetVendorCompanyDetails";
+// import { useGetSearchItems } from "@/services/useGetVendorCompanyDetails";
 import NotificationDrawer from "./notificationDrawer";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { useGetUserDetails } from "@/services/useGetUserDetails";
-import { LoaderCircle } from "lucide-react";
+// import { LoaderCircle } from "lucide-react";
 
-const dropdownValuesServices = {
-  title: "Services",
-  options: [
-    {
-      label: "Bookings",
-      value: "bookings",
-    },
-    {
-      label: "Services",
-      value: "services",
-    },
-  ],
-};
+// const dropdownValuesServices = {
+//   title: "Services",
+//   options: [
+//     {
+//       label: "Bookings",
+//       value: "bookings",
+//     },
+//     {
+//       label: "Services",
+//       value: "services",
+//     },
+//   ],
+// };
 
 export function useDebounce<T>(value: T, delay = 600): T {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -45,29 +48,29 @@ export function useDebounce<T>(value: T, delay = 600): T {
 }
 
 const Header: React.FC = () => {
-  const navigate = useNavigate();
-  const [service, setService] = useState(
-    dropdownValuesServices.options[1].value,
-  );
+  // const navigate = useNavigate();
+  // const [service, setService] = useState(
+  //   dropdownValuesServices.options[1].value,
+  // );
   const [openNotificationDrawer, setOpenNotificationDrawer] = useState(false);
-  const [searchText, setSearchText] = useState("");
+  // const [searchText, setSearchText] = useState("");
 
-  const debouncedSearch = useDebounce(searchText, 800);
+  // const debouncedSearch = useDebounce(searchText, 800);
 
   const { data: sessionData, isPending: isUserPending } = useGetUserDetails();
 
-  const { data: searchData, isPending } = useGetSearchItems({
-    service,
-    debouncedSearch,
-  });
+  // const { data: searchData, isPending } = useGetSearchItems({
+  //   service,
+  //   debouncedSearch,
+  // });
 
-  function handleServiceChange(value: any) {
-    setService(value.value);
-  }
+  // function handleServiceChange(value: any) {
+  //   setService(value.value);
+  // }
 
-  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setSearchText(e.target.value);
-  }
+  // function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+  //   setSearchText(e.target.value);
+  // }
 
   return (
     <>
@@ -97,15 +100,14 @@ const Header: React.FC = () => {
               </div>
             </div>
             <div className="w-1/2 flex items-center justify-end gap-4">
-              <DropdownSelector
+              {/* <DropdownSelector
                 labelName="hidden"
                 className="w-[136px] rounded-xl hidden md:flex"
                 values={dropdownValuesServices}
                 selectedValue={service}
                 onChange={handleServiceChange}
               />{" "}
-              {/* Right: Search + Bell */}
-              <div className="relative group focus-within:block">
+               <div className="relative group focus-within:block">
                 <InputGroup className="hidden md:flex items-center bg-gray-100 rounded-full   py-2 shadow-sm">
                   <InputGroupAddon>
                     <TiIconSearch className="text-gray-500" />
@@ -146,7 +148,7 @@ const Header: React.FC = () => {
                     )}
                   </ul>
                 )}
-              </div>
+              </div> */}
               <Button
                 onClick={() => setOpenNotificationDrawer(true)}
                 variant={"outline"}
