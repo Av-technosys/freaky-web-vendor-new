@@ -110,32 +110,38 @@ const ManageService = () => {
     bannerImage: "",
   });
 
-  function mapProductToForm(product: any): FormData {
-    return {
-      title: product.title,
-      type: product.type,
-      country: product.country,
-      state: product.state,
-      city: product.city,
-      postalCode: product.postalCode,
-      streetAddressLine1: product.streetAddressLine1,
-      streetAddressLine2: product.streetAddressLine2,
-      latitude: product.latitude,
-      longitude: product.longitude,
-      pricingType: product.pricingType,
-      price: product.price,
-      deliveryRadius: product.deliveryRadius,
-      productTypeId: product.productTypeId,
-      description: product.description,
-      maxBookingAtTime: product.maxBookingAtTime,
-      maxQuantity: product.maxQuantity,
-      minQuantity: product.minQuantity,
-      isAvailable: product.isAvailable,
-      returnPolicyURL: product.returnPolicyURL,
-      bannerImage: product.bannerImage,
-    }
-  }
 
+  function mapProductToForm(product: any): FormData {
+  const price =
+    product.price ??
+    product.prices?.[0]?.salePrice ??
+    product.prices?.[0]?.listPrice ??
+    0;
+
+  return {
+    title: product.title,
+    type: product.type,
+    country: product.country,
+    state: product.state,
+    city: product.city,
+    postalCode: product.postalCode,
+    streetAddressLine1: product.streetAddressLine1,
+    streetAddressLine2: product.streetAddressLine2,
+    latitude: product.latitude,
+    longitude: product.longitude,
+    pricingType: product.pricingType,
+    price: Number(price),
+    deliveryRadius: product.deliveryRadius,
+    productTypeId: product.productTypeId,
+    description: product.description,
+    maxBookingAtTime: product.maxBookingAtTime,
+    maxQuantity: product.maxQuantity,
+    minQuantity: product.minQuantity,
+    isAvailable: product.isAvailable,
+    returnPolicyURL: product.returnPolicyURL,
+    bannerImage: product.bannerImage,
+  };
+}
 
   const queryClient = useQueryClient();
 

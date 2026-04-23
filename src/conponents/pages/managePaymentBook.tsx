@@ -49,7 +49,7 @@ const ManagePaymentBook = () => {
                 <div className=" flex gap-2 items-center">
                   <div className="text-base ">{priceBook?.name}</div>
                   {priceBook.isStandard && <BadgeStandard />}
-                  {priceBook.isActive && <BadgePrimary />}
+                  {/* {priceBook.isActive && <BadgePrimary />} */}
                 </div>
                 <div className="flex gap-4">
                   <Button disabled={priceBook?.isStandard || priceBook?.isActive} onClick={() => handleDeleteClick({ id: priceBook?.id, name: priceBook?.name })} variant={"outline"}>

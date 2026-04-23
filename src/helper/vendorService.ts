@@ -27,6 +27,7 @@ export const getVendorServiceById = async (productId: any) => {
 };
 
 export const createVendorService = async ({ serviceData }: any) => {
+  console.log("Service Data being sent to API:", serviceData);
   try {
     const response = await axiosInstance.post(
       `${apiConstant.vendor.createService}`,
