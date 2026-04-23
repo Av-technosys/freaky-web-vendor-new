@@ -61,7 +61,7 @@ export default function DropdownSelector({
           align="start"
           className="w-[200px] rounded-md border border-slate-200 bg-white shadow-md"
         >
-          {values.options.map((item: any) => (
+          {values?.options?.map((item: any) => (
             <DropdownMenuItem
               key={item.label}
               onClick={() => onChange(item)}

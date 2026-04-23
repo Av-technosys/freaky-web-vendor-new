@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Button, Card, CardContent, Input, Label } from "../../components/ui";
 import DropdownSelector from "../dropdownSelector";
 
 import uploadImage from "../../assets/uploadImage.png";
@@ -8,13 +7,7 @@ import { useLoadScript, Autocomplete } from '@react-google-maps/api';
 import { VITE_GOOGLE_MAPS_API_KEY } from '@/const/env';
 import { getAddressValue, googleAddressItems } from "@/utils/addressUtils";
 
-import { useGetVendorServiceByServiceId } from "../../services/useGetVendorServices";
-import { useGetImageUrl, useUploadImage } from "../../services/useUploadImage";
-import {
-  useCreateVendorService,
-  useDeleteBannerImage,
-  useUpdateVendorService,
-} from "../../services/useCreateOrUpdateVendorService";
+
 import { useQueryClient } from "@tanstack/react-query";
 import ServiceAdditionalPhotos from "../serviceAdditionalPhotos";
 import ImageViewerDialog from "../imageViewerDialog";
@@ -25,54 +18,20 @@ import {
   MAX_WIDTH,
 } from "@/components/calendar/constants";
 import MarkdownEditor from "../textEditor";
-import { DollarSign, LoaderCircle } from "lucide-react";
+import { DollarSign, LoaderCircle, X } from "lucide-react";
 import { TiIconTrash } from "../icons";
 import { TooltipInfo } from "@/components/TooltipInfo";
-import { US_STATES } from "@/const/locatoins";
+import { COUNTRY_LABEL_VALUE, PRODUCT_CATEGORIES_LABEL_VALUE, PRODUCT_PRICE_TYPE_LABEL_VALUE, STATE_LABEL_VALUE } from "@/const/locatoins";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import withAuthorization from "@/lib/withAuthorization";
+import { useCreateVendorService, useDeleteBannerImage, useGetImageUrl, useGetVendorServiceByServiceId, useUpdateVendorService, useUploadImage } from "@/services";
+import { Button, Card, CardContent, Input, Label } from "@/components/ui";
+import { SelectProductType } from "@/components/product/SelectProductType";
+import { ProductPriceTypeRadio } from "@/components/product/PriceTypeSelect";
+import type { FormData, PriceTypeTire, PricingType } from "@/types/serviceTypes";
+import { cn } from "@/lib/utils";
 
-const dropdownValuesProductCategories = {
-  options: [
-    {
-      label: "PRODUCT",
-      value: "PRODUCT",
-    },
-    {
-      label: "ADDON",
-      value: "ADDON",
-    },
-  ],
-};
 
-const dropdownValuesCountries = {
-  options: [
-    {
-      label: "United States",
-      value: "united_states",
-    },
-  ],
-};
-
-const dropdownValuesStates = {
-  options: US_STATES.map((state) => ({
-    label: state,
-    value: state,
-  })),
-};
-
-const dropdownValuesProductPriceType = {
-  options: [
-    {
-      label: "FLAT",
-      value: "FLAT",
-    },
-    {
-      label: "TIRE",
-      value: "TIRE",
-    },
-  ],
-};
 
 // function formatDate(date: Date | undefined) {
 //   if (!date) {
@@ -98,26 +57,85 @@ const ManageService = () => {
   // const [value, setValue] = useState(formatDate(date));
   // const [time, setTime] = useState("12:00");
 
-  const [serviceName, setServiceName] = useState("");
-  const [categoryName, setCategoryName] = useState("PRODUCT");
-  const [address, setAddress] = useState({
-    countery: dropdownValuesCountries.options[0].value,
-    state: dropdownValuesStates.options[0].value,
-    city: "",
-    zipCode: "",
-    addressLine1: "",
-    addressLine2: "",
-  });
-  const [pricingType, setPricingType] = useState("FLAT");
-  const [unitPricing, setUnitPricing] = useState({
-    price: "0",
-    lowerBound: "0",
-    upperBound: "0",
-  });
-  const [longDescription, setLongDescription] = useState<String>("");
 
-  const [maxBooking, setMaxBooking] = useState<number>();
-  const [deleveryRadius, setDeleveryRadius] = useState<number>();
+
+  const [productPricing, setProductPricing] = useState<PriceTypeTire[]>([]);
+
+  const [formData, setFormData] = useState<FormData>({
+    title: "",
+    type: "PRODUCT",
+    country: COUNTRY_LABEL_VALUE.options[0].value,
+    state: STATE_LABEL_VALUE.options[0].value,
+    city: "",
+    postalCode: "",
+    streetAddressLine1: "",
+    streetAddressLine2: "",
+    latitude: "",
+    longitude: "",
+    pricingType: "FLAT",
+    price: 1,
+    deliveryRadius: 30,
+    productTypeId: "",
+    description: "",
+    maxBookingAtTime: 10,
+    maxQuantity: 100,
+    minQuantity: 1,
+    isAvailable: true,
+    returnPolicyURL: "",
+    bannerImage: "",
+
+  });
+
+  const [productData, setProductData] = useState<FormData>({
+    title: "",
+    type: "PRODUCT",
+    country: COUNTRY_LABEL_VALUE.options[0].value,
+    state: STATE_LABEL_VALUE.options[0].value,
+    city: "",
+    postalCode: "",
+    streetAddressLine1: "",
+    streetAddressLine2: "",
+    latitude: "",
+    longitude: "",
+    pricingType: "FLAT",
+    price: 1,
+    deliveryRadius: 30,
+    productTypeId: "",
+    description: "",
+    maxBookingAtTime: 10,
+    maxQuantity: 100,
+    minQuantity: 1,
+    isAvailable: true,
+    returnPolicyURL: "",
+    bannerImage: "",
+  });
+
+  function mapProductToForm(product: any): FormData {
+    return {
+      title: product.title,
+      type: product.type,
+      country: product.country,
+      state: product.state,
+      city: product.city,
+      postalCode: product.postalCode,
+      streetAddressLine1: product.streetAddressLine1,
+      streetAddressLine2: product.streetAddressLine2,
+      latitude: product.latitude,
+      longitude: product.longitude,
+      pricingType: product.pricingType,
+      price: product.price,
+      deliveryRadius: product.deliveryRadius,
+      productTypeId: product.productTypeId,
+      description: product.description,
+      maxBookingAtTime: product.maxBookingAtTime,
+      maxQuantity: product.maxQuantity,
+      minQuantity: product.minQuantity,
+      isAvailable: product.isAvailable,
+      returnPolicyURL: product.returnPolicyURL,
+      bannerImage: product.bannerImage,
+    }
+  }
+
 
   const queryClient = useQueryClient();
 
@@ -138,12 +156,11 @@ const ManageService = () => {
   useEffect(() => {
     if (data?.product && productId) {
       setMediaImages(data.product.media);
-      setServiceName(data.product.title || "");
-      setCategoryName(data.product.type || "Select Product Category");
-      setLongDescription(data.product.description || "");
-      setMediaBanner(data.product.bannerImage || "");
-      setDeleveryRadius(data.product.deliveryRadius || "");
-      setMaxBooking(data.product.maxQuantity || "");
+      console.log("data.product: ", data.product)
+      setFormData(mapProductToForm(data.product));
+      setProductData(mapProductToForm(data.product));
+
+      // setMediaBanner(data.product.bannerImage || "");
     }
   }, [data, productId]);
 
@@ -168,27 +185,25 @@ const ManageService = () => {
 
     if (!place.geometry?.location) return;
 
-    // const lat = place.geometry.location.lat();
-    // const lng = place.geometry.location.lng();
+    console.log(place)
 
-    console.log("places: ", place);
 
-    setAddress((prev: any) => ({
+    setFormData((prev: any) => ({
       ...prev,
-      country: "united_states",
+      country: "india",
       state: getAddressValue(place.address_components, googleAddressItems.administrative_area_level_1),
       city: getAddressValue(place.address_components, googleAddressItems.locality),
-      zipCode: getAddressValue(place.address_components, googleAddressItems.postal_code),
-      addressLine1: getAddressValue(place.address_components, googleAddressItems.administrative_area_level_2) || place.formatted_address,
-      addressLine2: "", // Reset or keep previous?
-      // latitude: lat,
-      // longitude: lng,
+      postalCode: getAddressValue(place.address_components, googleAddressItems.postal_code),
+      streetAddressLine1: place.formatted_address,
+      streetAddressLine2: getAddressValue(place.address_components, googleAddressItems.subpremise),
+      latitude: place?.geometry?.location?.lat || "",
+      longitude: place?.geometry?.location?.lng || "",
     }));
   };
 
-  function handleProductCategoryChange(value: any) {
-    setCategoryName(value.label);
-  }
+  // function handleProductCategoryChange(value: any) {
+  //   setCategoryName(value.label);
+  // }
 
   const handleBannerImage = async (e: any) => {
     const file = e.target.files?.[0];
@@ -267,15 +282,30 @@ const ManageService = () => {
   const submitHandler = (e: any) => {
     e.preventDefault();
     const serviceData = {
-      title: serviceName,
-      description: longDescription,
-      maxBooking: maxBooking,
-      deleveryRadius: deleveryRadius,
-      type: categoryName,
+      title: formData.title,
+      description: formData.description,
+      deleveryRadius: formData.deliveryRadius,
+      type: formData.type,
       bannerImage: mediaBanner,
       additionalImages: additionalImagesUrl,
       videoUrl: videoUrl,
-      pricingType: pricingType,
+      pricingType: formData.pricingType,
+      streetAddressLine1: formData.streetAddressLine1,
+      streetAddressLine2: formData.streetAddressLine2,
+      city: formData.city,
+      state: formData.state,
+      postalCode: formData.postalCode,
+      country: formData.country,
+      latitude: formData.latitude,
+      longitude: formData.longitude,
+      productTypeId: formData.productTypeId,
+      price: formData.price,
+      maxBookingAtTime: formData.maxBookingAtTime,
+      maxQuantity: formData.maxQuantity,
+      minQuantity: formData.minQuantity,
+      isAvailable: formData.isAvailable,
+      returnPolicyURL: formData.returnPolicyURL,
+
     };
     if (productId) {
       mutation.mutate(
@@ -315,7 +345,13 @@ const ManageService = () => {
       },
     });
   };
-
+  function handleFormChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  }
   return (
     <>
       {isPending && productId ? (
@@ -328,6 +364,7 @@ const ManageService = () => {
             <Card>
               <CardContent>
                 <form onSubmit={(e) => submitHandler(e)}>
+                  {/* <form> */}
                   <div className="grid grid-cols-2 gap-5">
                     <div className="col-span-1 flex flex-col gap-4 py-2  ">
                       <div className="w-full">
@@ -335,20 +372,24 @@ const ManageService = () => {
                         <Input
                           placeholder="Enter Service Name"
                           className="  mt-2"
-                          name="service-name"
-                          id="service-name"
+                          name="title"
+                          id="title"
                           type="text"
-                          value={serviceName}
-                          onChange={(e) => setServiceName(e.target.value)}
+                          value={formData.title}
+                          onChange={handleFormChange}
                           required
                         />
                       </div>
                       <div className="w-full flex flex-col gap-1">
                         <Label htmlFor="product-type">Product Type</Label>
-                        <DropdownSelector
-                          values={dropdownValuesProductCategories}
-                          selectedValue={categoryName}
-                          onChange={handleProductCategoryChange}
+                        <SelectProductType
+                          categoryName={formData.productTypeId}
+                          handleProductCategoryChange={(value: any) => {
+                            setFormData((prev) => ({
+                              ...prev,
+                              productTypeId: value.value,
+                            }));
+                          }}
                         />
                       </div>
                       <div className="w-full flex items-center justify-between">
@@ -369,22 +410,22 @@ const ManageService = () => {
                       />
 
                       <div className=" grid grid-cols-2 gap-4  w-full">
+
                         <div>
                           <Label
-                            htmlFor="delivery-radius"
+                            htmlFor="max-booking"
                             className="flex items-center gap-2  "
                           >
-                            Delivery Radius
-                            <TooltipInfo content="Delivery radius in Km how far orders can be delivered." />
+                            Min Booking At a Time
+                            <TooltipInfo content=" Min Booking defines how Min Quantity for the product in (km)" />
                           </Label>
 
                           <Input
-                            id="delivery-radius"
-                            value={deleveryRadius}
-                            placeholder="Delevery Radius"
-                            onChange={(e) =>
-                              setDeleveryRadius(Number(e.target.value))
-                            }
+                            id="max-booking"
+                            name="maxBookingAtTime"
+                            value={formData.maxBookingAtTime}
+                            onChange={handleFormChange}
+                            placeholder="Enter Maximum Quantity"
                             type="number"
                             className="mt-2"
                             required
@@ -398,16 +439,38 @@ const ManageService = () => {
                             className="flex items-center gap-2  "
                           >
                             Max Booking At a Time
-                            <TooltipInfo content=" Max Booking defines how Max Quantity of product at a time." />
+                            <TooltipInfo content=" Max Booking defines how Max Quantity for the product in (km)" />
                           </Label>
 
                           <Input
                             id="max-booking"
-                            value={maxBooking}
-                            onChange={(e) =>
-                              setMaxBooking(Number(e.target.value))
-                            }
+                            name="maxBookingAtTime"
+                            value={formData.maxBookingAtTime}
+                            onChange={handleFormChange}
                             placeholder="Enter Maximum Quantity"
+                            type="number"
+                            className="mt-2"
+                            required
+                            min={1}
+                            max={100}
+                          />
+                        </div>
+
+                        <div>
+                          <Label
+                            htmlFor="delivery-radius"
+                            className="flex items-center gap-2  "
+                          >
+                            Delivery Radius
+                            <TooltipInfo content="Delivery radius in Km how far orders can be delivered in (km)." />
+                          </Label>
+
+                          <Input
+                            id="delivery-radius"
+                            name="deliveryRadius"
+                            value={formData.deliveryRadius}
+                            placeholder="Delevery Radius"
+                            onChange={handleFormChange}
                             type="number"
                             className="mt-2"
                             required
@@ -433,14 +496,9 @@ const ManageService = () => {
                                   id="address1"
                                   placeholder="Enter Street Address Line 1"
                                   type="text"
-                                  // value={address.addressLine1} 
-                                  defaultValue={address.addressLine1}
-                                  onChange={(e) =>
-                                    setAddress((prev) => ({
-                                      ...prev,
-                                      addressLine1: e.target.value,
-                                    }))
-                                  }
+                                  value={formData.streetAddressLine1}
+                                  defaultValue={formData.streetAddressLine1}
+                                  onChange={handleFormChange}
                                   required
                                 />
                               </Autocomplete>
@@ -456,11 +514,11 @@ const ManageService = () => {
                               id="address2"
                               placeholder="Enter Street Address Line 2"
                               type="text"
-                              value={address.addressLine2}
+                              value={formData.streetAddressLine2}
                               onChange={(e) =>
-                                setAddress((prev) => ({
+                                setFormData((prev) => ({
                                   ...prev,
-                                  addressLine2: e.target.value,
+                                  streetAddressLine2: e.target.value,
                                 }))
                               }
                               required
@@ -473,12 +531,12 @@ const ManageService = () => {
                             <Label htmlFor="country">Country</Label>
                             <div className=" w-full">
                               <DropdownSelector
-                                values={dropdownValuesCountries}
-                                selectedValue={address.countery}
+                                values={COUNTRY_LABEL_VALUE}
+                                selectedValue={formData.country}
                                 onChange={({ value }: any) =>
-                                  setAddress((prev) => ({
+                                  setFormData((prev) => ({
                                     ...prev,
-                                    countery: value,
+                                    country: value,
                                   }))
                                 }
                               />
@@ -489,10 +547,10 @@ const ManageService = () => {
                             <Label htmlFor="state">State</Label>
                             <div className="w-full">
                               <DropdownSelector
-                                values={dropdownValuesStates}
-                                selectedValue={address.state}
+                                values={STATE_LABEL_VALUE}
+                                selectedValue={formData.state}
                                 onChange={({ value }: any) =>
-                                  setAddress((prev) => ({
+                                  setFormData((prev) => ({
                                     ...prev,
                                     state: value,
                                   }))
@@ -508,9 +566,9 @@ const ManageService = () => {
                               id="city"
                               placeholder="Enter City"
                               type="text"
-                              value={address.city}
+                              value={formData.city}
                               onChange={(e) =>
-                                setAddress((prev) => ({
+                                setFormData((prev) => ({
                                   ...prev,
                                   city: e.target.value,
                                 }))
@@ -527,11 +585,11 @@ const ManageService = () => {
                               name="zipCode"
                               id="zipCode"
                               type="number"
-                              value={address.zipCode}
+                              value={formData.postalCode}
                               onChange={(e) =>
-                                setAddress((prev) => ({
+                                setFormData((prev) => ({
                                   ...prev,
-                                  zipCode: e.target.value,
+                                  postalCode: e.target.value,
                                 }))
                               }
                               required
@@ -543,85 +601,7 @@ const ManageService = () => {
                       {/* Pricing of the service */}
 
                       <p className="text-lg mt-6">Pricing </p>
-                      <div className="flex flex-col gap-4">
-                        <div className="col-span-1 flex flex-col items-start justify-center w-full gap-2">
-                          <Label htmlFor="country">
-                            Pricing type{" "}
-                            <TooltipInfo content="Price type set with service, once set during service creation, it cannot be changed later." />{" "}
-                          </Label>
-                          <div className=" w-full">
-                            <DropdownSelector
-                              values={dropdownValuesProductPriceType}
-                              selectedValue={pricingType}
-                              onChange={({ value }: any) =>
-                                setPricingType(value)
-                              }
-                            />
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-3 gap-5">
-                          {pricingType === "TIRE" && (
-                            <>
-                              <div className="col-span-1 flex flex-col items-start justify-center gap-2">
-                                <Label htmlFor="unitPrice">Lower bound</Label>
-                                <Input
-                                  name="unitPrice"
-                                  id="unitPrice"
-                                  placeholder="Enter unit pricing"
-                                  type="number"
-                                  value={unitPricing.lowerBound}
-                                  onChange={(e) =>
-                                    setUnitPricing((prev) => ({
-                                      ...prev,
-                                      lowerBound: e.target.value,
-                                    }))
-                                  }
-                                  required
-                                />
-                              </div>
-                              <div className="col-span-1 flex flex-col items-start justify-center gap-2">
-                                <Label htmlFor="unitPrice">Upper bound</Label>
-                                <Input
-                                  name="unitPrice"
-                                  id="unitPrice"
-                                  placeholder="Enter unit pricing"
-                                  type="number"
-                                  value={unitPricing.upperBound}
-                                  onChange={(e) =>
-                                    setUnitPricing((prev) => ({
-                                      ...prev,
-                                      upperBound: e.target.value,
-                                    }))
-                                  }
-                                  required
-                                />
-                              </div>
-                            </>
-                          )}
-                          <div className="col-span-1 flex flex-col items-start justify-center gap-2">
-                            <Label htmlFor="unitPrice">Unit price</Label>
-                            <InputGroup>
-                              <InputGroupAddon>
-                                <DollarSign />
-                                <InputGroupInput
-                                  name="unitPrice"
-                                  id="unitPrice"
-                                  placeholder="Enter unit pricing"
-                                  type="number"
-                                  value={unitPricing.price}
-                                  onChange={(e) =>
-                                    setUnitPricing((prev) => ({
-                                      ...prev,
-                                      price: e.target.value,
-                                    }))
-                                  }
-                                  required
-                                />
-                              </InputGroupAddon>
-                            </InputGroup>
-                          </div>
-                        </div>
-                      </div>
+                      <ServicePricingSection className={`${!productId ? "" : "pointer-events-none"}`} formData={formData} setFormData={setFormData} productPricing={productPricing} setProductPricing={setProductPricing} />
                     </div>
                     <div className="col-span-1 py-2 grid h-full ">
                       <div className="w-full items-start  gap-2 flex flex-col">
@@ -630,8 +610,8 @@ const ManageService = () => {
                         </Label>
                         <div className="w-full h-96">
                           <MarkdownEditor
-                            longDescription={longDescription}
-                            setLongDescription={setLongDescription}
+                            longDescription={formData.description}
+                            setLongDescription={handleFormChange}
                           />
                         </div>
                       </div>
@@ -673,7 +653,7 @@ const ManageService = () => {
                       <Button
                         variant="outline"
                         className="h-7 w-7"
-                        onClick={() => imageDeleteHandler(productId)}
+                      // onClick={() => imageDeleteHandler(productId)}
                       >
                         <TiIconTrash size="12" color="#D30000" />
                       </Button>
@@ -735,3 +715,164 @@ const ManageService = () => {
 };
 
 export default withAuthorization("manage-services")(ManageService);
+
+
+function ServicePricingSection({
+  className,
+  formData,
+  setFormData,
+  productPricing,
+  setProductPricing,
+}: {
+  className?: string,
+  formData: FormData;
+  setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+  productPricing: PriceTypeTire[];
+  setProductPricing: React.Dispatch<React.SetStateAction<PriceTypeTire[]>>;
+}) {
+  console.log(formData)
+  return (
+    <div className={cn("flex flex-col gap-4", className)}>
+      <div className="col-span-1 flex flex-col items-start justify-center w-full gap-2">
+        <Label htmlFor="country">
+          Pricing type{" "}
+          <TooltipInfo content="Price type set with service, once set during service creation, it cannot be changed later." />{" "}
+        </Label>
+        <ProductPriceTypeRadio
+          selectedValue={formData.pricingType}
+          onChange={(value) =>
+            setFormData((prev: FormData) => ({
+              ...prev,
+              pricingType: value as PricingType,
+            }))
+          }
+        />
+        <div className=" w-full">
+        </div>
+      </div>
+      <div className="w-full">
+        {formData.pricingType === 'TIRE' ? <div className=" w-full flex flex-col gap-4">
+          <div>
+            <Button type="button" onClick={() => setProductPricing((prev) => [...prev, { lowerBound: 0, upperBound: 0, price: 0 }])}>Add tire</Button>
+          </div>
+          {
+            (
+              (productPricing as PriceTypeTire[])?.map((priceItem: PriceTypeTire, idx: number) => {
+                return (
+                  <div className=" w-full grid grid-cols-7 items-end gap-4">
+                    <div className=" col-span-2 flex flex-col items-start justify-center gap-2">
+                      <Label htmlFor="unitPrice">Lower bound</Label>
+                      <Input
+                        name="unitPrice"
+                        id="unitPrice"
+                        placeholder="Enter unit pricing"
+                        type="number"
+                        value={priceItem.lowerBound}
+                        onChange={(e) =>
+                          setProductPricing((prev) => {
+                            return prev.map((item, index) => {
+                              if (index === idx) {
+                                return {
+                                  ...item,
+                                  lowerBound: e.target.value,
+                                }
+                              }
+                              return item
+                            }) as PriceTypeTire[]
+                          })
+                        }
+                        required
+                      />
+                    </div>
+                    <div className=" col-span-2 flex flex-col items-start justify-center gap-2">
+                      <Label htmlFor="unitPrice">Upper bound</Label>
+                      <Input
+                        name="unitPrice"
+                        id="unitPrice"
+                        placeholder="Enter unit pricing"
+                        type="number"
+                        value={priceItem.upperBound}
+                        onChange={(e) =>
+                          setProductPricing((prev) => {
+                            return prev.map((item, index) => {
+                              if (index === idx) {
+                                return {
+                                  ...item,
+                                  upperBound: e.target.value,
+                                }
+                              }
+                              return item
+                            }) as PriceTypeTire[]
+                          })
+                        }
+                        required
+                      />
+                    </div>
+                    <div className=" col-span-2 flex flex-col items-start justify-center gap-2">
+                      <Label htmlFor="unitPrice">Price</Label>
+                      <Input
+                        name="unitPrice"
+                        id="unitPrice"
+                        placeholder="Enter unit pricing"
+                        type="number"
+                        value={priceItem.price}
+                        onChange={(e) =>
+                          setProductPricing((prev) => {
+                            return prev.map((item, index) => {
+                              if (index === idx) {
+                                return {
+                                  ...item,
+                                  price: e.target.value,
+                                }
+                              }
+                              return item
+                            }) as PriceTypeTire[]
+                          })
+                        }
+                        required
+                      />
+                    </div>
+                    <div className=" col-span-1 flex flex-col items-start justify-center gap-2">
+                      {/* <Label htmlFor="unitPrice">Price</Label> */}
+                      <Button type="button" onClick={() => {
+                        setProductPricing((prev) => {
+                          return prev.filter((_, index) => idx !== index)
+                        })
+                      }} variant={"ghost"} className="mb-1" size={"sm"} ><X className=" text-red-500 " /></Button>
+                    </div>
+
+                  </div>
+                )
+              })
+
+            )
+          }
+        </div> :
+          <div className="col-span-1 flex flex-col items-start justify-center gap-2">
+            <Label htmlFor="unitPrice">Price</Label>
+            <InputGroup className=" w-fit">
+              <InputGroupAddon>
+                <DollarSign />
+                <InputGroupInput
+                  name="unitPrice"
+                  id="unitPrice"
+                  placeholder="Enter unit pricing"
+                  type="number"
+                  value={formData.price as number || 0}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      price: Number(e.target.value),
+                    }))
+                  }
+                  required
+                />
+              </InputGroupAddon>
+            </InputGroup>
+          </div>
+        }
+
+      </div>
+    </div>
+  )
+}

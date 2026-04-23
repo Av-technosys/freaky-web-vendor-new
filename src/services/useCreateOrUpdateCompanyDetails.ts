@@ -101,13 +101,13 @@ export const useCreateVendorDocument = () => {
   return useMutation({
     mutationFn: createVendorDocuments,
     onSuccess: () => {
-      toast.success("Document uploaded successfully.");
+      // toast.success("Document uploaded successfully.");
       queryClient.invalidateQueries({
         queryKey: ["vendor-documents"],
       });
     },
     onError: () => {
-      toast.error("Unable to upload vendor document.");
+      toast.error("Unable to create vendor document.");
     },
   });
 };

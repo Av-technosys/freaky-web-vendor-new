@@ -10,4 +10,6 @@ export const googleAddressItems = {
     "postal_code": "postal_code",
     "latitude": "latitude",
     "longitude": "longitude",
+    "subpremise": "subpremise",
+    "formatted_address": "formatted_address"
 }

@@ -1,12 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Card, CardContent, CardTitle } from "../../components/ui/card";
+import { Card, CardContent, CardFooter, CardTitle } from "../../components/ui/card";
 import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-  
 } from "../../components/ui/input-group";
 import {
   InputOTP,
@@ -29,44 +27,120 @@ import {
 import { Button } from "../../components/ui/button";
 import { Calendar } from "../../components/ui/calender";
 import { ChevronDownIcon } from "lucide-react";
-import { type CompanyData } from "../../types/company";
 import { cn } from "@/lib/utils";
+import { useGetVendorDetails } from "@/services/useGetVendorCompanyDetails";
+import { useState, useEffect } from "react";
+import { useUpdateCompanyInformation } from "@/services/useCreateOrUpdateCompanyDetails";
+import { type CompanyData } from "../../types/company"; // Import CompanyData type
 
 interface CompanyInformationProps {
-  data: Pick<
-    CompanyData,
-    | "businessName"
-    | "website"
-    | "dbaName"
-    | "legalEntityName"
-    | "einNumber"
-    | "businessType"
-    | "incorporationDate"
-  >;
-  onUpdate: (key: keyof CompanyData, value: any) => void;
-  errors?: Record<string, string>;
-  readOnly: boolean | any;
-  open: boolean;
-  setOpen: (open: boolean) => void;
   className?: string;
+  data?: Partial<CompanyData>;
+  onUpdate?: (key: keyof CompanyData, value: any) => void;
+  errors?: Record<string, string>;
+  readOnly?: boolean;
+  open?: boolean; // Keep these for compatibility/optional usage
+  setOpen?: (open: boolean) => void;
 }
 
 const CompanyInformation = ({
-  data,
+  className,
+  data: controlledData,
   onUpdate,
   errors,
-  readOnly,
-  open,
-  setOpen,
-  className,
+  readOnly: propReadOnly,
+  open: propOpen,
+  setOpen: propSetOpen
 }: CompanyInformationProps) => {
-  const isReadOnly = readOnly === true;
+  const isControlled = !!onUpdate;
+
+  const { data: vendorData, isPending: isApiPending } = useGetVendorDetails();
+  const updateCompanyMutation = useUpdateCompanyInformation();
+
+  const [localFormData, setLocalFormData] = useState({
+    businessName: "",
+    website: "",
+    dbaName: "",
+    legalEntityName: "",
+    einNumber: "",
+    businessType: "",
+    incorporationDate: undefined as Date | undefined,
+  });
+
+  const [localOpen, setLocalOpen] = useState(false);
+  // Errors state is used in uncontrolled mode if we want to add validation, but for now we just accept errors prop for controlled mode
+  // or simple validation could be added. For now, rely on API feedback or simplified logic for uncontrolled.
+
+  const open = isControlled && propOpen !== undefined ? propOpen : localOpen;
+  const setOpen = isControlled && propSetOpen ? propSetOpen : setLocalOpen;
+
+  const isPending = !isControlled && isApiPending;
+
+  useEffect(() => {
+    if (!isControlled && vendorData?.data) {
+      const data = vendorData.data;
+      setLocalFormData({
+        businessName: data.businessName || "",
+        website: data.websiteURL || "",
+        dbaName: data.DBAname || "",
+        legalEntityName: data.legalEntityName || "",
+        einNumber: data.einNumber || "",
+        businessType: data.businessType || "",
+        incorporationDate: data.incorporationDate
+          ? new Date(data.incorporationDate)
+          : undefined,
+      });
+    }
+  }, [vendorData, isControlled]);
+
+  const formData = isControlled && controlledData ? {
+    businessName: controlledData.businessName || "",
+    website: controlledData.website || "",
+    dbaName: controlledData.dbaName || "",
+    legalEntityName: controlledData.legalEntityName || "",
+    einNumber: controlledData.einNumber || "",
+    businessType: controlledData.businessType || "",
+    incorporationDate: controlledData.incorporationDate,
+  } : localFormData;
+
+  const handleChange = (key: string, value: any) => {
+    if (isControlled && onUpdate) {
+      onUpdate(key as keyof CompanyData, value);
+    } else {
+      setLocalFormData((prev) => ({ ...prev, [key]: value }));
+    }
+  };
+
+  const handleSave = () => {
+    if (isControlled) return;
+    const payload = {
+      businessName: localFormData.businessName,
+      websiteURL: localFormData.website,
+      DBAname: localFormData.dbaName,
+      legalEntityName: localFormData.legalEntityName,
+      einNumber: localFormData.einNumber,
+      businessType: localFormData.businessType,
+      incorporationDate: localFormData.incorporationDate || new Date(),
+    };
+    updateCompanyMutation.mutate(payload);
+  };
+
+  // Logic for readOnly
+  // If controlled, use prop. If uncontrolled, check vendor approval status?
+  const isReadOnly = isControlled ? propReadOnly : (vendorData?.data?.isApproved === true);
+
+  if (isPending) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Card className={cn(className)}>
       <CardContent>
-        <div className="flex flex-col  gap-6">
-          <CardTitle>Company Information</CardTitle>
+        <div className="flex flex-col gap-6">
+          <div className="flex justify-between items-center">
+            <CardTitle>Company Information</CardTitle>
+
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div className="col-span-1 flex flex-col items-start justify-center gap-3">
@@ -76,8 +150,8 @@ const CompanyInformation = ({
                 id="businessName"
                 placeholder="Enter Business Name"
                 type="text"
-                value={data.businessName}
-                onChange={(e) => onUpdate("businessName", e.target.value)}
+                value={formData.businessName}
+                onChange={(e) => handleChange("businessName", e.target.value)}
                 required
               />
               {errors?.businessName && (
@@ -93,9 +167,9 @@ const CompanyInformation = ({
                 </InputGroupAddon>
                 <InputGroupInput
                   placeholder="https://www.example.com"
-                  value={data.website.replace("https://", "")}
+                  value={formData.website && formData.website.replace("https://", "") || ""}
                   onChange={(e) =>
-                    onUpdate("website", `https://${e.target.value}`)
+                    handleChange("website", `https://${e.target.value}`)
                   }
                 />
                 {errors?.websiteURL && (
@@ -113,9 +187,9 @@ const CompanyInformation = ({
                 id="dbaName"
                 placeholder="Enter DBA Name"
                 type="text"
-                value={data.dbaName}
+                value={formData.dbaName}
                 readOnly={isReadOnly}
-                onChange={(e) => onUpdate("dbaName", e.target.value)}
+                onChange={(e) => handleChange("dbaName", e.target.value)}
                 required
               />
               {errors?.DBAname && (
@@ -130,8 +204,8 @@ const CompanyInformation = ({
                 id="legalEntityName"
                 placeholder="Enter Entity Name"
                 type="text"
-                value={data.legalEntityName}
-                onChange={(e) => onUpdate("legalEntityName", e.target.value)}
+                value={formData.legalEntityName}
+                onChange={(e) => handleChange("legalEntityName", e.target.value)}
                 required
               />
               {errors?.legalEntityName && (
@@ -140,12 +214,12 @@ const CompanyInformation = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-2  gap-3">
-            <div className="col-span-1  flex flex-col items-start justify-center gap-3">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="col-span-1 flex flex-col items-start justify-center gap-3">
               <Label htmlFor="businessType">Business Type</Label>
               <Select
-                onValueChange={(value) => onUpdate("businessType", value)}
-                value={data.businessType}
+                onValueChange={(value) => handleChange("businessType", value)}
+                value={formData.businessType}
               >
                 <SelectTrigger
                   className="w-full"
@@ -166,7 +240,7 @@ const CompanyInformation = ({
               )}
             </div>
 
-            <div className="col-span-1  flex flex-col items-start justify-center gap-3">
+            <div className="col-span-1 flex flex-col items-start justify-center gap-3">
               <Label htmlFor="incorporationDate">Incorporation Date</Label>
               <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
@@ -174,8 +248,8 @@ const CompanyInformation = ({
                     variant="outline"
                     className="w-full justify-between text-gray-500 font-normal"
                   >
-                    {data.incorporationDate
-                      ? data.incorporationDate.toLocaleDateString()
+                    {formData.incorporationDate
+                      ? formData.incorporationDate.toLocaleDateString()
                       : "Select Date"}
                     <ChevronDownIcon />
                   </Button>
@@ -183,11 +257,11 @@ const CompanyInformation = ({
                 <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
                     mode="single"
-                    selected={data.incorporationDate}
+                    selected={formData.incorporationDate}
                     captionLayout="dropdown"
                     disabled={{ after: new Date() }}
                     onSelect={(date: Date | undefined) => {
-                      onUpdate("incorporationDate", date);
+                      handleChange("incorporationDate", date);
                       setOpen(false);
                     }}
                   />
@@ -203,8 +277,8 @@ const CompanyInformation = ({
               <Label htmlFor="einNumber">EIN Number</Label>
               <InputOTP
                 maxLength={9}
-                value={String(data.einNumber ?? "")}
-                onChange={(value) => onUpdate("einNumber", value)}
+                value={String(formData.einNumber ?? "")}
+                onChange={(value) => handleChange("einNumber", value)}
                 readOnly={isReadOnly}
                 className="text-black"
               >
@@ -230,6 +304,13 @@ const CompanyInformation = ({
           </div>
         </div>
       </CardContent>
+      <CardFooter>
+        {!isControlled && (
+          <Button onClick={handleSave} className="ml-auto" disabled={updateCompanyMutation.isPending}>
+            {updateCompanyMutation.isPending ? "Saving..." : "Save"}
+          </Button>
+        )}
+      </CardFooter>
     </Card>
   );
 };

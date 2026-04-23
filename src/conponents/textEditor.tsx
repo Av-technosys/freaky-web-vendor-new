@@ -1,6 +1,8 @@
 import React from "react";
 import MdEditor from "react-markdown-editor-lite";
 import MarkdownIt from "markdown-it";
+import { Button } from "@/components/ui";
+import { GenerateAiBtn } from "./generatAiBtn";
 
 const mdParser = new MarkdownIt();
 
@@ -10,6 +12,7 @@ const MarkdownEditor: React.FC<any> = ({
 }: any) => {
   return (
     <div className=" h-96">
+      {/* <GenerateAiBtn setLongDescription={setLongDescription} /> */}
       <MdEditor
         value={longDescription}
         style={{ height: "100%", backgroundColor: "#F4F5FA" }}

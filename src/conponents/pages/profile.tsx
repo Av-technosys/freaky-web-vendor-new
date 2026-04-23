@@ -23,7 +23,7 @@ import {
 } from "../../services/useCreateOrUpdateUserDetails";
 import { useGetImageUrl, useUploadImage } from "../../services/useUploadImage";
 import { LoaderCircle } from "lucide-react";
-import { COUNTRY_LABEL_VALUE, US_STATE_LABEL_VALUE } from "@/const/locatoins";
+import { COUNTRY_LABEL_VALUE, STATE_LABEL_VALUE } from "@/const/locatoins";
 import DropdownSelector from "../dropdownSelector";
 import { SkeletonForm } from "@/components/skleton/form";
 import ImageViewerDialog from "../imageViewerDialog";
@@ -48,7 +48,7 @@ const Profile = () => {
 
   const [address, setAddress] = useState({
     country: COUNTRY_LABEL_VALUE.options[0].value,
-    state: US_STATE_LABEL_VALUE.options[0].value,
+    state: STATE_LABEL_VALUE.options[0].value,
     city: "",
     zipCode: "",
     addressLine1: "",
@@ -344,7 +344,7 @@ const Profile = () => {
                       <Label htmlFor="state">State</Label>
                       <div className="w-full">
                         <DropdownSelector
-                          values={US_STATE_LABEL_VALUE}
+                          values={STATE_LABEL_VALUE}
                           selectedValue={address.state}
                           onChange={({ value }: any) =>
                             setAddress((prev) => ({ ...prev, state: value }))

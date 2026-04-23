@@ -87,3 +87,15 @@ export const deleteVendorServiceById = async (serviceId: any) => {
     throw error;
   }
 };
+
+export const getProductType = async () => {
+  try {
+    const response = await axiosInstance.get(
+      `${apiConstant.vendor.getProductType}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error while accepting invite:", error);
+    throw error;
+  }
+};

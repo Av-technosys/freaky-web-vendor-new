@@ -67,6 +67,29 @@ const UpdateDocumentPopup = ({
     closePopup(false);
   };
 
+
+
+
+  //   const [documentType, setDocumentType] = useState();
+  // const [documentURL, setDocumentURL] = useState("");
+
+  // const updateDocumentMutation = useUpdateVendorDocument();
+
+  // function handleDocumentChange(value: any) {
+  //   setDocumentType(value.value);
+  // }
+
+  // const submitHandler = () => {
+  //   const documentData = {
+  //     id: details.id,
+  //     documentType: documentType,
+  //     documentURL: documentURL,
+  //   };
+  //   updateDocumentMutation.mutate(documentData);
+  //   closePopup(false);
+  // };
+
+
   return (
     <>
       <AlertDialog open={openPopup} onOpenChange={closePopup}>

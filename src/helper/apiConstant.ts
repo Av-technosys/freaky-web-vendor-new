@@ -47,6 +47,7 @@ export const apiConstant = {
     acceptVendorInvite: "/v1/vendor/accept_invite",
     getAllVendorsForInvitation: "/v1/vendor/request_vendors",
     getAllSearchItems: "/v1/vendor/searchitems",
+    getProductType: "/v1/product/products_type",
   },
   review: {
     getAllReview: "/v1/vendor/review",
