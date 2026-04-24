@@ -118,8 +118,8 @@ export const PRODUCT_PRICE_TYPE_LABEL_VALUE = {
             value: "FLAT",
         },
         {
-            label: "TIRE",
-            value: "TIRE",
+            label: "TIER",
+            value: "TIER",
         },
     ],
 };

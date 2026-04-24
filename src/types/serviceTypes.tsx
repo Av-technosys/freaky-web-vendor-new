@@ -1,9 +1,9 @@
 export type ProductType = "PRODUCT" | "ADDON";
-export type PricingType = "FLAT" | "TIRE";
+export type PricingType = "FLAT" | "TIER";
 
 
 
-export interface PriceTypeTire {
+export interface PriceTypeTier {
     lowerBound: number;
     upperBound: number;
     price: number;

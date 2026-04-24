@@ -1,4 +1,4 @@
-// edit passbook dialog
+
 import { useEffect, useState } from "react";
 import {
   AlertDialog,
@@ -16,7 +16,7 @@ import Spin from "@/components/spin";
 const EditPaymentBookDialog = ({ isOpen, setOpen, priceBook }: any) => {
   return (
     <AlertDialog open={isOpen} onOpenChange={setOpen}>
-      <AlertDialogContent className=" sm:max-w-[600px]">
+      <AlertDialogContent className="sm:max-w-[600px]">
         <AlertDialogHeader>
           <AlertDialogTitle>{`Edit ${priceBook?.name}`}</AlertDialogTitle>
         </AlertDialogHeader>
@@ -30,70 +30,66 @@ export default EditPaymentBookDialog;
 
 function AlertContent({ id, setOpen }: any) {
   const { data, isPending } = useServicesByPriceBookId(id);
-  const [servicesData, setServicesData] = useState<any>([]);
+  const [servicesData, setServicesData] = useState<any[]>([]);
 
   const updatePriceBookMutation = useUpdatePriceBook();
 
   useEffect(() => {
-    setServicesData(data?.data);
+    setServicesData(data?.data || []);
   }, [data]);
 
   if (isPending) return <Spin />;
 
-  function handleDiscountChange(value: any, serviceData: any) {
-    serviceData.salePrice =
-      serviceData.listPrice - (serviceData.listPrice * value) / 100;
-    serviceData.discountPercentage = value;
-    setServicesData((prev: any) =>
-      prev.map((item: any) =>
-        item.productId === serviceData.productId
-          ? { ...serviceData, isEdited: true }
-          : item
+  // 🔥 GROUP BY productId
+  const groupedServices = Object.values(
+    servicesData.reduce((acc: any, item: any) => {
+      if (!acc[item.productId]) acc[item.productId] = [];
+      acc[item.productId].push(item);
+      return acc;
+    }, {})
+  );
+
+  function updateRow(updatedRow: any) {
+    setServicesData((prev) =>
+      prev.map((item) =>
+        item.id === updatedRow.id ? { ...updatedRow, isEdited: true } : item
       )
     );
   }
 
-  function handleSalePriceChange(value: any, serviceData: any) {
-    serviceData.salePrice = value;
-    serviceData.discountPercentage = Number(
-      ((serviceData.listPrice - value) / serviceData.listPrice) * 100
-    );
-    setServicesData((prev: any) =>
-      prev.map((item: any) =>
-        item.productId === serviceData.productId
-          ? { ...serviceData, isEdited: true }
-          : item
-      )
-    );
-  }
-  function handleLowerSlabChange(value: any, serviceData: any) {
-    serviceData.lowerSlab = value;
-    setServicesData((prev: any) =>
-      prev.map((item: any) =>
-        item.productId === serviceData.productId
-          ? { ...serviceData, isEdited: true }
-          : item
-      )
-    );
+  function handleDiscountChange(value: any, service: any) {
+    const discount = Number(value);
+    const updated = {
+      ...service,
+      discountPercentage: discount,
+      salePrice:
+        service.listPrice - (service.listPrice * discount) / 100,
+    };
+    updateRow(updated);
   }
 
-  function handleUpperSlabChange(value: any, serviceData: any) {
-    serviceData.upperSlab = value;
-    setServicesData((prev: any) =>
-      prev.map((item: any) =>
-        item.productId === serviceData.productId
-          ? { ...serviceData, isEdited: true }
-          : item
-      )
-    );
+  function handleSalePriceChange(value: any, service: any) {
+    const sale = Number(value);
+    const updated = {
+      ...service,
+      salePrice: sale,
+      discountPercentage: Number(
+        ((service.listPrice - sale) / service.listPrice) * 100
+      ),
+    };
+    updateRow(updated);
+  }
+
+  function handleLowerSlabChange(value: any, service: any) {
+    updateRow({ ...service, lowerSlab: Number(value) });
+  }
+
+  function handleUpperSlabChange(value: any, service: any) {
+    updateRow({ ...service, upperSlab: Number(value) });
   }
 
   function handleSaveClick() {
-    const isEditedData = servicesData.filter((service: any) => {
-      if (service.isEdited) {
-        return service;
-      }
-    });
+    const isEditedData = servicesData.filter((s) => s.isEdited);
     updatePriceBookMutation.mutate(isEditedData);
   }
 
@@ -103,67 +99,104 @@ function AlertContent({ id, setOpen }: any) {
 
   return (
     <>
-      <div className="flex flex-col gap-6 mt-4">
-        {servicesData?.map((service: any) => (
-          <div key={service.productId}>
-            <Label className="text-lg font-semibold">
-              {service.title}
-            </Label>
-            <div className=" space-y-2 mt-1">
-              {service.pricingType === "tier" && (
-                <div className=" w-full grid grid-cols-2 gap-4">
+      <div className="flex flex-col gap-6 mt-4 max-h-[500px] overflow-y-auto pr-2">
+        {groupedServices.map((group: any, index: number) => {
+          const isTier =
+            group.length > 1 || group[0].upperSlab !== null;
+
+          return (
+            <div key={index}>
+              <Label className="text-lg font-semibold">
+                {group[0].title}
+              </Label>
+
+              {isTier ? (
+                <div className="space-y-3 mt-2">
+                  {group.map((service: any) => (
+                    <div
+                      key={service.id}
+                      className="grid grid-cols-2 gap-4 border p-3 rounded-lg"
+                    >
+                      <div>
+                        <Label>Lower Slab</Label>
+                        <Input
+                          value={service.lowerSlab}
+                          onChange={(e) =>
+                            handleLowerSlabChange(e.target.value, service)
+                          }
+                        />
+                      </div>
+
+                      <div>
+                        <Label>Upper Slab</Label>
+                        <Input
+                          value={service.upperSlab}
+                          onChange={(e) =>
+                            handleUpperSlabChange(e.target.value, service)
+                          }
+                        />
+                      </div>
+
+                      <div>
+                        <Label>List Price</Label>
+                        <Input readOnly value={service.listPrice} />
+                      </div>
+
+                      <div>
+                        <Label>Discount %</Label>
+                        <Input
+                          value={service.discountPercentage}
+                          onChange={(e) =>
+                            handleDiscountChange(e.target.value, service)
+                          }
+                        />
+                      </div>
+
+                      <div>
+                        <Label>Sale Price</Label>
+                        <Input
+                          value={service.salePrice}
+                          onChange={(e) =>
+                            handleSalePriceChange(e.target.value, service)
+                          }
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="grid gap-3 grid-cols-3 mt-2">
                   <div>
-                    <Label className=" mb-1">Lower Slab</Label>
+                    <Label>List Price</Label>
+                    <Input readOnly value={group[0].listPrice} />
+                  </div>
+
+                  <div>
+                    <Label>Discount %</Label>
                     <Input
-                      value={service.lowerSlab}
+                      value={group[0].discountPercentage}
                       onChange={(e) =>
-                        handleLowerSlabChange(e.target.value, service)
+                        handleDiscountChange(e.target.value, group[0])
                       }
                     />
                   </div>
+
                   <div>
-                    <Label>Upper Slab</Label>
+                    <Label>Sale Price</Label>
                     <Input
-                      value={service.upperSlab}
+                      value={group[0].salePrice}
                       onChange={(e) =>
-                        handleUpperSlabChange(e.target.value, service)
+                        handleSalePriceChange(e.target.value, group[0])
                       }
                     />
                   </div>
                 </div>
               )}
-              <div className=" grid gap-3 grid-cols-3">
-                <div>
-                  <Label>List Price</Label>
-                  <Input
-                    className=" opacity-50"
-                    readOnly
-                    value={service.listPrice}
-                  />
-                </div>
-                <div>
-                  <Label>Discount %</Label>
-                  <Input
-                    value={service.discountPercentage}
-                    onChange={(e) =>
-                      handleDiscountChange(e.target.value, service)
-                    }
-                  />
-                </div>
-                <div>
-                  <Label>Sale Price</Label>
-                  <Input
-                    value={service.salePrice}
-                    onChange={(e) =>
-                      handleSalePriceChange(e.target.value, service)
-                    }
-                  />
-                </div>
-              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
+
       <AlertDialogFooter>
         <AlertDialogCancel onClick={handleCancelClick}>
           Cancel
@@ -178,5 +211,3 @@ function AlertContent({ id, setOpen }: any) {
     </>
   );
 }
-
-

@@ -25,10 +25,10 @@ export function ProductPriceTypeRadio({ selectedValue, onChange }: { selectedVal
             <FieldLabel htmlFor="tire-plan">
                 <Field orientation="horizontal">
                     <FieldContent>
-                        <FieldTitle>Tire</FieldTitle>
-                        <FieldDescription>Price based on tire size.</FieldDescription>
+                        <FieldTitle>Tier</FieldTitle>
+                        <FieldDescription>Price based on tier size.</FieldDescription>
                     </FieldContent>
-                    <RadioGroupItem value="TIRE" id="tire-plan" />
+                    <RadioGroupItem value="TIER" id="tire-plan" />
                 </Field>
             </FieldLabel>
         </RadioGroup>

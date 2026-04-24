@@ -28,7 +28,7 @@ import { useCreateVendorService, useDeleteBannerImage, useGetImageUrl, useGetVen
 import { Button, Card, CardContent, Input, Label } from "@/components/ui";
 import { SelectProductType } from "@/components/product/SelectProductType";
 import { ProductPriceTypeRadio } from "@/components/product/PriceTypeSelect";
-import type { FormData, PriceTypeTire, PricingType } from "@/types/serviceTypes";
+import type { FormData, PriceTypeTier, PricingType } from "@/types/serviceTypes";
 import { cn } from "@/lib/utils";
 
 
@@ -59,7 +59,7 @@ const ManageService = () => {
 
 
 
-  const [productPricing, setProductPricing] = useState<PriceTypeTire[]>([]);
+  const [productPricing, setProductPricing] = useState<PriceTypeTier[]>([]);
 
   const [formData, setFormData] = useState<FormData>({
     title: "",
@@ -162,10 +162,9 @@ const ManageService = () => {
   useEffect(() => {
     if (data?.product && productId) {
       setMediaImages(data.product.media);
-      console.log("data.product: ", data.product)
       setFormData(mapProductToForm(data.product));
       setProductData(mapProductToForm(data.product));
-
+      setProductPricing(data.product.pricing || []);
       // setMediaBanner(data.product.bannerImage || "");
     }
   }, [data, productId]);
@@ -306,6 +305,7 @@ const ManageService = () => {
       longitude: formData.longitude,
       productTypeId: formData.productTypeId,
       price: formData.price,
+      productPricing: productPricing,
       maxBookingAtTime: formData.maxBookingAtTime,
       maxQuantity: formData.maxQuantity,
       minQuantity: formData.minQuantity,
@@ -313,6 +313,11 @@ const ManageService = () => {
       returnPolicyURL: formData.returnPolicyURL,
 
     };
+
+    if (formData.pricingType === "TIER" && !productPricing.length) {
+    toast.error("Add at least one tier");
+    return;
+}
     if (productId) {
       mutation.mutate(
         { productId, serviceData },
@@ -358,6 +363,8 @@ const ManageService = () => {
       [name]: value,
     }));
   }
+
+
   return (
     <>
       {isPending && productId ? (
@@ -733,10 +740,9 @@ function ServicePricingSection({
   className?: string,
   formData: FormData;
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
-  productPricing: PriceTypeTire[];
-  setProductPricing: React.Dispatch<React.SetStateAction<PriceTypeTire[]>>;
+  productPricing: PriceTypeTier[];
+  setProductPricing: React.Dispatch<React.SetStateAction<PriceTypeTier[]>>;
 }) {
-  console.log(formData)
   return (
     <div className={cn("flex flex-col gap-4", className)}>
       <div className="col-span-1 flex flex-col items-start justify-center w-full gap-2">
@@ -744,26 +750,40 @@ function ServicePricingSection({
           Pricing type{" "}
           <TooltipInfo content="Price type set with service, once set during service creation, it cannot be changed later." />{" "}
         </Label>
+        
         <ProductPriceTypeRadio
-          selectedValue={formData.pricingType}
-          onChange={(value) =>
-            setFormData((prev: FormData) => ({
-              ...prev,
-              pricingType: value as PricingType,
-            }))
-          }
-        />
+  selectedValue={formData.pricingType}
+  onChange={(value) => {
+    const type = value.toUpperCase() as PricingType;
+    
+
+setFormData((prev: FormData) => ({
+  ...prev,
+  pricingType: type,
+  price: type === "TIER" ? 0 : prev.price,
+}));
+    if (type === "TIER") {
+      setProductPricing([
+        { lowerBound: 1, upperBound: 10, price: 0 },
+      ]);
+    }
+
+    if (type === "FLAT") {
+      setProductPricing([]);
+    }
+  }}
+/>
         <div className=" w-full">
         </div>
       </div>
       <div className="w-full">
-        {formData.pricingType === 'TIRE' ? <div className=" w-full flex flex-col gap-4">
+        {formData.pricingType === 'TIER' ? <div className=" w-full flex flex-col gap-4">
           <div>
-            <Button type="button" onClick={() => setProductPricing((prev) => [...prev, { lowerBound: 0, upperBound: 0, price: 0 }])}>Add tire</Button>
+            <Button type="button" onClick={() => setProductPricing((prev) => [...prev, { lowerBound: 0, upperBound: 0, price: 0 }])}>Add tier</Button>
           </div>
           {
             (
-              (productPricing as PriceTypeTire[])?.map((priceItem: PriceTypeTire, idx: number) => {
+              (productPricing as PriceTypeTier[])?.map((priceItem: PriceTypeTier, idx: number) => {
                 return (
                   <div className=" w-full grid grid-cols-7 items-end gap-4">
                     <div className=" col-span-2 flex flex-col items-start justify-center gap-2">
@@ -784,7 +804,7 @@ function ServicePricingSection({
                                 }
                               }
                               return item
-                            }) as PriceTypeTire[]
+                            }) as PriceTypeTier[]
                           })
                         }
                         required
@@ -808,7 +828,7 @@ function ServicePricingSection({
                                 }
                               }
                               return item
-                            }) as PriceTypeTire[]
+                            }) as PriceTypeTier[]
                           })
                         }
                         required
@@ -832,7 +852,7 @@ function ServicePricingSection({
                                 }
                               }
                               return item
-                            }) as PriceTypeTire[]
+                            }) as PriceTypeTier[]
                           })
                         }
                         required
