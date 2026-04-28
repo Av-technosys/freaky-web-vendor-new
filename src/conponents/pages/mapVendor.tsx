@@ -59,29 +59,7 @@ import { rotateIdToken } from "@/helper/refreshToken";
 import { jwtDecode } from "jwt-decode";
 
 const UserToVendor = () => {
-  const navigate = useNavigate();
-  useEffect(() => {
-    const token = localStorage.getItem("id_token");
-    if (token) {
-      try {
-        const decodedToken: any = jwtDecode(token);
-        const vendorRaw = decodedToken["custom:vendor_ids"];
-        if (vendorRaw) {
-          const vendorObj = JSON.parse(vendorRaw);
-          const vendorId = vendorObj.vendorId;
-
-          console.log("vendorRaw: ", vendorId);
-          if (vendorId) {
-            navigate("/");
-          }
-        }
-      } catch (error) {
-        console.error("Invalid token", error);
-
-      }
-    }
-  }, [])
-
+  
 
   const [userStepNumber, setUserStepNumber] = React.useState(0);
   const [selectedVendorId, setSelectedVendorId] = React.useState<string | null>(

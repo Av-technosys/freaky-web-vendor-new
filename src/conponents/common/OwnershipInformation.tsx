@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { COUNTRY_LABEL_VALUE } from "@/const/locatoins";
+import { COUNTRY_LABEL_VALUE, STATE_LABEL_VALUE } from "@/const/locatoins";
 import { useState, useEffect } from "react";
 import { useGetVendorDetails, useGetVendorOwnershipDetails } from "@/services/useGetVendorCompanyDetails";
 import { useUpdateOwnershipInformation } from "@/services/useCreateOrUpdateCompanyDetails";
@@ -360,9 +360,9 @@ const OwnershipInformation = ({
                       </SelectTrigger>
 
                       <SelectContent>
-                        {COUNTRY_LABEL_VALUE.map((state) => (
-                          <SelectItem key={state} value={state}>
-                            {state}
+                        {STATE_LABEL_VALUE.options.map((state) => (
+                           <SelectItem key={state.value} value={state.value}>
+                             {state.label}
                           </SelectItem>
                         ))}
                       </SelectContent>

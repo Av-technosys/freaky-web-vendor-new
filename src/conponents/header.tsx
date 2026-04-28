@@ -58,7 +58,6 @@ const Header: React.FC = () => {
   // const debouncedSearch = useDebounce(searchText, 800);
 
   const { data: sessionData, isPending: isUserPending } = useGetUserDetails();
-
   // const { data: searchData, isPending } = useGetSearchItems({
   //   service,
   //   debouncedSearch,

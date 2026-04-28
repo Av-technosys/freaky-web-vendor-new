@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "../../components/ui/select";
 import { cn } from "@/lib/utils";
-import { COUNTRY_LABEL_VALUE } from "@/const/locatoins";
+import { COUNTRY_LABEL_VALUE, STATE_LABEL_VALUE } from "@/const/locatoins";
 import { useLoadScript, Autocomplete } from "@react-google-maps/api";
 import { VITE_GOOGLE_MAPS_API_KEY } from "@/const/env";
 import { useState, useEffect } from "react";
@@ -270,13 +270,13 @@ const BusinessAddress = ({
                   <SelectValue placeholder="Select State" />
                 </SelectTrigger>
 
-                <SelectContent>
-                  {COUNTRY_LABEL_VALUE.map((state) => (
-                    <SelectItem key={state} value={state}>
-                      {state}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
+                                     <SelectContent>
+                        {STATE_LABEL_VALUE.options.map((state) => (
+                           <SelectItem key={state.value} value={state.value}>
+                             {state.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
               </Select>
               {errors?.state && (
                 <p className="text-red-500 text-sm">{errors.state}</p>

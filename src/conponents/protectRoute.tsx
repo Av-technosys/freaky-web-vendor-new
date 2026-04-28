@@ -1,9 +1,9 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
 const ProtectedRoute = () => {
   const token = localStorage.getItem("id_token");
-  const location = window.location.pathname;
+  const location = useLocation();
 
   if (!token) {
     return <Navigate to="/login" replace />;
@@ -11,30 +11,24 @@ const ProtectedRoute = () => {
 
   try {
     const decodedToken: any = jwtDecode(token);
+
     const vendorRaw = decodedToken?.["custom:vendor_ids"];
+    const vendorId = vendorRaw ? Number(vendorRaw) : null;
 
-    let vendorId: number | null = null;
+    const isMapVendorPage = location.pathname === "/map-vendor";
 
-    if (vendorRaw) {
-      try {
-        const vendorObj = JSON.parse(vendorRaw);
-        vendorId = vendorObj?.vendorId ?? null;
-      } catch {
-        vendorId = null;
-      }
+    if (!vendorId && !isMapVendorPage) {
+      return <Navigate to="/map-vendor" replace />;
     }
 
-    if (!vendorId && location === "/map-vendor") {
-      return <Outlet />;
+    if (vendorId && isMapVendorPage) {
+      return <Navigate to="/dashboard" replace />;
     }
 
-    if (vendorId) {
-      return <Outlet />;
-    }
-
-    return <Navigate to="/map-vendor" replace />;
+    return <Outlet />;
   } catch (error) {
-    console.error("Token decode failed", error);
+    console.error("Token decode failed:", error);
+
     return <Navigate to="/login" replace />;
   }
 };

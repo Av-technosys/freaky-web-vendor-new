@@ -92,18 +92,19 @@ export const useUserOtpSignUpMutation = () => {
   return useMutation({
     mutationFn: otpSignUpUser,
     onSuccess: (data) => {
-      toast.success(`User Create successful`);
-      const Token = data.idToken;
-      const refreshToken = data.refreshToken;
+  toast.success(`User Create successful`);
 
-      const user = decodeIdToken(data.idToken);
+  const Token = data.idToken;
+  const refreshToken = data.refreshToken;
 
-      localStorage.setItem("id_token", Token);
-      localStorage.setItem("refresh_token", refreshToken);
-      localStorage.setItem("username", user.username);
+  const user = decodeIdToken(data.idToken);
 
-      navigate("/map-vendor");
-    },
+  localStorage.setItem("id_token", Token);
+  localStorage.setItem("refresh_token", refreshToken);
+  localStorage.setItem("username", user.username);
+
+  navigate("/map-vendor");
+},
     onError: () => {
       toast.error("Something went wrong!");
     },

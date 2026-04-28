@@ -147,7 +147,6 @@ const ManageService = () => {
 
   const navigate = useNavigate();
   const { productId } = useParams();
-
   const { data, isPending } = useGetVendorServiceByServiceId(productId);
 
   const [mediaImages, setMediaImages] = useState<any>([]);
@@ -164,7 +163,14 @@ const ManageService = () => {
       setMediaImages(data.product.media);
       setFormData(mapProductToForm(data.product));
       setProductData(mapProductToForm(data.product));
-      setProductPricing(data.product.pricing || []);
+      // setProductPricing(data.product.pricing || []);
+      setProductPricing(
+  data.product.priceSlabs?.map((item: any) => ({
+    lowerBound: Number(item.lowerSlab),
+    upperBound: Number(item.upperSlab),
+    price: Number(item.salePrice ?? item.listPrice),
+  })) || []
+);
       // setMediaBanner(data.product.bannerImage || "");
     }
   }, [data, productId]);
@@ -363,6 +369,13 @@ const ManageService = () => {
       [name]: value,
     }));
   }
+
+  function handleDescriptionChange(value: any) {
+  setFormData((prev) => ({
+    ...prev,
+    description: value,
+  }));
+}
 
 
   return (
@@ -614,7 +627,8 @@ const ManageService = () => {
                       {/* Pricing of the service */}
 
                       <p className="text-lg mt-6">Pricing </p>
-                      <ServicePricingSection className={`${!productId ? "" : "pointer-events-none"}`} formData={formData} setFormData={setFormData} productPricing={productPricing} setProductPricing={setProductPricing} />
+                      
+                      <ServicePricingSection className={`${!productId ? "" : ""}`} productId={productId} formData={formData} setFormData={setFormData} productPricing={productPricing} setProductPricing={setProductPricing} />
                     </div>
                     <div className="col-span-1 py-2 grid h-full ">
                       <div className="w-full items-start  gap-2 flex flex-col">
@@ -624,7 +638,7 @@ const ManageService = () => {
                         <div className="w-full h-96">
                           <MarkdownEditor
                             longDescription={formData.description}
-                            setLongDescription={handleFormChange}
+                           setLongDescription={handleDescriptionChange}
                           />
                         </div>
                       </div>
@@ -736,8 +750,10 @@ function ServicePricingSection({
   setFormData,
   productPricing,
   setProductPricing,
+  productId,
 }: {
   className?: string,
+  productId?: string;
   formData: FormData;
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
   productPricing: PriceTypeTier[];
@@ -753,6 +769,7 @@ function ServicePricingSection({
         
         <ProductPriceTypeRadio
   selectedValue={formData.pricingType}
+    disabled={!!productId}
   onChange={(value) => {
     const type = value.toUpperCase() as PricingType;
     
@@ -800,7 +817,7 @@ setFormData((prev: FormData) => ({
                               if (index === idx) {
                                 return {
                                   ...item,
-                                  lowerBound: e.target.value,
+                                 lowerBound: Number(e.target.value),
                                 }
                               }
                               return item
@@ -824,7 +841,7 @@ setFormData((prev: FormData) => ({
                               if (index === idx) {
                                 return {
                                   ...item,
-                                  upperBound: e.target.value,
+                                  upperBound: Number(e.target.value),
                                 }
                               }
                               return item
@@ -848,7 +865,7 @@ setFormData((prev: FormData) => ({
                               if (index === idx) {
                                 return {
                                   ...item,
-                                  price: e.target.value,
+                                  price: Number(e.target.value),
                                 }
                               }
                               return item
