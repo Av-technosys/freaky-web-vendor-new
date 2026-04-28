@@ -55,15 +55,19 @@ const CompanyProfile = () => {
   const uploadImageMutation = useUploadImage();
   const createOrUpdateCompanyLogo = useUpdateCompanyLogo();
 
-
-
   const { data: vendorData, isPending: isVendorPending } =
     useGetVendorDetails();
+
   const { data: vendorOwnership, isPending: isVendorOwnershipPending } =
     useGetVendorOwnershipDetails();
   const { data: allVendorDocuments, isPending: isVendorDocumentsPending } =
     useGetVendorDocuments();
 
+    const documents = (allVendorDocuments?.data ?? []).map((item: any) => ({
+  label: item.documentType,
+  value: item.documentUrl,
+  type: "link",
+}));
   const [companyData, setCompanyData] = useState<CompanyData>({
     businessName: "",
     website: "",
@@ -329,17 +333,11 @@ const CompanyProfile = () => {
             editLink="bank-account-information"
           />
 
-          <CompanyDetailsPreviewCard
-            title="Document Upload"
-            data={allVendorDocuments?.data.map((item: any) => {
-              return {
-                label: item.documentType,
-                value: item.documentUrl,
-                type: "link"
-              } as CompanyDataPreviewItem
-            })}
-            editLink="document-upload"
-          />
+<CompanyDetailsPreviewCard
+  title="Document Upload"
+  data={documents}
+  editLink="document-upload"
+/>
 
           <CompanyOwnersPreviewCard
             title="Ownership Information"
