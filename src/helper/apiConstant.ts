@@ -67,5 +67,10 @@ export const apiConstant = {
     createExternalBooking: "v1/booking/create_external_booking",
     getAllBookings: "v1/booking/",
     getBookingItemDetailsById: "v1/booking",
+    
+  },
+  payment: {
+    getAllTransactions: "/v1/payment/payments",
+    // getTransactionDetails: "/v1/vendor/transaction",
   },
 };

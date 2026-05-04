@@ -17,10 +17,17 @@ const BookingDrawer = ({ open, setOpen, bookingId }: any) => {
   const [bookingDetails, setBookingDetails] = useState<any>({});
 
   const { data: bookingData, isPending } = useGetBookingDetailsById(bookingId);
-
-  useEffect(() => {
-    setBookingDetails(bookingData?.data[0]);
-  }, [bookingData, bookingId]);
+  console.log("bookingData", bookingData);
+useEffect(() => {
+ if (bookingData?.booking && bookingData?.items?.length) {
+  setBookingDetails({
+    ...bookingData.booking,
+    ...bookingData.items[0],
+  })
+} else {
+  setBookingDetails({})
+} 
+}, [bookingData, bookingId]);
 
   return (
     <>
