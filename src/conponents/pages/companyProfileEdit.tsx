@@ -5,6 +5,7 @@ import BusinessAddress from "../common/BusinessAddress";
 import BankAccountInformation from "../common/BankAccountInformation";
 import DocumentUpload from "../common/DocumentUpload";
 import OwnershipInformation from "../common/OwnershipInformation";
+import CompanyAvailability from "../common/AvailablityInformation";
 
 export default function CompanyProfileEdit() {
     const { slug } = useParams();
@@ -29,4 +30,5 @@ const companyUpdate: { [key: string]: React.ReactNode } = {
     "bank-account-information": <BankAccountInformation />,
     "document-upload": <DocumentUpload />,
     "ownership-information": <OwnershipInformation />,
+    "company-availability": <CompanyAvailability />,
 }

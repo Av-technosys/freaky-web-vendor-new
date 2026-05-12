@@ -254,6 +254,7 @@ const Profile = () => {
                       id="email"
                       type="text"
                       required
+                      disabled
                     />
                   </div>
                   <div className="col-span-1  flex flex-col items-start justify-center gap-3">

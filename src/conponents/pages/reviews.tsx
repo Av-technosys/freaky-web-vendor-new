@@ -73,36 +73,36 @@ const Reviews = () => {
   //   vendorId: 27,
   //   time: "all_time"
   // });
-  const [time, setTime] = useState(dropdownValuesTime.options[0].value);
-  const { data, isPending } = getVendorReviews(1, 10, time);
+  // const [time, setTime] = useState(dropdownValuesTime.options[0].value);
+  const { data, isPending } = getVendorReviews(1, 10);
   const [reviews, setReviews] = useState([]);
   useEffect(() => {
     setReviews(data?.data);
   }, [data]);
 
-  const [location, setLocation] = useState(
-    dropdownValuesLocation.options[0].value
-  );
-  const [service, setService] = useState(
-    dropdownValuesServices.options[0].value
-  );
+  // const [location, setLocation] = useState(
+  //   dropdownValuesLocation.options[0].value
+  // );
+  // const [service, setService] = useState(
+  //   dropdownValuesServices.options[0].value
+  // );
   const [openDrawer, setOpenDrawer] = useState(false);
   const [activeDrawerReviewId, setActiveDrawerReviewId] = useState<number>();
 
-  function handleTimeChange(value: any) {
-    queryClient.invalidateQueries({
-      queryKey: ["vendor-reviews"],
-    });
-    setTime(value.value);
-  }
+  // function handleTimeChange(value: any) {
+  //   queryClient.invalidateQueries({
+  //     queryKey: ["vendor-reviews"],
+  //   });
+  //   setTime(value.value);
+  // }
 
-  function handleLocationChange(value: any) {
-    setLocation(value.value);
-  }
+  // function handleLocationChange(value: any) {
+  //   setLocation(value.value);
+  // }
 
-  function handleServiceChange(value: any) {
-    setService(value.value);
-  }
+  // function handleServiceChange(value: any) {
+  //   setService(value.value);
+  // }
 
   const drawerHandler = (reviewId: number) => {
     setActiveDrawerReviewId(reviewId);
@@ -118,7 +118,7 @@ const Reviews = () => {
           reviewId={activeDrawerReviewId}
         />
       )}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-1 gap-3">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-1 gap-3">
         <div className="col-span-1">
           <DropdownSelector
             values={dropdownValuesTime}
@@ -140,7 +140,7 @@ const Reviews = () => {
             onChange={handleServiceChange}
           />{" "}
         </div>
-      </div>
+      </div> */}
       {/* <div>
         <ServicesReviews />
       </div> */}

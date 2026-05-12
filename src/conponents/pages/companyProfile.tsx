@@ -24,10 +24,13 @@ import {
 import {
   useGetVendorDetails,
   useGetVendorDocuments,
+  useGetVendorAvailability,
   useGetVendorOwnershipDetails,
 } from "../../services/useGetVendorCompanyDetails";
 import { useGetImageUrl, useUploadImage } from "../../services/useUploadImage";
 import type { CompanyData, CompanyDataPreviewItem, Owner } from "@/types";
+import { Card, CardContent } from "@/components/ui";
+import { CompanyAvailabilityPreviewCard } from "../common/CompanyAvaiblity";
 
 // ------------------------ INITIAL VALUES ------------------------
 
@@ -62,12 +65,14 @@ const CompanyProfile = () => {
     useGetVendorOwnershipDetails();
   const { data: allVendorDocuments, isPending: isVendorDocumentsPending } =
     useGetVendorDocuments();
+  const { data: vendorAvailability, isPending: isVendorAvailabilityPending } =
+    useGetVendorAvailability();
 
-    const documents = (allVendorDocuments?.data ?? []).map((item: any) => ({
-  label: item.documentType,
-  value: item.documentUrl,
-  type: "link",
-}));
+  const documents = (allVendorDocuments?.data ?? []).map((item: any) => ({
+    label: item.documentType,
+    value: item.documentUrl,
+    type: "link",
+  }));
   const [companyData, setCompanyData] = useState<CompanyData>({
     businessName: "",
     website: "",
@@ -333,17 +338,31 @@ const CompanyProfile = () => {
             editLink="bank-account-information"
           />
 
-<CompanyDetailsPreviewCard
-  title="Document Upload"
-  data={documents}
-  editLink="document-upload"
-/>
+          <CompanyDetailsPreviewCard
+            title="Document Upload"
+            data={documents}
+            editLink="document-upload"
+          />
 
           <CompanyOwnersPreviewCard
             title="Ownership Information"
             data={companyData.owners}
             editLink="ownership-information"
           />
+
+          <CompanyAvailabilityPreviewCard
+            title="Availability"
+            data={vendorAvailability?.data ?? []}
+            editLink="company-availability"
+          />
+
+          {/* <Card>
+            <CardContent>
+              <div>
+                {JSON.stringify(vendorAvailability, null, 2)}
+              </div>
+            </CardContent>
+          </Card> */}
 
 
 

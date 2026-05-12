@@ -8,6 +8,7 @@ import {
   sendInvitationToEmployee,
   updateBankAccountInformation,
   updateBusinessAddressInformation,
+  updateCompanyAvailability,
   updateCompanyInformation,
   updateCompanyLogo,
   updateContactInformation,
@@ -26,6 +27,20 @@ export const useUpdateCompanyInformation = () => {
     },
     onError: () => {
       toast.error("Unable to updated company information");
+    },
+  });
+};
+
+export const useUpdateCompanyAvailability = () => {
+  return useMutation({
+    mutationFn: updateCompanyAvailability,
+    onSuccess: (data: any) => {
+      if (data.status) {
+        toast.success("Company Availability updated successfully");
+      }
+    },
+    onError: () => {
+      toast.error("Unable to updated Company Availability");
     },
   });
 };

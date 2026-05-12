@@ -45,7 +45,7 @@ const ManageUser = () => {
                                 <h1>{data?.user?.number}</h1>
                                 <div className="flex gap-4">
                                     <MultiselectorDialog
-                                        employeeId={data?.vendor_employee?.vendorEmployeeId}
+                                        employeeId={data?.vendor_employee?.userId}
                                     >
                                         <button className="text-orange-500">Edit</button>
                                     </MultiselectorDialog>

@@ -2,13 +2,40 @@
 import { Card, CardContent } from "../../components/ui/card";
 import MetricsCardsFrame1 from "../../assets/Images/MetricsCards-frame1.png";
 import MetricsCardsFrame2 from "../../assets/Images/MetricsCards-frame2.png";
-import MetricsCardsFrame3 from "../../assets/Images/MetricsCards-frame3.png";
+import { useGetAllBookings } from "@/services";
+import { useMemo } from "react";
 
 export default function MetricsCards() {
+  // const [totalRevenue, setTotalRevenue] = useState(0);
+
+  const { data: apidata, isPending } = useGetAllBookings({
+    // text: searchText,
+    page: 1,
+    page_size: 20,
+  });
+
+  const totalRevenue: number = useMemo(() => {
+    let sum = 0;
+    apidata?.data?.forEach((item: any) => {
+      sum += Number(item.productPrice)
+    });
+    return sum;
+  }, [apidata])
+
+  const totalBooking: number = useMemo(() => {
+    let sum = 0;
+    apidata?.data?.forEach((item: any) => {
+      sum += 1;
+    });
+    return sum;
+  }, [apidata])
+
+
+
   const data = [
-    { title: "Average order value", value: "$430", icon: MetricsCardsFrame1 },
-    { title: "Revenue", value: "$22000", icon: MetricsCardsFrame2 },
-    { title: "Cancellation", value: "2.76%", icon: MetricsCardsFrame3 },
+    { title: "Average order value", value: "Rs. " + Number(totalRevenue / totalBooking).toFixed(2), icon: MetricsCardsFrame1 },
+    { title: "Revenue", value: "Rs. " + Number(totalRevenue).toFixed(2), icon: MetricsCardsFrame2 },
+    { title: "Total bookings", value: totalBooking, icon: MetricsCardsFrame2 },
   ];
 
   return (

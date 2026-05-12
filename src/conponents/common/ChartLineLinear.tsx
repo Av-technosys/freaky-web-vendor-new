@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useState } from "react";
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
+import { CartesianGrid, Label, Line, LineChart, XAxis, YAxis } from "recharts";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -16,49 +15,11 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "../../components/ui/chart";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../components/ui/select";
+
+import { useGetAllBookings } from "@/services";
 
 export const description = "A linear line chart for net sales analytics";
 
-const weeklyData = [
-  { day: "Mon", sales: 35000, percent: "17.3%" },
-  { day: "Tue", sales: 22000, percent: "10.9%" },
-  { day: "Wed", sales: 46000, percent: "22.7%" },
-  { day: "Thu", sales: 15000, percent: "7.4%" },
-  { day: "Fri", sales: 28000, percent: "13.8%" },
-  { day: "Sat", sales: 34000, percent: "16.8%" },
-  { day: "Sun", sales: 22500, percent: "11.1%" },
-];
-
-const monthlyData = [
-  { day: "Jan", sales: 45000 },
-  { day: "Feb", sales: 38000 },
-  { day: "Mar", sales: 48000 },
-  { day: "Apr", sales: 42000 },
-  { day: "May", sales: 47000 },
-  { day: "Jun", sales: 43000 },
-  { day: "Jul", sales: 49000 },
-  { day: "Aug", sales: 45000 },
-  { day: "Sep", sales: 44000 },
-  { day: "Oct", sales: 40000 },
-  { day: "Nov", sales: 48000 },
-  { day: "Dec", sales: 49500 },
-];
-
-const yearlyData = [
-  { day: "2020", sales: 45000 },
-  { day: "2021", sales: 47000 },
-  { day: "2022", sales: 48000 },
-  { day: "2023", sales: 49000 },
-  { day: "2024", sales: 46000 },
-  { day: "2025", sales: 49500 },
-];
 
 
 const chartConfig = {
@@ -71,20 +32,50 @@ const chartConfig = {
 export function ChartLineLinear() {
   const [timeframe, setTimeframe] = useState<"weekly" | "monthly" | "yearly">("weekly");
 
-  const data = timeframe === "weekly" ? weeklyData : timeframe === "monthly" ? monthlyData : yearlyData;
+  let weeklyData = [
+    { day: "1", sales: 35000, percent: "17.3%" },
+    { day: "5", sales: 22000, percent: "10.9%" },
+    { day: "10", sales: 46000, percent: "22.7%" },
+    { day: "15", sales: 15000, percent: "7.4%" },
+    { day: "20", sales: 28000, percent: "13.8%" },
+    { day: "25", sales: 34000, percent: "16.8%" },
+    { day: "30", sales: 22500, percent: "11.1%" },
+  ];
 
-  const getDescription = () => {
-    switch (timeframe) {
-      case "weekly": return "Showing net sales for the current week";
-      case "monthly": return "January - December 2024";
-      case "yearly": return "2020 - 2025";
-      default: return "Net sales overview";
-    }
-  };
+
+  function getDay(date: Date) {
+    return date.getDate();
+  }
 
   const getTotalRevenue = () => {
-    return data.reduce((sum, item) => sum + item.sales, 0).toLocaleString() + " USD";
+    return chartData
+      .reduce((sum: number, item: { sales: number }) => sum + item.sales, 0)
+      .toLocaleString() + " USD";
   };
+
+
+  const { data: apidata, isPending } = useGetAllBookings({
+    // text: searchText,
+    page: 1,
+    page_size: 20,
+  });
+
+  const chartData = (apidata?.data || []).map((item: any) => ({
+    day: new Date(item.createdAt).getDate().toString(),
+    sales: Number(item.productPrice || 0),
+  }));
+
+  const groupedData = Object.values(
+    (apidata?.data || []).reduce((acc: any, item: any) => {
+      const day = new Date(item.createdAt).getDate().toString();
+      const price = Number(item.productPrice || 0);
+
+      if (!acc[day]) acc[day] = { day, sales: 0 };
+      acc[day].sales += price;
+
+      return acc;
+    }, {})
+  );
 
   return (
     <Card className="rounded-2xl col-span-2  ">
@@ -93,47 +84,19 @@ export function ChartLineLinear() {
           <CardTitle className="text-xl font-semibold text-gray-800">
             Net Sales
           </CardTitle>
-          <CardDescription>{getDescription()}</CardDescription>
         </div>
-
-        <Select value={timeframe} onValueChange={(value: "weekly" | "monthly" | "yearly") => setTimeframe(value)}>
-          <SelectTrigger className="w-28 bg-[#FFEFD2] border-none font-medium">
-            <SelectValue placeholder="Weekly" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="weekly">Weekly</SelectItem>
-            <SelectItem value="monthly">Monthly</SelectItem>
-            <SelectItem value="yearly">Yearly</SelectItem>
-          </SelectContent>
-        </Select>
       </CardHeader>
-
-      {/* Summary Stats */}
-      <CardContent className="grid grid-cols-3 gap-4 pb-4">
-        <div className="space-y-1">
-          <p className="text-xs text-muted-foreground">Total Revenue</p>
-          <p className="text-lg font-semibold text-yellow-600">{getTotalRevenue()}</p>
-        </div>
-        <div className="space-y-1">
-          <p className="text-xs text-muted-foreground">Total Tickets</p>
-          <p className="text-lg font-semibold text-yellow-600">2438</p>
-        </div>
-        <div className="space-y-1">
-          <p className="text-xs text-muted-foreground">Total Events</p>
-          <p className="text-lg font-semibold text-yellow-600">32</p>
-        </div>
-      </CardContent>
-
       {/* Chart */}
       <CardContent className="pb-0">
         <ChartContainer config={chartConfig}>
           <LineChart
             accessibilityLayer
-            data={data}
+            data={groupedData}
             margin={{
               left: 12,
               right: 12,
               top: 20,
+              bottom: 20
             }}
           >
             <CartesianGrid
@@ -149,18 +112,30 @@ export function ChartLineLinear() {
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-            />
-
+            >
+              <Label
+                value="Days"
+                offset={-10}
+                position="insideBottom"
+                style={{ fill: "#6B7280", fontSize: 12 }}
+              />
+            </XAxis>
             <YAxis
-              width={40}               // ← FIX excess left spacing
-
+              width={56}
               tickLine={false}
               axisLine={false}
               tickFormatter={(value) => value.toLocaleString()}
-              ticks={[10000, 20000, 30000, 40000, 50000]}   // <- SAME AS IMAGE
-              stroke="#9CA3AF"   // grey tick text like design (#9CA3AF = Tailwind gray-400)
+              ticks={[100, 200, 300, 400, 500]}
+              stroke="#9CA3AF"
               tick={{ fontSize: 12, fontWeight: 500 }}
-            />
+            >
+              <Label
+                value="Sales (Rs)"
+                angle={-90}
+                position="insideLeft"
+                style={{ fill: "#6B7280", fontSize: 12 }}
+              />
+            </YAxis>
 
             <ChartTooltip
               cursor={false}
@@ -168,7 +143,7 @@ export function ChartLineLinear() {
                 <ChartTooltipContent
                   labelKey="day"
                   formatter={(value) => [
-                    `${Number(value).toLocaleString()} USD`,
+                    `Rs. ${Number(value).toLocaleString()} `,
                     chartConfig.sales.label,
                   ]}
                 />

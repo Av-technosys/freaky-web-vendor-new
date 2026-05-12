@@ -30,10 +30,10 @@ export const getAllBookings = async ({
   }
 };
 
-export const getBookingItemDetails = async (bookingId: any) => {
+export const getBookingItemDetails = async (bookingItemId: any) => {
   try {
     const response = await axiosInstance.get(
-      `${apiConstant.booking.getBookingItemDetailsById}/${bookingId}`,
+      `${apiConstant.booking.getBookingItemDetailsById}/${bookingItemId}`,
     );
     return response.data;
   } catch (error) {

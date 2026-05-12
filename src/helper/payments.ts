@@ -4,7 +4,7 @@ import { apiConstant } from "./apiConstant";
 export const getPayments = async () => {
   try {
     const response = await axiosInstance.get(
-      `${apiConstant.payment.getAllTransactions}`,
+      `${apiConstant.payment.getAllVendorPayments}`,
     );
     return response.data;
   } catch (error) {

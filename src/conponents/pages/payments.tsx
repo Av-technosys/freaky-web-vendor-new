@@ -1,10 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  Avatar,
-  AvatarFallback,
-} from "@radix-ui/react-avatar";
 
 import {
   Table,
@@ -24,17 +20,7 @@ import {
 
 import withAuthorization from "@/lib/withAuthorization";
 import { getPayments } from "@/helper/payments";
-
-const mapStatus = (status: string) => {
-  const s = String(status).toUpperCase();
-
-  if (s === "SUCCESS") return "Succeeded";
-  if (s === "PENDING") return "Pending";
-  if (s === "FAILED") return "Declined";
-  if (s === "REFUNDED") return "Refunded";
-
-  return "Pending";
-};
+import { Link } from "react-router-dom";
 
 const Payment = () => {
   const [payments, setPayments] = useState<any[]>([]);
@@ -49,18 +35,16 @@ const Payment = () => {
       setLoading(true);
 
       const res = await getPayments();
-      console.log("payment res", res);
-      const list = res?.payments || [];
+      const list = res?.data || [];
 
       const mapped = list.map((p: any) => ({
-        id: p.payment?.paymentId,
-        status: mapStatus(p.payment?.paymentStatus),
-        amount: Number(p.payment?.amount || 0),
-        method: p.payment?.provider || "N/A",
-        date: p.payment?.createdAt
-          ? new Date(p.payment.createdAt).toLocaleString()
-          : "-",
-        customer: p.booking?.contactName,
+        id: p.paymentId,
+        status: p.paymentStatus,
+        amount: p.amount || 0,
+        serviceName: p.productName,
+        date: new Date(p.createdAt).toDateString(),
+        contactName: p.contactName,
+        bookingId: p.bookingItemId,
       }));
       setPayments(mapped);
     } catch (err) {
@@ -80,7 +64,7 @@ const Payment = () => {
               <TableHead>CUSTOMER</TableHead>
               <TableHead>STATUS</TableHead>
               <TableHead>AMOUNT</TableHead>
-              <TableHead>P. METHOD</TableHead>
+              <TableHead>BOOKINGS</TableHead>
               <TableHead>CREATION DATE</TableHead>
             </TableRow>
           </TableHeader>
@@ -107,16 +91,16 @@ const Payment = () => {
 
 
                   <TableCell className="text-[#4B5563]">
-                    {item.customer || "Unknown"}
+                    {item.contactName || "Unknown"}
                   </TableCell>
                   <TableCell>
                     <div
                       className={`inline-flex items-center gap-1 rounded-xl px-2 py-1
-                      ${item.status === "Pending"
+                      ${item.status === "PENDING"
                           ? "font-bold text-[#B5850B] bg-[#FFF6E9]"
-                          : item.status === "Declined"
+                          : item.status === "DECLINED"
                             ? "font-bold text-[#B83131] bg-[#FFEAEA]"
-                            : item.status === "Create"
+                            : item.status === "CREATE"
                               ? "font-bold text-[#3D42AD] bg-[#EAECFF]"
                               : "text-[#165E3D] bg-[#EDFFEA]"
                         }`}
@@ -133,17 +117,13 @@ const Payment = () => {
                   <TableCell className="font-semibold text-[#4B5563]">
                     {new Intl.NumberFormat("en-US", {
                       style: "currency",
-                      currency: "USD",
+                      currency: "INR",
                     }).format(item.amount)}
                   </TableCell>
 
-                  <TableCell className="text-[#4B5563] flex items-center gap-2">
-                    <Avatar>
-                      <AvatarFallback className="text-xs p-2 rounded-full bg-slate-200">
-                        {item.method?.charAt(0) || "P"}
-                      </AvatarFallback>
-                    </Avatar>
-                    {item.method}
+                  <TableCell className=" text-blue-500   flex items-center gap-2">
+
+                    <Link className="hover:underline cursor-pointer" to={`/bookings?id=${item.bookingId}`}>{item.serviceName}</Link>
                   </TableCell>
 
                   <TableCell className="text-[#4B5563]">

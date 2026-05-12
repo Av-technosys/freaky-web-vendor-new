@@ -361,8 +361,8 @@ const OwnershipInformation = ({
 
                       <SelectContent>
                         {STATE_LABEL_VALUE.options.map((state) => (
-                           <SelectItem key={state.value} value={state.value}>
-                             {state.label}
+                          <SelectItem key={state.value} value={state.value}>
+                            {state.label}
                           </SelectItem>
                         ))}
                       </SelectContent>

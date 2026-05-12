@@ -112,36 +112,36 @@ const ManageService = () => {
 
 
   function mapProductToForm(product: any): FormData {
-  const price =
-    product.price ??
-    product.prices?.[0]?.salePrice ??
-    product.prices?.[0]?.listPrice ??
-    0;
+    const price =
+      product.price ??
+      product.prices?.[0]?.salePrice ??
+      product.prices?.[0]?.listPrice ??
+      0;
 
-  return {
-    title: product.title,
-    type: product.type,
-    country: product.country,
-    state: product.state,
-    city: product.city,
-    postalCode: product.postalCode,
-    streetAddressLine1: product.streetAddressLine1,
-    streetAddressLine2: product.streetAddressLine2,
-    latitude: product.latitude,
-    longitude: product.longitude,
-    pricingType: product.pricingType,
-    price: Number(price),
-    deliveryRadius: product.deliveryRadius,
-    productTypeId: product.productTypeId,
-    description: product.description,
-    maxBookingAtTime: product.maxBookingAtTime,
-    maxQuantity: product.maxQuantity,
-    minQuantity: product.minQuantity,
-    isAvailable: product.isAvailable,
-    returnPolicyURL: product.returnPolicyURL,
-    bannerImage: product.bannerImage,
-  };
-}
+    return {
+      title: product.title,
+      type: product.type,
+      country: product.country,
+      state: product.state,
+      city: product.city,
+      postalCode: product.postalCode,
+      streetAddressLine1: product.streetAddressLine1,
+      streetAddressLine2: product.streetAddressLine2,
+      latitude: product.latitude,
+      longitude: product.longitude,
+      pricingType: product.pricingType,
+      price: Number(price),
+      deliveryRadius: product.deliveryRadius,
+      productTypeId: product.productTypeId,
+      description: product.description,
+      maxBookingAtTime: product.maxBookingAtTime,
+      maxQuantity: product.maxQuantity,
+      minQuantity: product.minQuantity,
+      isAvailable: product.isAvailable,
+      returnPolicyURL: product.returnPolicyURL,
+      bannerImage: product.bannerImage,
+    };
+  }
 
   const queryClient = useQueryClient();
 
@@ -165,12 +165,12 @@ const ManageService = () => {
       setProductData(mapProductToForm(data.product));
       // setProductPricing(data.product.pricing || []);
       setProductPricing(
-  data.product.priceSlabs?.map((item: any) => ({
-    lowerBound: Number(item.lowerSlab),
-    upperBound: Number(item.upperSlab),
-    price: Number(item.salePrice ?? item.listPrice),
-  })) || []
-);
+        data.product.priceSlabs?.map((item: any) => ({
+          lowerBound: Number(item.lowerSlab),
+          upperBound: Number(item.upperSlab),
+          price: Number(item.salePrice ?? item.listPrice),
+        })) || []
+      );
       // setMediaBanner(data.product.bannerImage || "");
     }
   }, [data, productId]);
@@ -321,9 +321,9 @@ const ManageService = () => {
     };
 
     if (formData.pricingType === "TIER" && !productPricing.length) {
-    toast.error("Add at least one tier");
-    return;
-}
+      toast.error("Add at least one tier");
+      return;
+    }
     if (productId) {
       mutation.mutate(
         { productId, serviceData },
@@ -371,11 +371,11 @@ const ManageService = () => {
   }
 
   function handleDescriptionChange(value: any) {
-  setFormData((prev) => ({
-    ...prev,
-    description: value,
-  }));
-}
+    setFormData((prev) => ({
+      ...prev,
+      description: value,
+    }));
+  }
 
 
   return (
@@ -522,7 +522,7 @@ const ManageService = () => {
                                   id="address1"
                                   placeholder="Enter Street Address Line 1"
                                   type="text"
-                                  value={formData.streetAddressLine1}
+                                  // value={formData.streetAddressLine1}
                                   defaultValue={formData.streetAddressLine1}
                                   onChange={handleFormChange}
                                   required
@@ -627,7 +627,7 @@ const ManageService = () => {
                       {/* Pricing of the service */}
 
                       <p className="text-lg mt-6">Pricing </p>
-                      
+
                       <ServicePricingSection className={`${!productId ? "" : ""}`} productId={productId} formData={formData} setFormData={setFormData} productPricing={productPricing} setProductPricing={setProductPricing} />
                     </div>
                     <div className="col-span-1 py-2 grid h-full ">
@@ -638,7 +638,7 @@ const ManageService = () => {
                         <div className="w-full h-96">
                           <MarkdownEditor
                             longDescription={formData.description}
-                           setLongDescription={handleDescriptionChange}
+                            setLongDescription={handleDescriptionChange}
                           />
                         </div>
                       </div>
@@ -766,30 +766,30 @@ function ServicePricingSection({
           Pricing type{" "}
           <TooltipInfo content="Price type set with service, once set during service creation, it cannot be changed later." />{" "}
         </Label>
-        
+
         <ProductPriceTypeRadio
-  selectedValue={formData.pricingType}
-    disabled={!!productId}
-  onChange={(value) => {
-    const type = value.toUpperCase() as PricingType;
-    
+          selectedValue={formData.pricingType}
+          disabled={!!productId}
+          onChange={(value) => {
+            const type = value.toUpperCase() as PricingType;
 
-setFormData((prev: FormData) => ({
-  ...prev,
-  pricingType: type,
-  price: type === "TIER" ? 0 : prev.price,
-}));
-    if (type === "TIER") {
-      setProductPricing([
-        { lowerBound: 1, upperBound: 10, price: 0 },
-      ]);
-    }
 
-    if (type === "FLAT") {
-      setProductPricing([]);
-    }
-  }}
-/>
+            setFormData((prev: FormData) => ({
+              ...prev,
+              pricingType: type,
+              price: type === "TIER" ? 0 : prev.price,
+            }));
+            if (type === "TIER") {
+              setProductPricing([
+                { lowerBound: 1, upperBound: 10, price: 0 },
+              ]);
+            }
+
+            if (type === "FLAT") {
+              setProductPricing([]);
+            }
+          }}
+        />
         <div className=" w-full">
         </div>
       </div>
@@ -817,7 +817,7 @@ setFormData((prev: FormData) => ({
                               if (index === idx) {
                                 return {
                                   ...item,
-                                 lowerBound: Number(e.target.value),
+                                  lowerBound: Number(e.target.value),
                                 }
                               }
                               return item

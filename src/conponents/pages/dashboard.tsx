@@ -5,12 +5,15 @@ import RevenueStats from "../common/RevenueStats";
 import MetricsCards from "../common/MetricsCards";
 import { ChartPieDonut } from "../common/ChartPieDonut";
 import withAuthorization from "@/lib/withAuthorization";
+import AlertDashboardForMonth from "../common/AlertDashboardForMonth";
 
 const DashBoard = () => {
   return (
-    <div className="bg-[#FAF7EF] !pb-6 min-h-screen p-2 md:p-0 flex flex-col md:flex-row gap-2">
+    <div className="bg-[#FAF7EF] pb-6! min-h-screen p-2 md:p-0 flex flex-col md:flex-row gap-2">
+
       {/* LEFT SIDE — MAIN CONTENT */}
       <div className="flex-1 flex flex-col gap-2">
+        <AlertDashboardForMonth />
         <MetricsCards />
 
         <div className="grid grid-cols-3 gap-2">

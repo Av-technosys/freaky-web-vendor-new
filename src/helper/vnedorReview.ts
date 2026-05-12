@@ -13,7 +13,8 @@ export const getVendorReview = async (
   }
   try {
     const response = await axiosInstance.get(
-      `${apiConstant.review.getAllReview}?${query}`
+      // `${apiConstant.review.getAllReview}?${query}`
+      `${apiConstant.review.getAllReview}`
     );
     return response.data;
   } catch (error) {
