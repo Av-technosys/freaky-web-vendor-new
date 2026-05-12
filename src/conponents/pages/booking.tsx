@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "../../components/ui/table";
 import { useGetAllBookings } from "@/services/useGetAllBookings";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 
 import { TiIconEye } from "../icons";
@@ -20,7 +20,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { BOOKING_TABLE_PAGE_SIZE, BOOKING_TABLE_HEADER } from "@/const";
 import { cn } from "@/lib/utils";
 import withAuthorization from "@/lib/withAuthorization";
@@ -28,14 +28,16 @@ import { SkeletonTable } from "@/components/skleton/table";
 
 const Booking = () => {
   const navigate = useNavigate();
-  const [openDrawer, setOpenDrawer] = useState(false);
-  const [bookingId, setBookingId] = useState();
-
+  const query = useSearchParams();
+  const openBookingId = query[0].get("id");
+  const [openDrawer, setOpenDrawer] = useState(!openBookingId ? false : true);
+  const [bookingId, setBookingId] = useState(!openBookingId ? null : openBookingId);
+  useEffect(() => {
+    setOpenDrawer(!!openBookingId);
+    setBookingId(openBookingId);
+  }, [openBookingId]);
   const [searchParams] = useSearchParams();
   const page = Number(searchParams.get("page")) || 1;
-
-  // const [searchText, setSearchText] = useState("");
-  // const [page, setPage] = useState(1);
 
   const { data, isPending } = useGetAllBookings({
     // text: searchText,
@@ -46,12 +48,6 @@ const Booking = () => {
   const totalPages = data?.pagination?.total_pages;
 
   const bookings = data?.data || [];
-
-  const drawerHandler = (id: any) => {
-    setBookingId(id);
-    setOpenDrawer(true);
-  };
-
   return (
     <>
       {openDrawer && (
@@ -139,13 +135,11 @@ const Booking = () => {
                     </TableCell>
 
                     <TableCell className=" flex justify-end text-gray-700">
-                      <Button
-                        onClick={() => drawerHandler(item.id)}
-                        variant={"ghost"}
+                      <Link to={`/bookings?id=${item.id}`}
                         className=" cursor-pointer rounded-full w-10 h-10 text-blue-500"
                       >
                         <TiIconEye />
-                      </Button>
+                      </Link>
                     </TableCell>
                   </TableRow>
                 ))

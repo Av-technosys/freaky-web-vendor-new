@@ -9,17 +9,21 @@ import {
   Separator,
 } from "@/components/ui";
 import { TiIconX } from "./icons";
-import { useGetBookingDetailsById } from "@/services/useGetAllBookings";
+import { useGetBookingItemDetailsById } from "@/services/useGetAllBookings";
 import { InputGroupAddon } from "@/components/ui/input-group";
 import { LoaderCircle } from "lucide-react";
 
 const BookingDrawer = ({ open, setOpen, bookingId }: any) => {
   const [bookingDetails, setBookingDetails] = useState<any>({});
 
-  const { data: bookingData, isPending } = useGetBookingDetailsById(bookingId);
-
+  const { data: bookingData, isPending } = useGetBookingItemDetailsById(bookingId);
+  console.log("bookingData", bookingData);
   useEffect(() => {
-    setBookingDetails(bookingData?.data[0]);
+    if (bookingData) {
+      setBookingDetails(bookingData?.data);
+    } else {
+      setBookingDetails({})
+    }
   }, [bookingData, bookingId]);
 
   return (
@@ -69,14 +73,14 @@ const BookingDrawer = ({ open, setOpen, bookingId }: any) => {
                   />
 
                   <div className="flex flex-col justify-center gap-2">
-                    <p className="text-sm text-gray-500">Product Name</p>
+                    {/* <p className="text-sm text-gray-500">Product Name</p> */}
                     <p className="font-semibold">
                       {bookingDetails?.productName}
                     </p>
 
                     <p className="text-sm text-gray-500">Price</p>
                     <p className="text-green-600 font-bold">
-                      ${bookingDetails?.productPrice}
+                      Rs. {bookingDetails?.productPrice}
                     </p>
                   </div>
                 </div>
@@ -117,12 +121,12 @@ const BookingDrawer = ({ open, setOpen, bookingId }: any) => {
                     </span>
                   </div>
 
-                  <div className="flex justify-between">
+                  {/* <div className="flex justify-between">
                     <span className="font-semibold">Payment Status</span>
                     <span className="text-gray-600">
                       {bookingDetails?.paymentStatus}
                     </span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

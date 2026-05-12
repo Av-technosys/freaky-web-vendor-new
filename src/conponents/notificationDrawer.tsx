@@ -22,6 +22,8 @@ const NotificationDrawer = ({ open, setOpen }: any) => {
     isFetchingNextPage,
   } = useGetVendorNotifications(open);
 
+  console.log("notifications", notifications, hasNextPage, isFetchingNextPage);
+
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   const handleScroll = () => {

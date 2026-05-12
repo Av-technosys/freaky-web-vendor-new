@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import {
   getSearchedItems,
+  getVendorAvailability,
   getVendorDetails,
   getVendorDocuments,
   getVendorEmployees,
@@ -30,6 +31,13 @@ export const useGetVendorOwnershipDetails = () => {
   });
 };
 
+export const useGetVendorAvailability = () => {
+  return useQuery({
+    queryKey: ["vendor-availability"],
+    queryFn: () => getVendorAvailability(),
+  });
+};
+
 export const useGetVendorEmployees = () => {
   return useQuery({
     queryKey: ["vendor-employees"],
@@ -37,7 +45,7 @@ export const useGetVendorEmployees = () => {
   });
 };
 
-export const useGetVendorNotifications = (enabled:any) => {
+export const useGetVendorNotifications = (enabled: any) => {
   return useInfiniteQuery({
     queryKey: ["vendor-notifications"],
     queryFn: ({ pageParam }) => getVendorNotifications({ pageParam }),

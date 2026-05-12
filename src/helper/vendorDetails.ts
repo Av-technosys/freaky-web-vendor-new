@@ -37,6 +37,18 @@ export const getVendorOwners = async () => {
   }
 };
 
+export const getVendorAvailability = async () => {
+  try {
+    const response = await axiosInstance.get(
+      `${apiConstant.vendor.getVendorAvailability}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+    throw error;
+  }
+};
+
 export const getVendorEmployees = async () => {
   try {
     const response = await axiosInstance.get(

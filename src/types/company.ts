@@ -10,6 +10,8 @@ export interface Owner {
   city: string;
   zipcode: string;
   ownershipPercentage: string;
+  isAuthorizedSignature?: boolean;
+  id?: number;
 }
 
 export interface DocumentFile {
@@ -59,5 +61,14 @@ export interface CompanyData {
   bankType: string;
   documents: Document[];
 }
+
+export interface CompanyDataPreview {
+  title: string;
+  data: CompanyDataPreviewItem[];
+  className?: string;
+  editLink?: string;
+}
+
+export interface CompanyDataPreviewItem { label: string, value: string | Date | number | boolean, type?: "text" | "date" | "number" | "link" }
 
 export type CompanyDataMap = Map<keyof CompanyData, any>;

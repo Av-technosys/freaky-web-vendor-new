@@ -42,26 +42,50 @@ const ManagePaymentBook = () => {
       </div>
       <Label className=" pl-4 ">Pricebooks</Label>
       {proceBooksData?.map((priceBook: any) => {
+        console.log("priceBook: ", priceBook);
         return (
-          <Card key={priceBook?.id} className="mt-2 py-2">
-            <CardDescription>
-              <div className="w-full px-4 flex items-center justify-between">
-                <div className=" flex gap-2 items-center">
-                  <div className="text-base ">{priceBook?.name}</div>
-                  {priceBook.isStandard && <BadgeStandard />}
-                  {priceBook.isActive && <BadgePrimary />}
-                </div>
-                <div className="flex gap-4">
-                  <Button disabled={priceBook?.isStandard || priceBook?.isActive} onClick={() => handleDeleteClick({ id: priceBook?.id, name: priceBook?.name })} variant={"outline"}>
-                    <TiIconTrash color="#D30000" />
-                  </Button>
-                  <Button onClick={() => handleEditClick({ id: priceBook?.id, name: priceBook?.name })} variant="outline">
-                    <TiIconPencilPlus color="#D30000" />
-                  </Button>
-                </div>
-              </div>
-            </CardDescription>
-          </Card>
+         <Card key={priceBook?.id} className="mt-2 py-2">
+  <CardDescription>
+    <div className="w-full px-4 flex items-center justify-between">
+      
+      <div className="flex gap-2 items-center">
+        <div className="text-base">{priceBook?.name}</div>
+
+        {priceBook?.isDefault && <BadgeDefault />}
+        {priceBook?.isStandard && <BadgeStandard />}
+
+      </div>
+
+      <div className="flex gap-4">
+        <Button
+          disabled={priceBook?.isStandard || priceBook?.isActive}
+          onClick={() =>
+            handleDeleteClick({
+              id: priceBook?.id,
+              name: priceBook?.name,
+            })
+          }
+          variant={"outline"}
+        >
+          <TiIconTrash color="#D30000" />
+        </Button>
+
+        <Button
+          onClick={() =>
+            handleEditClick({
+              id: priceBook?.id,
+              name: priceBook?.name,
+            })
+          }
+          variant="outline"
+        >
+          <TiIconPencilPlus color="#D30000" />
+        </Button>
+      </div>
+
+    </div>
+  </CardDescription>
+</Card>
         );
       })}
 
@@ -72,11 +96,11 @@ const ManagePaymentBook = () => {
 };
 
 const BadgeStandard = () => {
-  return <Badge >Standard</Badge>
+  return <Badge>Standard</Badge>
 }
 
-const BadgePrimary = () => {
-  return <Badge className=" bg-green-600">Primary</Badge>
+const BadgeDefault = () => {
+  return <Badge className="bg-blue-500 text-white">Default</Badge>
 }
 
 export default withAuthorization("manage-payment-book")(ManagePaymentBook);

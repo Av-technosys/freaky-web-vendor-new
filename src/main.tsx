@@ -23,6 +23,7 @@ import { Toaster } from "./components/ui";
 import ManagePaymentBook from "./conponents/pages/managePaymentBook";
 import ManageService from "./conponents/pages/manageService";
 import UserToVendor from "./conponents/pages/mapVendor";
+import CompanyProfileEdit from "./conponents/pages/companyProfileEdit";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ const routes = createBrowserRouter([
           { index: true, element: <Navigate to="/dashboard" replace /> },
           { path: "/dashboard", element: <Home /> },
           { path: "/company-profile", element: <CompanyProfile /> },
+          { path: "/company-profile/:slug", element: <CompanyProfileEdit /> },
           { path: "/services", element: <Services /> },
           {
             path: "/services/manage-service/:productId?",

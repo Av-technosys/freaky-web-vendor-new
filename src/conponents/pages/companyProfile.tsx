@@ -1,36 +1,36 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
-import type { Owner, CompanyData, Document } from "../../types/company";
 
-import CompanyInformation from "../common/CompanyInformationProps";
-import ContactDetails from "../common/ContactDetails";
-import BusinessAddress from "../common/BusinessAddress";
-import OwnershipInformation from "../common/OwnershipInformation";
-import BankAccountInformation from "../common/BankAccountInformation";
+// import CompanyInformation from "../common/CompanyInformationProps";
+// import ContactDetails from "../common/ContactDetails";
+// import BusinessAddress from "../common/BusinessAddress";
+// import OwnershipInformation from "../common/OwnershipInformation";
+// import BankAccountInformation from "../common/BankAccountInformation";
 import CompanyLogo from "../common/CompanyLogo";
-import { Button, Card, CardContent, CardTitle } from "../../components/ui";
-import DropdownSelector from "../dropdownSelector";
-import { useGetImageUrl, useUploadImage } from "../../services/useUploadImage";
+// import DropdownSelector from "../dropdownSelector";
+import { CompanyDetailsPreviewCard, CompanyOwnersPreviewCard } from "../common/CompanyinformationPreview";
+import { SkeletonForm } from "@/components/skleton/form";
+import withAuthorization from "@/lib/withAuthorization";
 import {
-  useCreateVendorDocument,
-  useDeleteVendorDocument,
-  useUpdateBankAccountInformation,
-  useUpdateBusinessAddressInformation,
-  useUpdateCompanyInformation,
+  // useCreateVendorDocument,
+  // useDeleteVendorDocument,
+  // useUpdateBankAccountInformation,
+  // useUpdateBusinessAddressInformation,
+  // useUpdateCompanyInformation,
   useUpdateCompanyLogo,
-  useUpdateContactInformation,
-  useUpdateOwnershipInformation,
+  // useUpdateContactInformation,
+  // useUpdateOwnershipInformation,
 } from "../../services/useCreateOrUpdateCompanyDetails";
-import { toast } from "sonner";
 import {
   useGetVendorDetails,
   useGetVendorDocuments,
+  useGetVendorAvailability,
   useGetVendorOwnershipDetails,
 } from "../../services/useGetVendorCompanyDetails";
-import { useQueryClient } from "@tanstack/react-query";
-import UpdateDocumentPopup from "../updateDocumentPopup";
-import withAuthorization from "@/lib/withAuthorization";
-import { SkeletonForm } from "@/components/skleton/form";
+import { useGetImageUrl, useUploadImage } from "../../services/useUploadImage";
+import type { CompanyData, CompanyDataPreviewItem, Owner } from "@/types";
+import { Card, CardContent } from "@/components/ui";
+import { CompanyAvailabilityPreviewCard } from "../common/CompanyAvaiblity";
 
 // ------------------------ INITIAL VALUES ------------------------
 
@@ -47,68 +47,32 @@ const initialOwner: Owner = {
   ownershipPercentage: "",
 };
 
-const defaultDocuments: Document[] = [
-  { id: "1", type: "business_license", files: [], maxFiles: 5 },
-  { id: "2", type: "tax_certificate", files: [], maxFiles: 5 },
-  { id: "3", type: "ownership_proof", files: [], maxFiles: 5 },
-  { id: "4", type: "bank_statement", files: [], maxFiles: 5 },
-];
 
-const documentDropdownValues = {
-  options: [
-    {
-      label: "Business License",
-      value: "business_license",
-    },
-    {
-      label: "Tax Certificate",
-      value: "tax_certificate",
-    },
-    {
-      label: "Proof of ownership",
-      value: "proof_of_ownership",
-    },
-    {
-      label: "Bank Statement",
-      value: "bank_statement",
-    },
-  ],
-};
+
 
 // -------------------------- MAIN COMPONENT ------------------------
 
 const CompanyProfile = () => {
-  const [open, setOpen] = useState(false);
-  const [vendorDocuments, setVendorDocuments] = useState<any>([]);
-  const [openUpdateDocumentPopup, setOpenUpdateDocumentPopup] = useState(false);
-  const [updatedDocumentDetails, setUpdatedDocumentDetails] = useState();
-
-  const [documentInputs, setDocumentInputs] = useState<any[]>([
-    { documentType: "business_license", documentUrl: "choose file" },
-  ]);
 
   const getImageUrlMutation = useGetImageUrl();
   const uploadImageMutation = useUploadImage();
+  const createOrUpdateCompanyLogo = useUpdateCompanyLogo();
 
   const { data: vendorData, isPending: isVendorPending } =
     useGetVendorDetails();
+
   const { data: vendorOwnership, isPending: isVendorOwnershipPending } =
     useGetVendorOwnershipDetails();
   const { data: allVendorDocuments, isPending: isVendorDocumentsPending } =
     useGetVendorDocuments();
+  const { data: vendorAvailability, isPending: isVendorAvailabilityPending } =
+    useGetVendorAvailability();
 
-  const queryClient = useQueryClient();
-
-  const CompanyInformationMutation = useUpdateCompanyInformation();
-  const ContactInformationMutation = useUpdateContactInformation();
-  const BusinessAddressMutation = useUpdateBusinessAddressInformation();
-  const BankAccountMutation = useUpdateBankAccountInformation();
-  const OwnershipInformationMutation = useUpdateOwnershipInformation();
-  const vendorDocumentMutation = useCreateVendorDocument();
-  const documentDeleteMutation = useDeleteVendorDocument();
-
-  const createOrUpdateCompanyLogo = useUpdateCompanyLogo();
-
+  const documents = (allVendorDocuments?.data ?? []).map((item: any) => ({
+    label: item.documentType,
+    value: item.documentUrl,
+    type: "link",
+  }));
   const [companyData, setCompanyData] = useState<CompanyData>({
     businessName: "",
     website: "",
@@ -144,236 +108,11 @@ const CompanyProfile = () => {
     routingNumber: "",
     bankType: "",
 
-    documents: defaultDocuments,
+    documents: [],
   });
 
   const [companyLogo, setCompanyLogo] = useState<any>("");
-  const vendorId = vendorData?.data?.vendorId;
-
-  useEffect(() => {
-    const companyOwners = vendorOwnership?.data ?? [];
-    if (vendorData) {
-      const companyInfo = vendorData?.data;
-      setCompanyData((prev) => ({
-        ...prev,
-        accountNumber: companyInfo?.bankAccountNumber ?? "",
-        bankName: companyInfo?.bankName ?? "",
-        payeeName: companyInfo?.payeeName ?? "",
-        routingNumber: companyInfo?.routingNumber ?? "",
-        bankType: companyInfo?.bankType ?? "",
-        contactName: companyInfo?.primaryContactName ?? "",
-        primaryEmail: companyInfo?.businessName ?? "",
-        primaryPhoneNumber: companyInfo?.primaryPhoneNumber ?? "",
-        instagramLink: companyInfo?.instagramURL ?? "",
-        youtubeLink: companyInfo?.youtubeURL ?? "",
-        facebookLink: companyInfo?.facebookURL ?? "",
-        linkedinLink: companyInfo?.linkedinURL ?? "",
-
-        address1: companyInfo?.streetAddressLine1 ?? "",
-        address2: companyInfo?.streetAddressLine2 ?? "",
-        country: companyInfo?.country ?? "",
-        state: companyInfo?.state ?? "",
-        city: companyInfo?.city ?? "",
-        zipCode: companyInfo?.zipcode ?? "",
-
-        owners: companyOwners,
-
-        businessName: companyInfo?.businessName ?? "",
-        website: companyInfo?.websiteURL ?? "",
-        dbaName: companyInfo?.DBAname ?? "",
-        legalEntityName: companyInfo?.legalEntityName ?? "",
-        einNumber: companyInfo?.einNumber ?? "",
-        businessType: companyInfo?.businessType ?? "",
-        incorporationDate: companyInfo?.incorporationDate
-          ? new Date(companyInfo?.incorporationDate)
-          : undefined,
-      }));
-
-      setCompanyLogo(companyInfo?.logoUrl);
-      setDocumentInputs(allVendorDocuments?.data ?? []);
-    }
-  }, [vendorData, allVendorDocuments, vendorOwnership]);
-
-  // --------------------- UPDATE FUNCTIONS ---------------------
-
-  const updateCompanyData = (key: keyof CompanyData, value: any) => {
-    setCompanyData((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
-  };
-
-  const updateOwner = (index: number, field: keyof Owner, value: string) => {
-    setCompanyData((prev) => {
-      const updatedOwners = [...prev.owners];
-      updatedOwners[index] = { ...updatedOwners[index], [field]: value };
-      return { ...prev, owners: updatedOwners };
-    });
-  };
-
-  const addOwner = () => {
-    if (companyData?.owners?.length >= 4) return;
-
-    setCompanyData((prev) => ({
-      ...prev,
-      owners: [...prev.owners, { ...initialOwner }],
-    }));
-  };
-
-  const removeOwner = (index: number) => {
-    if (companyData?.owners?.length <= 1) return;
-
-    setCompanyData((prev) => {
-      const updatedOwners = prev.owners.filter((_, i) => i !== index);
-
-      let newAuthorized = prev.authorizedSignatory;
-      if (index === prev.authorizedSignatory) newAuthorized = 0;
-      else if (index < prev.authorizedSignatory)
-        newAuthorized = prev.authorizedSignatory - 1;
-
-      return {
-        ...prev,
-        owners: updatedOwners,
-        authorizedSignatory: newAuthorized,
-      };
-    });
-  };
-
-  const handleSave = () => {
-    const companyInformationData = {
-      businessName: companyData.businessName || "",
-      websiteURL: companyData.website || "",
-      DBAname: companyData.dbaName || "",
-      legalEntityName: companyData.legalEntityName || "",
-      einNumber: companyData.einNumber || "",
-      businessType: companyData.businessType || "",
-      incorporationDate: companyData.incorporationDate || Date.now(),
-    };
-
-    const companyContactDetails = {
-      primaryContactName: companyData.contactName || "",
-      primaryEmail: companyData.primaryEmail || "",
-      primaryPhoneNumber: companyData.primaryPhoneNumber || "",
-      instagramURL: companyData.instagramLink || "",
-      youtubeURL: companyData.youtubeLink || "",
-      facebookURL: companyData.facebookLink || "",
-      linkedinURL: companyData.linkedinLink || "",
-    };
-
-    const companyBusinessAddress = {
-      streetAddressLine1: companyData.address1,
-      streetAddressLine2: companyData.address2,
-      city: companyData.city,
-      state: companyData.state,
-      country: companyData.country,
-      zipcode: companyData.zipCode,
-      latitude: companyData.latitude,
-      longitude: companyData.longitude,
-    };
-
-    const companyBankAccountInformation = {
-      bankAccountNumber: companyData.accountNumber,
-      bankName: companyData.bankName,
-      payeeName: companyData.payeeName,
-      routingNumber: companyData.routingNumber,
-      bankType: companyData.bankType,
-    };
-
-    const companyOwnershipInformation = companyData.owners;
-
-    CompanyInformationMutation.mutate(companyInformationData);
-    ContactInformationMutation.mutate(companyContactDetails);
-    BusinessAddressMutation.mutate(companyBusinessAddress);
-    BankAccountMutation.mutate(companyBankAccountInformation);
-    OwnershipInformationMutation.mutate(companyOwnershipInformation);
-
-    if (vendorDocuments?.length > 0) {
-      vendorDocumentMutation.mutate(vendorDocuments);
-    }
-    setVendorDocuments([]);
-    queryClient.invalidateQueries({
-      queryKey: ["vendor-details"],
-    });
-    queryClient.invalidateQueries({
-      queryKey: ["vendor-owners"],
-    });
-  };
-
-  const handlePrevious = () => console.log("Previous step");
-
-  const handleDocumentChange = (index: number, value: any) => {
-    setDocumentInputs((prev) =>
-      prev.map((item, i) =>
-        i === index ? { ...item, documentType: value.value } : item,
-      ),
-    );
-  };
-
-  const handleDocumentUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>,
-    index: number,
-  ) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const toastId = toast.loading("Uploading document...");
-
-    try {
-      const currentDoc = documentInputs[index];
-
-      if (!currentDoc?.documentType) {
-        toast.error("Please select document type first", { id: toastId });
-        return;
-      }
-      const imageData = {
-        fileName: file.name,
-        fileType: file.type,
-        path: "vendorDocument",
-      };
-
-      const uploadRes = await getImageUrlMutation.mutateAsync({
-        data: imageData,
-      });
-
-      const filePath = uploadRes?.data?.filePath;
-      const uploadUrl = uploadRes?.data?.uploadUrl;
-
-      if (!filePath || !uploadUrl) {
-        throw new Error("Upload URL not received");
-      }
-      await uploadImageMutation.mutateAsync({
-        url: uploadUrl,
-        file,
-      });
-      setDocumentInputs((prev) =>
-        prev.map((item, i) =>
-          i === index ? { ...item, documentUrl: filePath } : item,
-        ),
-      );
-
-      setVendorDocuments((prev: any[]) => [
-        ...prev,
-        {
-          filePath,
-          documentType: currentDoc.documentType,
-        },
-      ]);
-
-      toast.success("Document uploaded successfully", { id: toastId });
-    } catch (error) {
-      console.error(error);
-      toast.error("Document upload failed", { id: toastId });
-    } finally {
-      e.target.value = "";
-    }
-  };
-
-  const handleAddMore = () => {
-    setDocumentInputs((prev: any) => [
-      ...prev,
-      { documentType: "business_license", documentUrl: "choose file" },
-    ]);
-  };
+  const vendorId = vendorData?.data?.vendorId; // Fix vendorData undefined by moving hook up
 
   const handleCompanyLogo = async (e: any) => {
     const file = e.target.files?.[0];
@@ -403,20 +142,50 @@ const CompanyProfile = () => {
     }
   };
 
-  const documentDeleteHandler = (id: any, indexId: any) => {
-    if (id) {
-      documentDeleteMutation.mutate(id);
-    } else {
-      setDocumentInputs((prev: any[]) =>
-        prev.filter((_, index) => index !== indexId),
-      );
-    }
-  };
 
-  const documentUpdateHandler = (doc: any) => {
-    setOpenUpdateDocumentPopup(true);
-    setUpdatedDocumentDetails(doc);
-  };
+  useEffect(() => {
+    const companyOwners = vendorOwnership?.data ?? [];
+    if (vendorData) {
+      const companyInfo = vendorData?.data;
+      setCompanyData((prev) => ({
+        ...prev,
+        accountNumber: companyInfo?.bankAccountNumber ?? "",
+        bankName: companyInfo?.bankName ?? "",
+        payeeName: companyInfo?.payeeName ?? "",
+        routingNumber: companyInfo?.routingNumber ?? "",
+        bankType: companyInfo?.bankType ?? "",
+        contactName: companyInfo?.primaryContactName ?? "",
+        primaryEmail: companyInfo?.primaryEmail || companyInfo?.businessName || "",
+        primaryPhoneNumber: companyInfo?.primaryPhoneNumber ?? "",
+        instagramLink: companyInfo?.instagramURL ?? "",
+        youtubeLink: companyInfo?.youtubeURL ?? "",
+        facebookLink: companyInfo?.facebookURL ?? "",
+        linkedinLink: companyInfo?.linkedinURL ?? "",
+
+        address1: companyInfo?.streetAddressLine1 ?? "",
+        address2: companyInfo?.streetAddressLine2 ?? "",
+        country: companyInfo?.country ?? "",
+        state: companyInfo?.state ?? "",
+        city: companyInfo?.city ?? "",
+        zipCode: companyInfo?.zipcode ?? "",
+
+        owners: companyOwners,
+
+        businessName: companyInfo?.businessName ?? "",
+        website: companyInfo?.websiteURL ?? "",
+        dbaName: companyInfo?.DBAname ?? "",
+        legalEntityName: companyInfo?.legalEntityName ?? "",
+        einNumber: companyInfo?.einNumber ?? "",
+        businessType: companyInfo?.businessType ?? "",
+        incorporationDate: companyInfo?.incorporationDate
+          ? new Date(companyInfo?.incorporationDate)
+          : undefined,
+      }));
+
+      setCompanyLogo(companyInfo?.logoUrl);
+    }
+  }, [vendorData, vendorOwnership]);
+
 
   if (isVendorPending || isVendorOwnershipPending || isVendorDocumentsPending) {
     return (
@@ -427,166 +196,180 @@ const CompanyProfile = () => {
     );
   }
 
+  const companyInformationData: CompanyDataPreviewItem[] = [
+    {
+      label: "Business Name",
+      value: companyData.businessName,
+    },
+    {
+      label: "Website",
+      value: companyData.website,
+    },
+    {
+      label: "DBA Name",
+      value: companyData.dbaName,
+    },
+    {
+      label: "Legal Entity Name",
+      value: companyData.legalEntityName,
+    },
+    {
+      label: "EIN Number",
+      value: companyData.einNumber,
+    },
+    {
+      label: "Business Type",
+      value: companyData.businessType,
+    },
+    {
+      label: "Incorporation Date",
+      value: companyData.incorporationDate as Date,
+      type: "date",
+    },
+  ];
+
+  const contactDetailsData = [
+    {
+      label: "Contact Name",
+      value: companyData.contactName,
+    },
+    {
+      label: "Primary Email",
+      value: companyData.primaryEmail,
+    },
+    {
+      label: "Primary Phone Number",
+      value: companyData.primaryPhoneNumber,
+    },
+    {
+      label: "Instagram Link",
+      value: companyData.instagramLink,
+    },
+    {
+      label: "Youtube Link",
+      value: companyData.youtubeLink,
+    },
+    {
+      label: "Facebook Link",
+      value: companyData.facebookLink,
+    },
+    {
+      label: "Linkedin Link",
+      value: companyData.linkedinLink,
+    },
+  ];
+
+  const businessAddressData = [
+    {
+      label: "Address 1",
+      value: companyData.address1,
+    },
+    {
+      label: "Address 2",
+      value: companyData.address2,
+    },
+    {
+      label: "Country",
+      value: companyData.country,
+    },
+    {
+      label: "State",
+      value: companyData.state,
+    },
+    {
+      label: "City",
+      value: companyData.city,
+    },
+    {
+      label: "Zip Code",
+      value: companyData.zipCode,
+    },
+  ];
+
+  const bankAccountInformationData = [
+    {
+      label: "Account Number",
+      value: companyData.accountNumber,
+    },
+    {
+      label: "Bank Name",
+      value: companyData.bankName,
+    },
+    {
+      label: "Routing Number",
+      value: companyData.routingNumber,
+    },
+    {
+      label: "Account Type",
+      value: companyData.bankType,
+    },
+    {
+      label: "Payee Name",
+      value: companyData.payeeName,
+    },
+  ];
+
   return (
     <>
-      {
-        <UpdateDocumentPopup
-          openPopup={openUpdateDocumentPopup}
-          closePopup={setOpenUpdateDocumentPopup}
-          details={updatedDocumentDetails}
-          dropdownValues={documentDropdownValues}
-        />
-      }
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 mt-2">
         <div className="order-1 lg:order-1 col-span-1 lg:col-span-3 flex flex-col gap-3">
-          <CompanyInformation
-            data={{
-              businessName: companyData.businessName,
-              website: companyData.website,
-              dbaName: companyData.dbaName,
-              legalEntityName: companyData.legalEntityName,
-              einNumber: companyData.einNumber,
-              businessType: companyData.businessType,
-              incorporationDate: companyData.incorporationDate,
-            }}
-            onUpdate={updateCompanyData}
-            readOnly={true}
-            open={open}
-            setOpen={setOpen}
+
+          <CompanyDetailsPreviewCard
+            title="Company Information"
+            data={companyInformationData}
+            editLink="company-information"
           />
 
-          <ContactDetails
-            data={{
-              contactName: companyData.contactName,
-              primaryEmail: companyData.primaryEmail,
-              primaryPhoneNumber: companyData.primaryPhoneNumber,
-              instagramLink: companyData.instagramLink,
-              youtubeLink: companyData.youtubeLink,
-              facebookLink: companyData.facebookLink,
-              linkedinLink: companyData.linkedinLink,
-            }}
-            onUpdate={updateCompanyData}
+          <CompanyDetailsPreviewCard
+            title="Contact Details"
+            data={contactDetailsData}
+            editLink="contact-details"
           />
 
-          <BusinessAddress
-            data={{
-              address1: companyData.address1,
-              address2: companyData.address2,
-              country: companyData.country,
-              state: companyData.state,
-              city: companyData.city,
-              zipCode: companyData.zipCode,
-            }}
-            onUpdate={updateCompanyData}
+          <CompanyDetailsPreviewCard
+            title="Business Address"
+            data={businessAddressData}
+            editLink="business-address"
           />
 
-          <OwnershipInformation
-            data={{
-              owners: companyData.owners,
-              authorizedSignatory: companyData.authorizedSignatory,
-              businessType: companyData.businessType,
-            }}
-            onUpdateOwner={updateOwner}
-            onUpdateAuthorizedSignatory={(index) =>
-              updateCompanyData("authorizedSignatory", index)
-            }
-            onAddOwner={addOwner}
-            onRemoveOwner={removeOwner}
+          <CompanyDetailsPreviewCard
+            title="Bank Account Information"
+            data={bankAccountInformationData}
+            editLink="bank-account-information"
           />
 
-          <BankAccountInformation
-            data={{
-              accountNumber: companyData.accountNumber,
-              bankName: companyData.bankName,
-              payeeName: companyData.payeeName,
-              routingNumber: companyData.routingNumber,
-              bankType: companyData.bankType,
-            }}
-            onUpdate={updateCompanyData}
-            onPrevious={handlePrevious}
-            onSave={handleSave}
+          <CompanyDetailsPreviewCard
+            title="Document Upload"
+            data={documents}
+            editLink="document-upload"
           />
 
-          <Card>
+          <CompanyOwnersPreviewCard
+            title="Ownership Information"
+            data={companyData.owners}
+            editLink="ownership-information"
+          />
+
+          <CompanyAvailabilityPreviewCard
+            title="Availability"
+            data={vendorAvailability?.data ?? []}
+            editLink="company-availability"
+          />
+
+          {/* <Card>
             <CardContent>
-              <CardTitle>Document Upload</CardTitle>
-              <Button
-                className="mb-2 mt-3 cursor-pointer text-orange-600 border border-orange-600"
-                variant={"outline"}
-                type="button"
-                onClick={handleAddMore}
-              >
-                Add more
-              </Button>
-              <div className="grid grid-cols-3 gap-3">
-                {documentInputs?.map((doc, index) => (
-                  <div key={index} className="contents">
-                    <div className="col-span-1">
-                      <DropdownSelector
-                        values={documentDropdownValues}
-                        selectedValue={doc.documentType}
-                        onChange={(value: any) =>
-                          handleDocumentChange(index, value)
-                        }
-                      />
-                    </div>
-
-                    <div className="col-span-2 flex gap-3 items-start">
-                      <div className="w-1/2">
-                        <input
-                          type="file"
-                          accept="*/*"
-                          className="hidden"
-                          id={`file-upload-${index}`}
-                          onChange={(e) => handleDocumentUpload(e, index)}
-                        />
-                        <label
-                          htmlFor={
-                            doc.documentUrl === "choose file"
-                              ? `file-upload-${index}`
-                              : undefined
-                          }
-                          className="w-full bg-[#E1E2E9] rounded-md p-2 text-[11px] cursor-pointer text-gray-600 block"
-                        >
-                          {doc.documentUrl !== "choose file" ? (
-                            <a
-                              href={`${import.meta.env.VITE_IMAGE_BASE_URL}/${doc.documentUrl
-                                }`}
-                              target="_blank"
-                              className="w-full"
-                              rel="noopener noreferrer"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              {doc.documentUrl.split("/").pop()}
-                            </a>
-                          ) : (
-                            "Choose file"
-                          )}
-                        </label>{" "}
-                      </div>
-
-                      <div className="w-1/2 flex gap-2">
-                        {doc.documentUrl !== "choose file" && doc.id && (
-                          <Button onClick={() => documentUpdateHandler(doc)}>
-                            Edit
-                          </Button>
-                        )}
-                        <Button
-                          onClick={() => documentDeleteHandler(doc?.id, index)}
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+              <div>
+                {JSON.stringify(vendorAvailability, null, 2)}
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
 
-          <div className=" pb-6 flex justify-end mt-6">
-            <Button onClick={handleSave}>Submit</Button>
-          </div>
+
+
+          {/* <div className=" pb-6 flex justify-end mt-6">
+              <Button onClick={handleSave}>Submit</Button>
+            </div> */}
+          <div className="h4"></div>
         </div>
 
         <CompanyLogo

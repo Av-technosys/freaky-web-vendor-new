@@ -14,6 +14,19 @@ export const updateCompanyInformation = async (companyInformationData: any) => {
   }
 };
 
+export const updateCompanyAvailability = async (companyAvailabilityData: any) => {
+  try {
+    const response = await axiosInstance.put(
+      apiConstant.vendor.updateAvailability,
+      companyAvailabilityData,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error while sending request:", error);
+    throw error;
+  }
+};
+
 export const updateContactInformation = async (contactInformationData: any) => {
   try {
     const response = await axiosInstance.put(

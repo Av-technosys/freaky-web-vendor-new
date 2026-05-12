@@ -27,6 +27,7 @@ export const getVendorServiceById = async (productId: any) => {
 };
 
 export const createVendorService = async ({ serviceData }: any) => {
+  console.log("Service Data being sent to API:", serviceData);
   try {
     const response = await axiosInstance.post(
       `${apiConstant.vendor.createService}`,
@@ -84,6 +85,18 @@ export const deleteVendorServiceById = async (serviceId: any) => {
     return response.data;
   } catch (error) {
     console.error("Error while sending request:", error);
+    throw error;
+  }
+};
+
+export const getProductType = async () => {
+  try {
+    const response = await axiosInstance.get(
+      `${apiConstant.vendor.getProductType}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error while accepting invite:", error);
     throw error;
   }
 };

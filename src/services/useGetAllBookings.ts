@@ -8,9 +8,9 @@ export const useGetAllBookings = ({ text, page, page_size }: any) => {
   });
 };
 
-export const useGetBookingDetailsById = (bookingId: any) => {
+export const useGetBookingItemDetailsById = (bookingItemId: any) => {
   return useQuery({
-    queryKey: ["bookingItem-details", bookingId],
-    queryFn: () => getBookingItemDetails(bookingId),
+    queryKey: ["bookingItem-details", bookingItemId],
+    queryFn: () => getBookingItemDetails(bookingItemId),
   });
 };

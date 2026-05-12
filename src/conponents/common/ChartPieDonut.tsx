@@ -16,6 +16,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "../../components/ui/chart";
+import { useGetAllBookings } from "@/services";
 
 export const description = "Customer Booking Donut Chart";
 
@@ -56,6 +57,78 @@ const chartConfig = {
 export function ChartPieDonut() {
   const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
 
+
+
+  const { data: apidata, isPending } = useGetAllBookings({
+    // text: searchText,
+    page: 1,
+    page_size: 20,
+  });
+
+
+  const colors = [
+    // 🔵 Blues
+    "#3B82F6", "#1E40AF", "#60A5FA", "#0EA5E9",
+
+    // 🟡 Yellows / Gold
+    "#FACC15", "#EAB308", "#FFD700", "#FFF3B0",
+
+    // 🔴 Reds / Pinks
+    "#EF4444", "#DC2626", "#F43F5E", "#FB7185",
+
+    // 🟢 Greens
+    "#22C55E", "#16A34A", "#4ADE80", "#14532D",
+
+    // 🟣 Purples
+    "#8B5CF6", "#7C3AED", "#C084FC", "#4C1D95",
+
+    // 🟠 Oranges
+    "#F97316", "#EA580C", "#FDBA74",
+
+    // ⚫ Neutrals
+    "#000000", "#111827", "#374151", "#9CA3AF", "#F3F4F6", "#FFFFFF",
+
+    // 🌈 Pastels
+    "#FFB3BA", "#FFDFBA", "#FFFFBA", "#BAFFC9", "#BAE1FF",
+
+    // ⚡ Neon
+    "#39FF14", "#FF00FF", "#00FFFF", "#FF073A",
+
+    // 🌊 Teal / Cyan
+    "#14B8A6", "#06B6D4", "#0891B2",
+
+    // 🧊 Unique
+    "#6EE7B7", "#FDE68A", "#A5B4FC", "#FCA5A5"
+  ];
+
+
+  function getRandomColor(key: string) {
+    let hash = 0;
+    for (let i = 0; i < key.length; i++) {
+      hash = key.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return colors[Math.abs(hash) % colors.length];
+  }
+
+  const pieData = Object.values(
+    (apidata?.data || []).reduce((acc: any, item: any) => {
+      const service = item.productName || "Unknown";
+
+      if (!acc[service]) {
+        acc[service] = {
+          service,
+          bookings: 0,
+          fill: getRandomColor(service), // color helper
+        };
+      }
+
+      acc[service].bookings += 1;
+
+      return acc;
+    }, {})
+  );
+
+
   return (
     <Card className="flex flex-col md:min-w-[33.33%]" >
       <CardHeader className="items-center pb-0">
@@ -73,7 +146,7 @@ export function ChartPieDonut() {
               content={<ChartTooltipContent hideLabel />}
             />
             <Pie
-              data={chartData}
+              data={pieData}
               dataKey="bookings"
               nameKey="service"
               innerRadius={isMobile ? 30 : 50}
@@ -86,7 +159,7 @@ export function ChartPieDonut() {
       </CardContent>
       <CardFooter className="grid grid-cols-2 gap-2 max-sm:gap-1">
 
-        {chartData.map((item) => (
+        {pieData.map((item: any) => (
           <div key={item.service} className="flex items-center gap-2">
             <span
               className="w-3 h-3 rounded-full"
@@ -96,8 +169,9 @@ export function ChartPieDonut() {
           </div>
         ))}
 
+
         <div className="col-span-2 text-gray-600 text-center font-bold text-[20px] ">
-          Total Booking - {chartData.reduce((sum, s) => sum + s.bookings, 0)}
+          Total Booking - {pieData?.reduce((sum, s: any) => sum + s.bookings, 0) as string}
         </div>
 
       </CardFooter>

@@ -1,1 +1,1 @@
-export const IS_DEV_ADMIN = false
+export const IS_DEV_ADMIN = true

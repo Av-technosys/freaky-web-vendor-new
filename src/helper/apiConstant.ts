@@ -47,6 +47,9 @@ export const apiConstant = {
     acceptVendorInvite: "/v1/vendor/accept_invite",
     getAllVendorsForInvitation: "/v1/vendor/request_vendors",
     getAllSearchItems: "/v1/vendor/searchitems",
+    getProductType: "/v1/product/products_type",
+    getVendorAvailability: "/v1/vendor/availability",
+    updateAvailability: "/v1/vendor/availability",
   },
   review: {
     getAllReview: "/v1/vendor/review",
@@ -65,6 +68,12 @@ export const apiConstant = {
   booking: {
     createExternalBooking: "v1/booking/create_external_booking",
     getAllBookings: "v1/booking/",
-    getBookingItemDetailsById: "v1/booking",
+    getBookingItemDetailsById: "v1/booking/item",
+
+  },
+  payment: {
+    getAllTransactions: "/v1/payment/payments",
+    getAllVendorPayments: "/v1/vendor/payments"
+    // getTransactionDetails: "/v1/vendor/transaction",
   },
 };

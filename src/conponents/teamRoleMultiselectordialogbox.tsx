@@ -12,6 +12,7 @@ import { useUpdateEmployeePermissions } from "@/services/useCreateOrUpdateCompan
 import { USER_ACCESS_DROPDOWN } from "@/const/dropdown";
 import { useGetEmployeePermissions } from "@/services/useGetEmployeePermissions";
 import { Skeleton } from "../components/ui";
+import { Field, FieldContent, FieldDescription, FieldLabel, FieldTitle } from "@/components/ui/field";
 
 type ComponentProps = {
   children: React.ReactNode;
@@ -33,7 +34,9 @@ export default function MultiselectorDialog({
   useEffect(() => {
     if (!isPending && employeePermissions?.data) {
       try {
-        let permissionArray = employeePermissions.data;
+        console.log(employeePermissions)
+        let permissionArray = employeePermissions.data?.permissions;
+        console.log(permissionArray, "permissionArray");
 
         if (typeof permissionArray === "string") {
           permissionArray = JSON.parse(permissionArray);
@@ -89,15 +92,17 @@ export default function MultiselectorDialog({
             ) : (
               <div className=" pr-4 w-full overflow-y-auto">
                 {USER_ACCESS_DROPDOWN?.map((role: any) => (
-                  <div
+                  <FieldLabel
                     key={role.label}
                     className="flex justify-between items-center mb-4"
                   >
-                    <div>
-                      <h3 className="text-black text-normal">{role.label}</h3>
-                      <p className="text-gray-500 ">{role?.description}</p>
-                    </div>
-                    <div>
+                    <Field orientation={"horizontal"} className=" cursor-pointer">
+                      <FieldContent className="">
+                        <FieldTitle className=" text-gray-800">{role.label}</FieldTitle>
+                        <FieldDescription>
+                          {role?.description}
+                        </FieldDescription>
+                      </FieldContent>
                       <Checkbox
                         checked={allowedPermissions.includes(
                           role?.value?.toLowerCase(),
@@ -109,8 +114,8 @@ export default function MultiselectorDialog({
                           )
                         }
                       />
-                    </div>
-                  </div>
+                    </Field>
+                  </FieldLabel>
                 ))}
                 <div className="float-right flex gap-2 text-xl font-bold mt-4">
                   <Button onClick={updateHandler}>Update</Button>
